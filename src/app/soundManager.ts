@@ -1,10 +1,13 @@
 export class SoundManager {
   constructor() {
     this.yum.src = './assets/yum.mp3';
+    this.yum.preload = "auto";
     this.yum.load();
     this.yuck.src = './assets/yuck.mp3';
+    this.yuck.preload = "auto";
     this.yuck.load();
     this.whoo.src = './assets/whoo.mp3';
+    this.whoo.preload = "auto";
     this.whoo.load();
   }
   private yum = new Audio();
@@ -14,19 +17,22 @@ export class SoundManager {
 
   public playYum() {
     if (this.sound) {
-      this.yum.play();
+      const yumc = this.yum.cloneNode() as HTMLAudioElement;
+      yumc.play();
     }
   }
 
   public playYuck() {
     if (this.sound) {
-      this.yuck.play();
+      const yuckc = this.yuck.cloneNode() as HTMLAudioElement;
+      yuckc.play();
     }
   }
 
   public playWhoo() {
     if (this.sound) {
-      this.whoo.play();
+      const whooc = this.whoo.cloneNode() as HTMLAudioElement;
+      whooc.play();
     }
   }
 
