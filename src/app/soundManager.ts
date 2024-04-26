@@ -17,22 +17,31 @@ export class SoundManager {
 
   public playYum() {
     if (this.sound) {
+      this.yum.play();
       const yumc = this.yum.cloneNode() as HTMLAudioElement;
-      yumc.play();
+      yumc.preload = "auto";
+      yumc.load();
+      this.yum = yumc;
     }
   }
 
   public playYuck() {
     if (this.sound) {
+      this.yuck.play();
       const yuckc = this.yuck.cloneNode() as HTMLAudioElement;
-      yuckc.play();
+      yuckc.preload = "auto";
+      yuckc.load();
+      this.yuck = yuckc;
     }
   }
 
   public playWhoo() {
     if (this.sound) {
+      this.whoo.play();
       const whooc = this.whoo.cloneNode() as HTMLAudioElement;
-      whooc.play();
+      whooc.preload = "auto";
+      whooc.load();
+      this.whoo = whooc;
     }
   }
 
