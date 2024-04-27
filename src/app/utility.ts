@@ -1,5 +1,9 @@
 import { boundOffsetMax, boundoffsetMin, dataUpperBound, multipleLowerBound, multipleUpperBound } from "./constants";
 
+export function hasTouch(): boolean {
+  return ('ontouchstart' in window);
+}
+
 export function wrapUp(value: number, max: number): number {
   if (value === max - 1) {
     return 0;

@@ -4,7 +4,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChangeDetectorRef } from '@angular/core';
 import { DataCell } from './dataCell';
 import { Puzzle } from './puzzle';
-import { getUniqueCollection, parseId, wrapDown, wrapUp } from './utility';
+import { getUniqueCollection, hasTouch, parseId, wrapDown, wrapUp } from './utility';
 import { HostListener } from '@angular/core';
 import { SoundManager } from './soundManager';
 import { PositionManager } from './positionManager';
@@ -69,7 +69,6 @@ export class AppComponent implements AfterViewChecked {
     this.init();
   }
 
-
   /* Data */
   private addRandomValues(upperBound: number) {
     this.cellData = [];
@@ -112,6 +111,23 @@ export class AppComponent implements AfterViewChecked {
     else {
       return "assets/muncher-neutral.png";
     }
+  }
+
+  public getGeneralInstructions(): string {
+    if (hasTouch()) {
+      return "Tap squares";
+    }
+    else {
+      return "Use arrow keys and space bar to select";
+    }
+  }
+
+  public getButtonText(): string {
+    let text = "New Game"
+    if (!hasTouch()) {
+      text += " (or hit 'N' key)"
+    }
+    return text;
   }
 
   public getQuestionPrompt(): string {
@@ -169,14 +185,26 @@ export class AppComponent implements AfterViewChecked {
     }
   }
 
-  @HostListener('document:touchstart', ['$event'])
-  handleTouchEvent(event: any) {
+   @HostListener('document:touchstart', ['$event'])
+   // @HostListener('document:click', ['$event'])
+   handleClickOrTouchEvent(event: UIEvent) {
+    console.log("touch? " + (event instanceof TouchEvent));
+    console.log("mouse? " + (event instanceof PointerEvent));
+    console.log("hasTouch? " + hasTouch());
+    console.log("---");
+    if (hasTouch() && (event instanceof PointerEvent)) {
+      console.log('Skipping mouse event if touch enabled.')
+      return;
+    } else {
+      console.log("Continuing with touch or mouse event");
+    }
+    console.log(`TouchClick: ${event}`);
     if (this.noRemainingSolutions()) {
       return;
     }
     let rowColumn: number[] = [];
     try {
-      rowColumn = parseId(event.target.id);
+      rowColumn = parseId((<HTMLElement>(event.target)).id);
     } catch (err) {
       return;
     }
