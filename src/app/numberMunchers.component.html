@@ -1,11 +1,11 @@
-<main id="keytarget" class="main disable-dbl-tap-zoom" [ngClass]="{done: noRemainingSolutions()}">
+<main id="keytarget" class="main disable-dbl-tap-zoom" [ngClass]="{'done-background': noRemainingSolutions()}" >
   <div class="content">
     <div class="container">
       <h1>Number Munchers Reborn <img alt="muncher logo" src="assets/muncher-happy.png" width="40px" /></h1>
       <h2>Find {{getQuestionPrompt()}}</h2>
       <h3>{{getGeneralInstructions()}}</h3>
       <button id="btnNewGame" class="btn" [ngClass]="getButtonClass()" (click)="newGame()">{{getButtonText()}}</button>
-      <button id="btnSound" (click)="toggleSound(); " type="button" class="btn imagebutton">
+      <button id="btnSound" (click)="toggleSound()" type="button" class="btn imagebutton">
         <svg *ngIf="getSoundManager().getSoundOn()" role="img" aria-labelledby="Sound off"
           xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-volume-up"
           viewBox="0 0 16 16">
@@ -47,7 +47,7 @@
               <a href="https://github.com/smycynek/number-munchers-reborn">https://github.com/smycynek/number-munchers-reborn</a>
             </li>
             <li>
-              ||v114||
+              ||v117||
             </li>
           </ul>
         </details>

@@ -19,8 +19,7 @@ import { PositionManager } from './positionManager';
 export class AppComponent implements AfterViewChecked {
   private cellData: DataCell[] = [];
   private statusMessage = "Start!";
-  private statusMessageClass = "default";
-  private errorState = false;
+  private statusMessageClass = "status-default";
   private activePuzzle: Puzzle = Puzzle.getRandomPuzzle();
   private foundNumbers: Set<number> = new Set<number>();
   private soundManager: SoundManager = new SoundManager();
@@ -38,10 +37,9 @@ export class AppComponent implements AfterViewChecked {
     this.positionManager.setActiveRow(0);
     this.positionManager.setActiveColumn(0);
     this.statusMessage = "Start!";
-    this.statusMessageClass = "default";
+    this.statusMessageClass = "status-default";
     this.cellData = [];
     this.foundNumbers = new Set<number>();
-    this.errorState = false;
   }
 
   private init() {
@@ -103,11 +101,11 @@ export class AppComponent implements AfterViewChecked {
 
   public getImage(): string {
     const data = this.getCellData(this.positionManager.getActiveRow(), this.positionManager.getActiveColumn());
-    if (this.errorState) {
-      return "assets/muncher-sad.png";
-    }
     if (data.valid && data.discovered)
       return "assets/muncher-happy.png";
+    else if (!data.valid && data.discovered) {
+        return "assets/muncher-sad.png";
+    }
     else {
       return "assets/muncher-neutral.png";
     }
@@ -155,13 +153,16 @@ export class AppComponent implements AfterViewChecked {
     let classes = "";
     const cell: DataCell = this.getCellData(cellRow, cellColumn);
     if (!cell) {
-      classes = "default";
+      classes = "status-default";
     }
-    if (cell.discovered) {
-      classes = "discovered";
+    if (cell.discovered && cell.valid) {
+      classes = "discovered-valid";
+    }
+    if (cell.discovered && !cell.valid) {
+      classes = "discovered-invalid";
     }
     if (cellRow == this.positionManager.getActiveRow() && cellColumn == this.positionManager.getActiveColumn()) {
-      classes += " active";
+      classes += " cell-active";
     }
     return classes;
   }
@@ -169,7 +170,6 @@ export class AppComponent implements AfterViewChecked {
   /* Mouse and Keyboard */
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
-    this.errorState = false;
     if (event.key == "ArrowUp") {
       this.down();
     } else if (event.key == "ArrowDown") {
@@ -235,30 +235,29 @@ export class AppComponent implements AfterViewChecked {
 
   /* Action */
   private choiceAction(): void {
-    this.errorState = false;
     if (this.noRemainingSolutions()) {
       return;
     }
     console.log(this.positionManager.getActiveRow() + ", " + this.positionManager.getActiveColumn());
     const data = this.getCellData(this.positionManager.getActiveRow(), this.positionManager.getActiveColumn());
+    data.discovered = true;
+
     if (data.valid) {
-      this.cellData[(this.positionManager.getActiveRow() * this.positionManager.getColumns()) + this.positionManager.getActiveColumn()].discovered = true;
-      this.foundNumbers.add(data.value);
+       this.foundNumbers.add(data.value);
       if (this.noRemainingSolutions()) {
         this.soundManager.playWhoo();
-        this.statusMessageClass = "success";
+        this.statusMessageClass = "status-success";
         this.statusMessage = 'You found all the numbers!';
         return;
       }
       this.soundManager.playYum();
       this.statusMessage = `Correct! ${data.value} is ${this.activePuzzle.responseText}`;
-      this.statusMessageClass = "success";
+      this.statusMessageClass = "status-success";
 
     } else {
       this.soundManager.playYuck();
       this.statusMessage = `Sorry, ${data.value} is not ${this.activePuzzle.responseText}`;
-      this.statusMessageClass = "error";
-      this.errorState = true;
+      this.statusMessageClass = "status-error";
     }
 
     console.log(`Correct? ${data.valid}, Value: ${data.value}, Question: ${this.activePuzzle.questionText}`)

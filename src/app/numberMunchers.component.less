@@ -9,7 +9,7 @@
     touch-action: manipulation;
 }
 
-.done {
+.done-background {
     background-color: lightgray;
 }
 
@@ -43,22 +43,7 @@
 }
 
 
-summary:focus {
-    outline: none;
-    box-shadow: none;
-}
-
-details:focus {
-    outline: none;
-    box-shadow: none;
-}
-
-a:focus {
-    outline: none;
-    box-shadow: none;
-}
-
-.active {
+.cell-active {
     font-weight: bolder;
     border-width: 0.125em;
 }
@@ -72,27 +57,44 @@ a:focus {
     color: gray;
 }
 
-.discovered {
+.discovered-valid {
+    background-color: lightgreen;
+}
+
+.discovered-invalid {
+    background-color: pink;
+}
+
+.status-success {
     color: green;
-    background-color: white;
     font-weight: bold;
 }
 
-.success {
-    color: green;
-    font-weight: bold;
-}
-
-.error {
+.status-error {
     font-weight: bold;
     color: red;
 }
 
-.default {
+.status-default {
     color: black;
 }
 
 button:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+summary:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+details:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+a:focus {
     outline: none;
     box-shadow: none;
 }
