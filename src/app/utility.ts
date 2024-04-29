@@ -56,9 +56,17 @@ export function randomRange(lower: number, upper: number): number {
   return initial + lower;
 }
 
+// A narrower range used for > and <
 export function getBetweenBounds() {
   const bound1 = randomRange(0, dataUpperBound);
   const bound2 = bound1 + randomRange(boundoffsetMin, boundOffsetMax);
+  return [bound1, bound2];
+}
+
+// A wider range used for < or >
+export function getBetweenBoundsWide() {
+  const bound1 = randomRange(0, dataUpperBound - 20);
+  const bound2 = bound1 + randomRange(boundoffsetMin + 15, boundOffsetMax + 15 );
   return [bound1, bound2];
 }
 

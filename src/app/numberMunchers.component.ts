@@ -94,6 +94,13 @@ export class AppComponent implements AfterViewChecked {
     return done;
   }
 
+  private perfectScore(): boolean {
+    if (!this.cellData.length) {
+      return false;
+    }
+    return this.cellData.filter((cell: DataCell) => cell.discovered).every((cell: DataCell) => (cell.valid));
+  }
+
   /* UI State */
   public isActive(cellRow: number, cellColumn: number): boolean {
     return (cellRow == this.positionManager.getActiveRow() && cellColumn == this.positionManager.getActiveColumn());
@@ -248,6 +255,9 @@ export class AppComponent implements AfterViewChecked {
         this.soundManager.playWhoo();
         this.statusMessageClass = "status-success";
         this.statusMessage = 'You found all the numbers!';
+        if (this.perfectScore()) {
+          this.statusMessage += " Perfect score!!";
+        }
         return;
       }
       this.soundManager.playYum();

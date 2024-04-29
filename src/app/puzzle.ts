@@ -1,5 +1,5 @@
 import { dataUpperBound } from "./constants";
-import { getBetweenBounds, getMultipleBounds, randomRange } from "./utility";
+import { getBetweenBounds, getBetweenBoundsWide, getMultipleBounds, randomRange } from "./utility";
 
 export class Puzzle {
   private constructor(
@@ -15,6 +15,7 @@ export class Puzzle {
     primes.forEach(p => factorNumbers.delete(p));
     const randomFactor = [...factorNumbers.values()][Math.floor(Math.random() * factorNumbers.size)];
     const betweenBounds = getBetweenBounds();
+    const betweenBoundsWide = getBetweenBoundsWide();
     const multipleBounds = getMultipleBounds();
     return [
       new Puzzle(
@@ -26,6 +27,11 @@ export class Puzzle {
         (item: number) => ((item >= betweenBounds[0]) && (item <= betweenBounds[1])),
         `numbers >= ${betweenBounds[0]} and <= ${betweenBounds[1]}`,
         `>= ${betweenBounds[0]} and <= ${betweenBounds[1]}`
+      ),
+      new Puzzle(
+        (item: number) => ((item > betweenBoundsWide[1]) || (item < betweenBoundsWide[0])),
+        `numbers > ${betweenBoundsWide[1]} or < ${betweenBoundsWide[0]}`,
+        `> ${betweenBoundsWide[1]} or < ${betweenBoundsWide[0]}`
       ),
       new Puzzle(
         (item: number) => (Math.sqrt(item) === Math.floor(Math.sqrt(item))),
