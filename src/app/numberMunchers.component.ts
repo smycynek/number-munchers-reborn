@@ -8,6 +8,7 @@ import { getUniqueCollection, hasTouch, parseId, wrapDown, wrapUp } from './util
 import { HostListener } from '@angular/core';
 import { SoundManager } from './soundManager';
 import { PositionManager } from './positionManager';
+import JSConfetti from 'js-confetti';
 
 @Component({
   selector: 'app-number-munchers',
@@ -128,7 +129,10 @@ export class AppComponent implements AfterViewChecked {
   }
 
   public getButtonText(): string {
-    let text = "New Game"
+    let text = "New game";
+    if (this.noRemainingSolutions())  {
+      text = "Try again!";
+   }
     if (!hasTouch()) {
       text += " (or hit 'N' key)"
     }
@@ -170,6 +174,9 @@ export class AppComponent implements AfterViewChecked {
     }
     if (cellRow == this.positionManager.getActiveRow() && cellColumn == this.positionManager.getActiveColumn()) {
       classes += " cell-active";
+    }
+    if (this.noRemainingSolutions()) {
+      classes += " game-over";
     }
     return classes;
   }
@@ -252,11 +259,15 @@ export class AppComponent implements AfterViewChecked {
     if (data.valid) {
        this.foundNumbers.add(data.value);
       if (this.noRemainingSolutions()) {
-        this.soundManager.playWhoo();
         this.statusMessageClass = "status-success";
         this.statusMessage = 'You found all the numbers!';
         if (this.perfectScore()) {
+          this.soundManager.playWhooAndPerfectScore();
           this.statusMessage += " Perfect score!!";
+          const jsConfetti = new JSConfetti();
+          jsConfetti.addConfetti();
+        } else {
+          this.soundManager.playWhoo();
         }
         return;
       }

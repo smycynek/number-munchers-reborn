@@ -9,10 +9,14 @@ export class SoundManager {
     this.whoo.src = './assets/whoo.mp3';
     this.whoo.preload = "auto";
     this.whoo.load();
+    this.perfectScore.src = './assets/perfectScore.mp3';
+    this.perfectScore.preload = "auto";
+    this.perfectScore.load();
   }
   private yum = new Audio();
   private yuck = new Audio();
   private whoo = new Audio();
+  private perfectScore = new Audio();
   private sound: boolean = true;
 
   public playYum() {
@@ -43,6 +47,21 @@ export class SoundManager {
       whooc.load();
       this.whoo = whooc;
     }
+  }
+
+  public playPerfectScore() {
+    if (this.sound) {
+        this.perfectScore.play();
+        const perfectScorec = this.perfectScore.cloneNode() as HTMLAudioElement;
+        perfectScorec.preload = "auto";
+        perfectScorec.load();
+        this.perfectScore = perfectScorec;
+    }
+  }
+
+  public playWhooAndPerfectScore() {
+    this.whoo.addEventListener("ended", () => this.playPerfectScore());
+    this.playWhoo();
   }
 
   public getSoundOn(): boolean {
