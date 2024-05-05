@@ -1,7 +1,7 @@
 <main id="keytarget" class="main disable-dbl-tap-zoom" >
   <div class="content">
     <div class="container">
-      <h1>Number Munchers Reborn <img alt="muncher logo" src="assets/muncher-happy.png" width="40px" /></h1>
+      <h1>Number Munchers Reborn (beta) <img alt="muncher logo" src="assets/muncher-happy.png" width="40px" /></h1>
       <h2>Find {{getQuestionPrompt()}}</h2>
       <h3>{{getGeneralInstructions()}}</h3>
       <button id="btnNewGame" class="btn" [ngClass]="getButtonClass()" (click)="newGame()">{{getButtonText()}}</button>
@@ -24,6 +24,7 @@
         </svg>
       </button>
       <p [ngClass]="getStatusMessageClass()">{{getStatusMessage()}}</p>
+      <p class ="detail" [ngClass]="getStatusMessageClass()">{{getStatusDetailMessage()}}</p>
       <p>{{getFoundNumbers()}}</p>
       <div *ngFor="let r of [].constructor(getPositionManager().getRows()); index as idxr" class="row">
         <div [ngClass]="getCellClass(idxr,idxc)" id="{{idxr}}{{idxc}}"
@@ -41,13 +42,25 @@
             <li>Not all solutions shown. For example, for "find factors of 21," you'll find at least
               3, 7, 1, or 21, but not necessarily all of them.
             </li>
+            <li>
+              New beta features
+              <ol>
+
+              <li>
+              We know make sure there are at least 3 correct answers in every puzzle.
+              The consequence is that there may be some duplicate squares, but this will get fixed eventually.
+            </li>
+            <li>
+              Now, more feedback on correct and incorrect answers!
+            </li>
+            </ol>
             <li><a href="mailto:sv@stevenvictor.net?subject=Number Munchers Reborn info">sv&#64;stevenvictor.net</a>
             </li>
             <li>
               <a href="https://github.com/smycynek/number-munchers-reborn">https://github.com/smycynek/number-munchers-reborn</a>
             </li>
             <li>
-              ||v121||
+              ||v125||
             </li>
           </ul>
         </details>

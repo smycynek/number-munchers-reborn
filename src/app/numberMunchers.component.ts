@@ -4,7 +4,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChangeDetectorRef } from '@angular/core';
 import { DataCell } from './dataCell';
 import { Puzzle } from './puzzle';
-import { getUniqueCollection, hasTouch, parseId, wrapDown, wrapUp } from './utility';
+import { getRandomIndicies, getRandomItemAndRemove, getUniqueCollection, hasTouch, parseId, wrapDown, wrapUp } from './utility';
 import { HostListener } from '@angular/core';
 import { SoundManager } from './soundManager';
 import { PositionManager } from './positionManager';
@@ -20,6 +20,7 @@ import JSConfetti from 'js-confetti';
 export class AppComponent implements AfterViewChecked {
   private cellData: DataCell[] = [];
   private statusMessage = "Start!";
+  private statusMessageDetail = "You can do it!";
   private statusMessageClass = "status-default";
   private activePuzzle: Puzzle = Puzzle.getRandomPuzzle();
   private foundNumbers: Set<number> = new Set<number>();
@@ -38,6 +39,7 @@ export class AppComponent implements AfterViewChecked {
     this.positionManager.setActiveRow(0);
     this.positionManager.setActiveColumn(0);
     this.statusMessage = "Start!";
+    this.statusMessageDetail = "You can do it!";
     this.statusMessageClass = "status-default";
     this.cellData = [];
     this.foundNumbers = new Set<number>();
@@ -58,6 +60,7 @@ export class AppComponent implements AfterViewChecked {
       }
       if (this.noRemainingSolutions()) {
         this.statusMessage = "No solutions, try a new game";
+        this.statusMessageDetail = "-";
       }
     }
   }
@@ -71,13 +74,25 @@ export class AppComponent implements AfterViewChecked {
   /* Data */
   private addRandomValues(upperBound: number) {
     this.cellData = [];
+    const specialIndices = getRandomIndicies(3, (this.positionManager.getRows() * this.positionManager.getColumns()) -1 );
     const curatedValues = getUniqueCollection(upperBound, this.positionManager.getRows() * this.positionManager.getColumns());
     for (let idx = 0; idx != this.positionManager.getRows() * this.positionManager.getColumns(); idx++) {
-      const value = curatedValues[idx];
+      let value = curatedValues[idx];
+      // Replace 3 values in the puzzles with known correct values to ensure 
+      // at least several correct answers to find.
+      if (this.activePuzzle.validSamples.size && specialIndices.has(idx)) {
+          // const previous = value;
+          value = getRandomItemAndRemove(this.activePuzzle.validSamples);
+          specialIndices.delete(idx);      
+          // console.log(`Replacing ${previous} with ${value} at position ${idx}`);
+          // console.log('---')
+      }
+
       const valid = this.activePuzzle?.predicate(value);
       const data = new DataCell(value, valid, false);
       this.cellData.push(data);
     }
+    // TODO improvement, simplify adding in correct answers and avoid duplicates.
   }
 
   public getCellData(r: number, c: number): DataCell {
@@ -145,6 +160,10 @@ export class AppComponent implements AfterViewChecked {
 
   public getStatusMessage(): string {
     return this.statusMessage;
+  }
+
+  public getStatusDetailMessage(): string {
+    return this.statusMessageDetail;
   }
 
   public getStatusMessageClass(): string {
@@ -229,22 +248,22 @@ export class AppComponent implements AfterViewChecked {
 
   private up() {
     this.positionManager.setActiveRow(wrapUp(this.positionManager.getActiveRow(), this.positionManager.getRows()));
-    console.log(this.positionManager.getActiveRow() + ", " + this.positionManager.getActiveColumn());
+   // console.log(this.positionManager.getActiveRow() + ", " + this.positionManager.getActiveColumn());
   }
 
   private down() {
     this.positionManager.setActiveRow(wrapDown(this.positionManager.getActiveRow(), this.positionManager.getRows()));
-    console.log(this.positionManager.getActiveRow() + ", " + this.positionManager.getActiveColumn());
+   // console.log(this.positionManager.getActiveRow() + ", " + this.positionManager.getActiveColumn());
   }
 
   private left() {
     this.positionManager.setActiveColumn(wrapDown(this.positionManager.getActiveColumn(), this.positionManager.getColumns()));
-    console.log(this.positionManager.getActiveRow() + ", " + this.positionManager.getActiveColumn());
+  //  console.log(this.positionManager.getActiveRow() + ", " + this.positionManager.getActiveColumn());
   }
 
   private right() {
     this.positionManager.setActiveColumn(wrapUp(this.positionManager.getActiveColumn(), this.positionManager.getColumns()));
-    console.log(this.positionManager.getActiveRow() + ", " + this.positionManager.getActiveColumn());
+  //  console.log(this.positionManager.getActiveRow() + ", " + this.positionManager.getActiveColumn());
   }
 
   /* Action */
@@ -261,6 +280,7 @@ export class AppComponent implements AfterViewChecked {
       if (this.noRemainingSolutions()) {
         this.statusMessageClass = "status-success";
         this.statusMessage = 'You found all the numbers!';
+        this.statusMessageDetail = '-';
         if (this.perfectScore()) {
           this.soundManager.playWhooAndPerfectScore();
           this.statusMessage += " Perfect score!!";
@@ -273,11 +293,13 @@ export class AppComponent implements AfterViewChecked {
       }
       this.soundManager.playYum();
       this.statusMessage = `Correct! ${data.value} is ${this.activePuzzle.responseText}`;
+      this.statusMessageDetail = this.activePuzzle.successDetails(data.value);
       this.statusMessageClass = "status-success";
 
     } else {
       this.soundManager.playYuck();
       this.statusMessage = `Sorry, ${data.value} is not ${this.activePuzzle.responseText}`;
+      this.statusMessageDetail = this.activePuzzle.errorDetails(data.value);
       this.statusMessageClass = "status-error";
     }
 
