@@ -4,11 +4,12 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChangeDetectorRef } from '@angular/core';
 import { DataCell } from './dataCell';
 import { Puzzle } from './puzzle';
-import { getRandomIndicies, getRandomItemAndRemove, getUniqueCollection, hasTouch, parseId, wrapDown, wrapUp } from './utility';
+import { debug, getRandomItemAndRemove, getUniqueCollection, hasTouch, parseId, wrapDown, wrapUp } from './utility';
 import { HostListener } from '@angular/core';
 import { SoundManager } from './soundManager';
 import { PositionManager } from './positionManager';
 import JSConfetti from 'js-confetti';
+import { maxReplacements } from './constants';
 
 @Component({
   selector: 'app-number-munchers',
@@ -53,7 +54,7 @@ export class AppComponent implements AfterViewChecked {
       for (let iTries = 0; iTries < 10; iTries++) {
         if (this.noRemainingSolutions()) {
           this.addRandomValues(this.activePuzzle.maxSquareValue);
-          console.log("retry");
+          debug("retry");
         } else {
           break;
         }
@@ -71,23 +72,35 @@ export class AppComponent implements AfterViewChecked {
     this.init();
   }
 
+  private getCuratedValues(upperBound: number) : Set<number> {
+    const curatedValues = new Set(getUniqueCollection(upperBound, this.positionManager.getRows() * this.positionManager.getColumns()));
+    debug('--');
+    debug(`Curated init: ${[...curatedValues]} : ${curatedValues.size}`);
+    const replacementCount = this.activePuzzle.validSamples.size < maxReplacements ? this.activePuzzle.validSamples.size : maxReplacements;
+
+    debug(`Valid samples: ${[...this.activePuzzle.validSamples]}`);
+    for (let idx = 0; idx != replacementCount; idx++) {
+      const validValue = getRandomItemAndRemove(this.activePuzzle.validSamples);
+      if (curatedValues.has(validValue)) {
+          debug("Value exists");
+          continue;
+      } else {
+        const valueToRemove = getRandomItemAndRemove(curatedValues);
+        debug("Value to remove: " + valueToRemove);
+        curatedValues.add(validValue);
+        debug("Adding valid value: " + validValue);
+      }
+    }
+    debug(`Curated final: ${[...curatedValues]} : ${curatedValues.size}`);
+    return curatedValues;
+  }
+
   /* Data */
   private addRandomValues(upperBound: number) {
     this.cellData = [];
-    const specialIndices = getRandomIndicies(3, (this.positionManager.getRows() * this.positionManager.getColumns()) -1 );
-    const curatedValues = getUniqueCollection(upperBound, this.positionManager.getRows() * this.positionManager.getColumns());
+    const curatedValues = this.getCuratedValues(upperBound);
     for (let idx = 0; idx != this.positionManager.getRows() * this.positionManager.getColumns(); idx++) {
-      let value = curatedValues[idx];
-      // Replace 3 values in the puzzles with known correct values to ensure 
-      // at least several correct answers to find.
-      if (this.activePuzzle.validSamples.size && specialIndices.has(idx)) {
-          // const previous = value;
-          value = getRandomItemAndRemove(this.activePuzzle.validSamples);
-          specialIndices.delete(idx);      
-          // console.log(`Replacing ${previous} with ${value} at position ${idx}`);
-          // console.log('---')
-      }
-
+      const value = getRandomItemAndRemove(curatedValues);
       const valid = this.activePuzzle?.predicate(value);
       const data = new DataCell(value, valid, false);
       this.cellData.push(data);
@@ -221,17 +234,17 @@ export class AppComponent implements AfterViewChecked {
    @HostListener('document:touchstart', ['$event'])
    // @HostListener('document:click', ['$event'])
    handleClickOrTouchEvent(event: UIEvent) {
-    console.log("touch? " + (event instanceof TouchEvent));
-    console.log("mouse? " + (event instanceof PointerEvent));
-    console.log("hasTouch? " + hasTouch());
-    console.log("---");
+    debug("touch? " + (event instanceof TouchEvent));
+    debug("mouse? " + (event instanceof PointerEvent));
+    debug("hasTouch? " + hasTouch());
+    debug("---");
     if (hasTouch() && (event instanceof PointerEvent)) {
-      console.log('Skipping mouse event if touch enabled.')
+      debug('Skipping mouse event if touch enabled.')
       return;
     } else {
-      console.log("Continuing with touch or mouse event");
+      debug("Continuing with touch or mouse event");
     }
-    console.log(`TouchClick: ${event}`);
+    debug(`TouchClick: ${event}`);
     if (this.noRemainingSolutions()) {
       return;
     }
@@ -248,22 +261,22 @@ export class AppComponent implements AfterViewChecked {
 
   private up() {
     this.positionManager.setActiveRow(wrapUp(this.positionManager.getActiveRow(), this.positionManager.getRows()));
-   // console.log(this.positionManager.getActiveRow() + ", " + this.positionManager.getActiveColumn());
+   // debug(this.positionManager.getActiveRow() + ", " + this.positionManager.getActiveColumn());
   }
 
   private down() {
     this.positionManager.setActiveRow(wrapDown(this.positionManager.getActiveRow(), this.positionManager.getRows()));
-   // console.log(this.positionManager.getActiveRow() + ", " + this.positionManager.getActiveColumn());
+   // debug(this.positionManager.getActiveRow() + ", " + this.positionManager.getActiveColumn());
   }
 
   private left() {
     this.positionManager.setActiveColumn(wrapDown(this.positionManager.getActiveColumn(), this.positionManager.getColumns()));
-  //  console.log(this.positionManager.getActiveRow() + ", " + this.positionManager.getActiveColumn());
+  //  debug(this.positionManager.getActiveRow() + ", " + this.positionManager.getActiveColumn());
   }
 
   private right() {
     this.positionManager.setActiveColumn(wrapUp(this.positionManager.getActiveColumn(), this.positionManager.getColumns()));
-  //  console.log(this.positionManager.getActiveRow() + ", " + this.positionManager.getActiveColumn());
+  //  debug(this.positionManager.getActiveRow() + ", " + this.positionManager.getActiveColumn());
   }
 
   /* Action */
@@ -271,7 +284,7 @@ export class AppComponent implements AfterViewChecked {
     if (this.noRemainingSolutions()) {
       return;
     }
-    console.log(this.positionManager.getActiveRow() + ", " + this.positionManager.getActiveColumn());
+    debug(this.positionManager.getActiveRow() + ", " + this.positionManager.getActiveColumn());
     const data = this.getCellData(this.positionManager.getActiveRow(), this.positionManager.getActiveColumn());
     data.discovered = true;
 
@@ -280,7 +293,7 @@ export class AppComponent implements AfterViewChecked {
       if (this.noRemainingSolutions()) {
         this.statusMessageClass = "status-success";
         this.statusMessage = 'You found all the numbers!';
-        this.statusMessageDetail = '-';
+        this.statusMessageDetail = this.activePuzzle.successDetails(data.value);
         if (this.perfectScore()) {
           this.soundManager.playWhooAndPerfectScore();
           this.statusMessage += " Perfect score!!";
@@ -303,7 +316,7 @@ export class AppComponent implements AfterViewChecked {
       this.statusMessageClass = "status-error";
     }
 
-    console.log(`Correct? ${data.valid}, Value: ${data.value}, Question: ${this.activePuzzle.questionText}`)
+    debug(`Correct? ${data.valid}, Value: ${data.value}, Question: ${this.activePuzzle.questionText}`)
   }
 
   /* Position */

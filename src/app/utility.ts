@@ -99,7 +99,7 @@ export function getValidMultiples(num: number): Set<number> {
 export function between(lower: number, upper: number, inclusive: boolean): Set<number> {
   const betweens = new Set<number>();
   const lbound = inclusive ? lower: lower+1;
-  const ubound = inclusive ? upper: upper+1;
+  const ubound = inclusive ? upper: upper-1;
   for (let idx = lbound; idx <= ubound; idx++) {
     betweens.add(idx);
   }
@@ -124,7 +124,12 @@ export function factors(num: number): Set<number> {
       factors.add(idx);
     }
   }
-  console.log("factors of " + num)
-  console.log(factors);
   return factors;
+}
+
+const LOG = false;
+export function debug(message: string) {
+  if (LOG) {
+  console.log(message)
+  }
 }

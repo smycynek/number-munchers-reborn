@@ -5,3 +5,4 @@ export const multipleLowerBound = 2;
 export const multipleUpperBound = 9;
 export const boundoffsetMin = 6; 
 export const boundOffsetMax = 15;
+export const maxReplacements = 3;
