@@ -79,11 +79,6 @@
     color: black;
 }
 
-button:focus {
-    outline: none;
-    box-shadow: none;
-}
-
 summary:focus {
     outline: none;
     box-shadow: none;
@@ -110,6 +105,11 @@ ol:focus {
 }
 
 ul:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+button:focus {
     outline: none;
     box-shadow: none;
 }
@@ -157,3 +157,59 @@ p {
 .detail {
     font-size: small;
 }
+
+.version {
+    font-size: xx-small;
+    color: gray;
+}
+
+.credits {
+    font-size: small;
+    color: grey;
+}
+
+.centered {
+    text-align: center;
+
+}
+.centered-image {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 10%;
+}
+.help {
+    background-color: lightyellow
+
+}
+
+li {
+    list-style: none;
+}
+
+summary {
+    text-decoration: underline;
+}
+
+
+
+dialog {
+    width: 95%;
+}
+
+  ::backdrop {
+    background-image: linear-gradient(
+      45deg,
+      grey, white
+    );
+    opacity: 0.90;
+  }
+
+  .glossary {
+    margin: 1em;
+  }
+
+  .right {
+    display: block;
+    float: right;
+  }

@@ -54,7 +54,7 @@ export class Puzzle {
       ),
       new Puzzle(
         (item: number) => (Math.sqrt(item) === Math.floor(Math.sqrt(item))),
-        "perfect squares (ask for help)",
+        "perfect squares",
         "a perfect square.",
         (item: number) => {return `${Math.sqrt(item)} times itself (${Math.sqrt(item)}) equals ${item}`},
         (item: number) => {return `There are no whole numbers when multipied by themselves that are equal to ${item}`},

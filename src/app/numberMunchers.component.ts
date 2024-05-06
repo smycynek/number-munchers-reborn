@@ -4,7 +4,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChangeDetectorRef } from '@angular/core';
 import { DataCell } from './dataCell';
 import { Puzzle } from './puzzle';
-import { debug, getRandomItemAndRemove, getUniqueCollection, hasTouch, parseId, wrapDown, wrapUp } from './utility';
+import { debug, getRandomItemAndRemove, getUniqueCollection, hasTouch, parseId, toggleLog, wrapDown, wrapUp } from './utility';
 import { HostListener } from '@angular/core';
 import { SoundManager } from './soundManager';
 import { PositionManager } from './positionManager';
@@ -334,4 +334,7 @@ export class AppComponent implements AfterViewChecked {
     document.getElementById("btnSound")?.blur();
   }
 
+  public toggleDebug(): void {
+    toggleLog();
+  }
 }

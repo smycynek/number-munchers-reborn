@@ -127,7 +127,12 @@ export function factors(num: number): Set<number> {
   return factors;
 }
 
-const LOG = false;
+let LOG = false;
+
+export function toggleLog(): void {
+  LOG = !LOG;
+}
+
 export function debug(message: string) {
   if (LOG) {
   console.log(message)
