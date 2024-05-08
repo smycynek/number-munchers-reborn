@@ -97,7 +97,7 @@ export class AppComponent implements AfterViewChecked {
     if (data.valid && data.discovered)
       return "assets/muncher-happy.png";
     else if (!data.valid && data.discovered) {
-        return "assets/muncher-sad.png";
+      return "assets/muncher-sad.png";
     }
     else {
       return "assets/muncher-neutral.png";
@@ -115,9 +115,9 @@ export class AppComponent implements AfterViewChecked {
 
   public getStartButtonText(): string {
     let text = StringResources.NEW_GAME;
-    if (this.noRemainingSolutions())  {
+    if (this.noRemainingSolutions()) {
       text = StringResources.TRY_AGAIN;
-   }
+    }
     if (!hasTouch()) {
       text = `${text} ${StringResources.N_KEY}`;
     }
@@ -188,9 +188,9 @@ export class AppComponent implements AfterViewChecked {
     }
   }
 
-   @HostListener('document:touchstart', ['$event'])
-   // @HostListener('document:click', ['$event'])
-   handleClickOrTouchEvent(event: UIEvent) {
+  @HostListener('document:touchstart', ['$event'])
+  // @HostListener('document:click', ['$event'])
+  handleClickOrTouchEvent(event: UIEvent) {
     debug("touch? " + (event instanceof TouchEvent));
     debug("mouse? " + (event instanceof PointerEvent));
     debug("hasTouch? " + hasTouch());
@@ -246,7 +246,7 @@ export class AppComponent implements AfterViewChecked {
     data.discovered = true;
 
     if (data.valid) {
-       this.foundNumbers.add(data.value);
+      this.foundNumbers.add(data.value);
       if (this.noRemainingSolutions()) {
         this.statusMessageClass = "status-success";
         this.statusMessage = StringResources.FOUND_ALL;

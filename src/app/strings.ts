@@ -8,7 +8,7 @@ export class StringResources {
     public static readonly N_KEY = "(or hit 'N' key)";
     public static readonly FOUND = "Found:";
     public static readonly FOUND_ALL = "You found all the numbers!";
-    public static readonly PERFECT_SCORE ="Perfect score!";
+    public static readonly PERFECT_SCORE = "Perfect score!";
     public static readonly CORRECT = "Correct!";
     public static readonly SORRY = "Sorry,";
     public static readonly IS = "is";

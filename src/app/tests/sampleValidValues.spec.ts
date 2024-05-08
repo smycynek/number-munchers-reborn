@@ -1,4 +1,5 @@
-import { getNaturalNumberSet,
+import {
+    getNaturalNumberSet,
     getValidBetweenValues,
     getValidFactors,
     getValidMultiples,
@@ -13,7 +14,7 @@ require ng test
 */
 
 describe('PseudoUnitTests-SampleValidValues', () => {
-    it('getNaturalNumberSet gives valid natural numbers', () => {  
+    it('getNaturalNumberSet gives valid natural numbers', () => {
         const naturals = getNaturalNumberSet(3);
         expect(naturals.size).toEqual(3);
         expect(naturals.has(1)).toBeTrue();
@@ -26,7 +27,7 @@ describe('PseudoUnitTests-SampleValidValues', () => {
         expect(betweensExclusive.size).toEqual(2);
         expect(betweensExclusive.has(2)).toBeTrue();
         expect(betweensExclusive.has(3)).toBeTrue();
-        const betweensInclusive= getValidBetweenValues(1, 4, true);
+        const betweensInclusive = getValidBetweenValues(1, 4, true);
         expect(betweensInclusive.size).toEqual(4);
         expect(betweensInclusive.has(1)).toBeTrue();
         expect(betweensInclusive.has(2)).toBeTrue();
@@ -65,5 +66,5 @@ describe('PseudoUnitTests-SampleValidValues', () => {
         expect(multiples.has(27)).toBeTrue();
     });
 
-   
+
 });

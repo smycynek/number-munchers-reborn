@@ -1,9 +1,10 @@
-import { getRandomItemFromSetAndRemove,
+import {
+    getRandomItemFromSetAndRemove,
     getRandomNaturalNumberSet,
     getRandomNumberWithinRange,
     getRandomNumberWithinRangeFromSeed
 } from "../sampleRandomValues";
-import {getNaturalNumberSet} from "../sampleValidValues";
+import { getNaturalNumberSet } from "../sampleValidValues";
 /*
 This is a little bit of overkill, but if I'm making a game
 for kids, I want to make sure output is correct.
@@ -14,13 +15,13 @@ require ng test
 
 describe('PseudoUnitTests-SampleRandomValues', () => {
 
-    it('getRandomNaturalNumberSet gives a valid range set', () => {  
+    it('getRandomNaturalNumberSet gives a valid range set', () => {
         const randomNaturals = getRandomNaturalNumberSet(99, 99);
         expect(randomNaturals.size).toEqual(99);
-        expect([...randomNaturals].every(val => val >=1 && val <= 99)).toBe(true);
+        expect([...randomNaturals].every(val => val >= 1 && val <= 99)).toBe(true);
     });
 
-    it('getRandomNumberWithinRange gives a number within a range', () => {  
+    it('getRandomNumberWithinRange gives a number within a range', () => {
         const diceRoll = getRandomNumberWithinRange(1, 6);
         expect(diceRoll <= 6 && diceRoll >= 1).toBe(true);
         const lowRoll = getRandomNumberWithinRangeFromSeed(0, 1, 6);
@@ -29,7 +30,7 @@ describe('PseudoUnitTests-SampleRandomValues', () => {
         expect(highRoll).toBe(6);
     });
 
-    it('getRandomItemFromSetAndRemove removes a random number from a set', () => {  
+    it('getRandomItemFromSetAndRemove removes a random number from a set', () => {
         const set = getNaturalNumberSet(5);
         expect(set.size).toEqual(5);
         const val = getRandomItemFromSetAndRemove(set);

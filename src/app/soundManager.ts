@@ -51,11 +51,11 @@ export class SoundManager {
 
   public playPerfectScore() {
     if (this.sound) {
-        this.perfectScore.play();
-        const perfectScorec = this.perfectScore.cloneNode() as HTMLAudioElement;
-        perfectScorec.preload = "auto";
-        perfectScorec.load();
-        this.perfectScore = perfectScorec;
+      this.perfectScore.play();
+      const perfectScorec = this.perfectScore.cloneNode() as HTMLAudioElement;
+      perfectScorec.preload = "auto";
+      perfectScorec.load();
+      this.perfectScore = perfectScorec;
     }
   }
 

@@ -32,6 +32,6 @@ export function toggleLog(): void {
 
 export function debug(message: string) {
   if (LOG) {
-  console.log(message)
+    console.log(message)
   }
 }
