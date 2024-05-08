@@ -1,108 +1,161 @@
-import { dataUpperBound } from "./constants";
-import { between, factors, getBetweenBounds, getBetweenBoundsWide, getMultipleBounds, getValidMultiples, greaterThanOrLessThan, perfectSquares, primes, randomRange } from "./utility";
+import { dataUpperBound,
+  maxReplacements } from "./constants";
+import { DataCell } from "./dataCell";
+
+import { 
+  debug,
+ } from "./utility";
+
+ import  { 
+  isBetween,
+  isFactor,
+  isMultiple,
+  isPerfectSquare,
+  isOutsideExclusive,
+} from "./predicates";
+
+import {
+  getValidBetweenValues, 
+  getValidFactors, 
+  getValidMultiples,
+  getValidOutsideExclusiveValues, 
+  perfectSquares} 
+  from "./sampleValidValues";
+
+import { 
+  getRandomNumberWithinRange, 
+  getRandomItemFromSetAndRemove, 
+  getRandomNaturalNumberSet,
+  getRandomFactorTarget, 
+  getRandomBetweenBounds, 
+  getRandomBetweenBoundsWide, 
+  getRandomMultipleBase, 
+  }
+  from "./sampleRandomValues";
 
 export class Puzzle {
+  public static getRandomPuzzle() {
+    const puzzles = Puzzle.createPuzzles();
+    return puzzles[getRandomNumberWithinRange(0, puzzles.length - 1)];
+  }
+
+  public generateCells(totalValues: number): Set<DataCell> {
+    const dataCells: Set<DataCell> = new Set();
+     const curatedValues = this.getCuratedValues(totalValues);
+     for (let idx = 0; idx != totalValues; idx++) {
+       const value = getRandomItemFromSetAndRemove(curatedValues);
+       const valid = this.predicate(value);
+       const data = new DataCell(value, valid, false);
+       dataCells.add(data);
+     }
+     return dataCells;
+   }
+
   private constructor(
-    public predicate: (val: number) => boolean,
-    public questionText: string,
-    public responseText: string,
+    private predicate: (val: number) => boolean,
+    public readonly questionText: string,
+    public readonly responseText: string,
     public successDetails: (val: number) => string,
     public errorDetails: (val: number) => string,
-    public maxSquareValue: number,
-    public validSamples: Set<number>
-
+    private readonly maxSquareValue: number,
+    private validSamples: Set<number>
   ) { }
 
-  public getSuccessDetails(value: number) : string {
-    return value + " " + this.successDetails;
+  private getCuratedValues(totalValues: number) : Set<number> {
+    const curatedValues = new Set(getRandomNaturalNumberSet(this.maxSquareValue, totalValues));
+    debug('--');
+    debug(`Curated init: ${[...curatedValues]} : ${curatedValues.size}`);
+    const replacementCount = this.validSamples.size < maxReplacements ? this.validSamples.size : maxReplacements;
+
+    debug(`Valid samples: ${[...this.validSamples]}`);
+    for (let idx = 0; idx != replacementCount; idx++) {
+      const validValue = getRandomItemFromSetAndRemove(this.validSamples);
+      if (curatedValues.has(validValue)) {
+          debug("Value exists");
+          continue;
+      } else {
+        const valueToRemove = getRandomItemFromSetAndRemove(curatedValues);
+        debug("Value to remove: " + valueToRemove);
+        curatedValues.add(validValue);
+        debug("Adding valid value: " + validValue);
+      }
+    }
+    debug(`Curated final: ${[...curatedValues]} : ${curatedValues.size}`);
+    return curatedValues;
   }
 
   private static createPuzzles(): Puzzle[] {
-    const factorNumbers = new Set<number>([...[].constructor(dataUpperBound).keys()]);
-    primes.forEach(p => factorNumbers.delete(p));
-    const randomFactor = [...factorNumbers.values()][Math.floor(Math.random() * factorNumbers.size)];
-    const betweenBounds = getBetweenBounds();
-    const betweenBoundsWide = getBetweenBoundsWide();
-    const multipleBounds = getMultipleBounds();
+    const randomFactorTarget = getRandomFactorTarget();
+    const randomBetweenBounds = getRandomBetweenBounds();
+    const randomBetweenBoundsWide = getRandomBetweenBoundsWide();
+    const randomMultipleBase = getRandomMultipleBase();
     return [
       new Puzzle(
-        (item: number) => ((item > betweenBounds[0]) && (item < betweenBounds[1])),
-        `numbers between ${betweenBounds[0]} and ${betweenBounds[1]}`,
-        `between ${betweenBounds[0]} and ${betweenBounds[1]}`,
-        (item: number) => {return `${item} is greater than ${betweenBounds[0]} and less than ${betweenBounds[1]}`; },
-        (item: number) => {return `${item} is not greater than ${betweenBounds[0]} and less than ${betweenBounds[1]}`; },
+        (cellValue: number) => (isBetween(cellValue, randomBetweenBounds[0], randomBetweenBounds[1], false)),
+        `Find numbers between ${randomBetweenBounds[0]} and ${randomBetweenBounds[1]}`,
+        `between ${randomBetweenBounds[0]} and ${randomBetweenBounds[1]}`,
+        (cellValue: number) => {return `${cellValue} is greater than ${randomBetweenBounds[0]} and less than ${randomBetweenBounds[1]}`; },
+        (cellValue: number) => {return `${cellValue} is not greater than ${randomBetweenBounds[0]} and less than ${randomBetweenBounds[1]}`; },
         dataUpperBound,
-        between(betweenBounds[0], betweenBounds[1], false)
+        getValidBetweenValues(randomBetweenBounds[0], randomBetweenBounds[1], false)
       ),
       new Puzzle(
-        (item: number) => ((item >= betweenBounds[0]) && (item <= betweenBounds[1])),
-        `numbers >= ${betweenBounds[0]} and <= ${betweenBounds[1]}`,
-        `>= ${betweenBounds[0]} and <= ${betweenBounds[1]}`,
-        (item: number) => {return `${item} is greater than or equal to ${betweenBounds[0]} and less than or equal to ${betweenBounds[1]}`; },
-        (item: number) => {return `${item} is not greater than or equal to ${betweenBounds[0]} and less than or equal to ${betweenBounds[1]}`; },
+        (cellValue: number) => (isBetween(cellValue, randomBetweenBounds[0], randomBetweenBounds[1], true)),
+        `Find numbers >= ${randomBetweenBounds[0]} and <= ${randomBetweenBounds[1]}`,
+        `>= ${randomBetweenBounds[0]} and <= ${randomBetweenBounds[1]}`,
+        (cellValue: number) => {return `${cellValue} is greater than or equal to ${randomBetweenBounds[0]} and less than or equal to ${randomBetweenBounds[1]}`; },
+        (cellValue: number) => {return `${cellValue} is not greater than or equal to ${randomBetweenBounds[0]} and less than or equal to ${randomBetweenBounds[1]}`; },
         dataUpperBound,
-         between(betweenBounds[0], betweenBounds[1], true)
+         getValidBetweenValues(randomBetweenBounds[0], randomBetweenBounds[1], true)
       ),
       new Puzzle(
-        (item: number) => ((item > betweenBoundsWide[1]) || (item < betweenBoundsWide[0])),
-        `numbers > ${betweenBoundsWide[1]} or < ${betweenBoundsWide[0]}`,
-        `> ${betweenBoundsWide[1]} or < ${betweenBoundsWide[0]}`,
-        (item: number) => {return `${item} is either greater than ${betweenBoundsWide[1]} or less than ${betweenBoundsWide[0]}`; },
-        (item: number) => {return `${item} is not greater than ${betweenBoundsWide[1]} or less than ${betweenBoundsWide[0]}`; },
+        (cellValue: number) => isOutsideExclusive(cellValue, randomBetweenBoundsWide[0], randomBetweenBoundsWide[1]),
+        `Find numbers > ${randomBetweenBoundsWide[1]} or < ${randomBetweenBoundsWide[0]}`,
+        `> ${randomBetweenBoundsWide[1]} or < ${randomBetweenBoundsWide[0]}`,
+        (cellValue: number) => {return `${cellValue} is either greater than ${randomBetweenBoundsWide[1]} or less than ${randomBetweenBoundsWide[0]}`; },
+        (cellValue: number) => {return `${cellValue} is not greater than ${randomBetweenBoundsWide[1]} or less than ${randomBetweenBoundsWide[0]}`; },
         dataUpperBound,
-        greaterThanOrLessThan(betweenBoundsWide[0], betweenBoundsWide[1])
+        getValidOutsideExclusiveValues(randomBetweenBoundsWide[0], randomBetweenBoundsWide[1])
       ),
       new Puzzle(
-        (item: number) => (Math.sqrt(item) === Math.floor(Math.sqrt(item))),
-        "perfect squares",
+        (cellValue: number) => isPerfectSquare(cellValue),
+        "Find perfect squares",
         "a perfect square.",
-        (item: number) => {return `${Math.sqrt(item)} times itself (${Math.sqrt(item)}) equals ${item}`},
-        (item: number) => {return `There are no whole numbers when multipied by themselves that are equal to ${item}`},
+        (cellValue: number) => {return `${Math.sqrt(cellValue)} times itself (${Math.sqrt(cellValue)}) equals ${cellValue}`},
+        (cellValue: number) => {return `There are no whole numbers when multipied by themselves that are equal to ${cellValue}`},
         dataUpperBound,
         new Set([...perfectSquares])
       ),
       new Puzzle(
-        (item: number) => ((item % multipleBounds) === 0),
-        `multiples of ${multipleBounds}`,
-        `a multiple of ${multipleBounds}.`,
-        (item: number) => {return `${multipleBounds} times ${item/multipleBounds} equals ${item}` },
-        (item: number) => {return `No whole numbers times ${multipleBounds} equal ${item}` },
+        (cellValue: number) => isMultiple(cellValue, randomMultipleBase),
+        `Find multiples of ${randomMultipleBase}`,
+        `a multiple of ${randomMultipleBase}.`,
+        (cellValue: number) => {return `${randomMultipleBase} times ${cellValue/randomMultipleBase} equals ${cellValue}` },
+        (cellValue: number) => {return `No whole numbers times ${randomMultipleBase} equal ${cellValue}` },
         dataUpperBound,
-        getValidMultiples(multipleBounds)
+        getValidMultiples(randomMultipleBase)
       ),
       new Puzzle(
-        (item: number) => ((item % multipleBounds) === 0),
-        `numbers divisible by ${multipleBounds}`,
-        `divisible by ${multipleBounds}.`,
-        (item: number) => {return `${item} divided by ${multipleBounds} equals ${item/multipleBounds}` },
-        (item: number) => {return `${item} divided by ${multipleBounds} is ${Math.round((item/multipleBounds)*100)/100}, not a whole number` },
+        (cellValue: number) => isMultiple(cellValue, randomMultipleBase),
+        `Find numbers divisible by ${randomMultipleBase}`,
+        `divisible by ${randomMultipleBase}.`,
+        (cellValue: number) => {return `${cellValue} divided by ${randomMultipleBase} equals ${cellValue/randomMultipleBase}` },
+        (cellValue: number) => {return `${cellValue} divided by ${randomMultipleBase} is ${Math.round((cellValue/randomMultipleBase)*100)/100}, not a whole number` },
         dataUpperBound,
-        getValidMultiples(multipleBounds)
+        getValidMultiples(randomMultipleBase)
       ),
       new Puzzle(
-        (item: number) => ((randomFactor % item) === 0),
-        `factors of ${randomFactor}`,
-        `a factor of ${randomFactor}`,
-        (item: number) => {return `${item} times ${randomFactor/item} equals ${randomFactor}`; },
-        (item: number) => {return `No whole numbers multiplied by ${item} equal ${randomFactor}`; },
+        (cellValue: number) => isFactor(cellValue, randomFactorTarget),
+        `Find factors of ${randomFactorTarget}`,
+        `a factor of ${randomFactorTarget}`,
+        (cellValue: number) => {return `${cellValue} times ${randomFactorTarget/cellValue} equals ${randomFactorTarget}`; },
+        (cellValue: number) => {return `No whole numbers multiplied by ${cellValue} equal ${randomFactorTarget}`; },
         20, // smaller upper bound for factors
-        factors(randomFactor)
+        getValidFactors(randomFactorTarget)
       )
 
     ];
   }
 
-  public static getRandomPuzzle() {
-    const puzzles = Puzzle.createPuzzles();
-    return puzzles[randomRange(0, puzzles.length - 1)];
-  }
 
 }
-
-/*
-      new Puzzle(
-      (item: number) => (item <= 30),
-      "numbers less or equal to thirty",
-      "less than or equal to thirty."
-    ),
-*/

@@ -1,17 +1,17 @@
-import { defaultRows, defaultColumns } from "./constants";
+import { puzzleRows, puzzleColumns } from "./constants";
 
 export class PositionManager {
-    private rows = defaultRows;
-    private columns = defaultColumns;
+    private rowCount = puzzleRows;
+    private columnCount = puzzleColumns;
     private activeRow = 0;
     private activeColumn = 0;
 
-    public getRows(): number {
-        return this.rows;
+    public getRowCount(): number {
+        return this.rowCount;
     }
 
-    public getColumns(): number {
-        return this.columns;
+    public getColumnCount(): number {
+        return this.columnCount;
     }
 
     public getActiveRow(): number {
