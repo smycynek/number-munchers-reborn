@@ -188,20 +188,43 @@ export class AppComponent implements AfterViewChecked {
     }
   }
 
-  @HostListener('document:touchstart', ['$event'])
-  // @HostListener('document:click', ['$event'])
-  handleClickOrTouchEvent(event: UIEvent) {
-    debug("touch? " + (event instanceof TouchEvent));
-    debug("mouse? " + (event instanceof PointerEvent));
-    debug("hasTouch? " + hasTouch());
+  @HostListener('document:click', ['$event'])
+  handleClickEvent(event: UIEvent) {
+    debug("---document:click---");
+    debug("touch event? " + (event instanceof TouchEvent));
+    debug("mouse event? " + (event instanceof PointerEvent));
+    debug("device has touch? " + hasTouch());
     debug("---");
-    if (hasTouch() && (event instanceof PointerEvent)) {
-      debug('Skipping mouse event if touch enabled.')
+    if (hasTouch() || event instanceof TouchEvent) {
+      debug('Skipping mouse event if touch event.')
       return;
-    } else {
-      debug("Continuing with touch or mouse event");
     }
-    debug(`TouchClick: ${event}`);
+    debug(`TouchOrClick: ${event}`);
+    if (this.noRemainingSolutions()) {
+      return;
+    }
+    this.handleClockOrTouchEvent(event);
+  }
+
+  @HostListener('document:touchstart', ['$event'])
+  handleTouchEvent(event: UIEvent) {
+    debug("---document:touch---");
+    debug("touch event? " + (event instanceof TouchEvent));
+    debug("mouse event? " + (event instanceof PointerEvent));
+    debug("device has touch? " + hasTouch());
+    debug("---");
+    if (!hasTouch() || event instanceof PointerEvent) {
+      debug('Skipping touch event if pointer event.')
+      return;
+    }
+    debug(`TouchOrClick: ${event}`);
+    if (this.noRemainingSolutions()) {
+      return;
+    }
+    this.handleClockOrTouchEvent(event);
+  }
+
+  private handleClockOrTouchEvent(event: UIEvent) {
     if (this.noRemainingSolutions()) {
       return;
     }
@@ -215,6 +238,7 @@ export class AppComponent implements AfterViewChecked {
     this.positionManager.setActiveColumn(rowColumn[1]);
     this.choiceAction();
   }
+
 
   private up() {
     this.positionManager.setActiveRow(wrapUp(this.positionManager.getActiveRow(), this.positionManager.getRowCount()));
