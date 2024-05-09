@@ -191,11 +191,11 @@ export class AppComponent implements AfterViewChecked {
   @HostListener('document:click', ['$event'])
   handleClickEvent(event: UIEvent) {
     debug("---document:click---");
-    debug("touch event? " + (event instanceof TouchEvent));
+    debug("touch event? " + (('touches' in event)));
     debug("mouse event? " + (event instanceof PointerEvent));
     debug("device has touch? " + hasTouch());
     debug("---");
-    if (hasTouch() || event instanceof TouchEvent) {
+    if (hasTouch() || ('touches' in event)) {
       debug('Skipping mouse event if touch event.')
       return;
     }
@@ -209,7 +209,7 @@ export class AppComponent implements AfterViewChecked {
   @HostListener('document:touchstart', ['$event'])
   handleTouchEvent(event: UIEvent) {
     debug("---document:touch---");
-    debug("touch event? " + (event instanceof TouchEvent));
+    debug("touch event? " + ('touches' in event));
     debug("mouse event? " + (event instanceof PointerEvent));
     debug("device has touch? " + hasTouch());
     debug("---");
