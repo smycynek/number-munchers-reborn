@@ -18,6 +18,10 @@ export function getValidMultiples(num: number): Set<number> {
   return multiples;
 }
 
+export function getPrimes(): Set<number> {
+  return new Set<number>([...primes]);
+}
+
 export function getValidBetweenValues(lower: number, upper: number, inclusive: boolean): Set<number> {
   return new Set([...getNaturalNumberSet(dataUpperBound)].filter(value => isBetween(value, lower, upper, inclusive)));
 }

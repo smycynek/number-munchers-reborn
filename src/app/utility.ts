@@ -35,3 +35,18 @@ export function debug(message: string) {
     console.log(message)
   }
 }
+
+export function format_and(items: number[]) : string {
+  if (items.length < 1) {
+    return '';
+  }
+  if (items.length < 2) {
+    return items[0].toString();
+  }
+  if (items.length === 2) {
+    return `${items[0]} and ${items[1]}`;
+  }
+  let formatted = items.slice(0, items.length-1).join(', ');
+  formatted = `${formatted}, and ${items[items.length-1]}`;
+  return formatted;
+}

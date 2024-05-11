@@ -6,6 +6,7 @@ import { DataCell } from "./dataCell";
 
 import {
   debug,
+  format_and,
 } from "./utility";
 
 import {
@@ -14,9 +15,11 @@ import {
   isMultiple,
   isPerfectSquare,
   isOutsideExclusive,
+  isPrime,
 } from "./predicates";
 
 import {
+  getPrimes,
   getValidBetweenValues,
   getValidFactors,
   getValidMultiples,
@@ -155,7 +158,17 @@ export class Puzzle {
         (cellValue: number) => { return `No whole numbers multiplied by ${cellValue} equal ${randomFactorTarget}`; },
         20, // smaller upper bound for factors
         getValidFactors(randomFactorTarget)
+      ),
+      new Puzzle(
+        (cellValue: number) => isPrime(cellValue),
+        'Find prime numbers (beta)',
+        'a prime number',
+        (cellValue: number) => { return `${cellValue} is not divisible by anything except 1 and itself (${cellValue})`;},
+        (cellValue: number) => { return `${cellValue} has factors such as ${ format_and([...getValidFactors(cellValue)])}`; },
+        dataUpperBound,
+        getPrimes()
       )
+
 
     ];
   }
