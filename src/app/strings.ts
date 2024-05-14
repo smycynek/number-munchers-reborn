@@ -15,5 +15,3 @@ export class StringResources {
     public static readonly NOT = "not";
     public static readonly TITLE = "Number Munchers Reborn";
 }
-
-

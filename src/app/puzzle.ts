@@ -24,7 +24,7 @@ import {
   getValidFactors,
   getValidMultiples,
   getValidOutsideExclusiveValues,
-  perfectSquares
+  getPerfectSquares
 }
   from "./sampleValidValues";
 
@@ -45,13 +45,17 @@ export class Puzzle {
     return puzzles[getRandomNumberWithinRange(0, puzzles.length - 1)];
   }
 
+  public generateCell(curatedValues: Set<number>) {
+    const value = getRandomItemFromSetAndRemove(curatedValues)
+    const valid = this.predicate(value);
+    return new DataCell(value, valid, false);
+  }
+
   public generateCells(totalValues: number): Set<DataCell> {
     const dataCells: Set<DataCell> = new Set();
     const curatedValues = this.getCuratedValues(totalValues);
     for (let idx = 0; idx != totalValues; idx++) {
-      const value = getRandomItemFromSetAndRemove(curatedValues);
-      const valid = this.predicate(value);
-      const data = new DataCell(value, valid, false);
+      const data = this.generateCell(curatedValues)
       dataCells.add(data);
     }
     return dataCells;
@@ -67,25 +71,34 @@ export class Puzzle {
     private validSamples: Set<number>
   ) { }
 
-  private getCuratedValues(totalValues: number): Set<number> {
-    const curatedValues = new Set(getRandomNaturalNumberSet(this.maxSquareValue, totalValues));
-    debug('--');
-    debug(`Curated init: ${[...curatedValues]} : ${curatedValues.size}`);
-    const replacementCount = this.validSamples.size < maxReplacements ? this.validSamples.size : maxReplacements;
+  public getCuratedValue(): number {
+    return getRandomNumberWithinRange(1, this.maxSquareValue)
+  }
 
-    debug(`Valid samples: ${[...this.validSamples]}`);
-    for (let idx = 0; idx != replacementCount; idx++) {
-      const validValue = getRandomItemFromSetAndRemove(this.validSamples);
-      if (curatedValues.has(validValue)) {
-        debug("Value exists");
-        continue;
-      } else {
-        const valueToRemove = getRandomItemFromSetAndRemove(curatedValues);
-        debug("Value to remove: " + valueToRemove);
-        curatedValues.add(validValue);
-        debug("Adding valid value: " + validValue);
+  public getValidSamples(): Set<number> {
+    return new Set<number>([...this.validSamples]);
+  }
+
+  public getCuratedValues(totalValues: number, addValidValues: boolean = true): Set<number> {
+    const curatedValues = new Set(getRandomNaturalNumberSet(this.maxSquareValue, totalValues));
+    if (addValidValues) {
+      const validSamples = this.getValidSamples();
+      const replacementCount = validSamples.size < maxReplacements ? validSamples.size : maxReplacements;
+      debug(`Valid samples: ${[...validSamples]}`);
+      for (let idx = 0; idx != replacementCount; idx++) {
+        const validValue = getRandomItemFromSetAndRemove(validSamples);
+        if (curatedValues.has(validValue)) {
+          debug("Value exists");
+          continue;
+        } else {
+          const valueToRemove = getRandomItemFromSetAndRemove(curatedValues);
+          debug("Value to remove: " + valueToRemove);
+          curatedValues.add(validValue);
+          debug("Adding valid value: " + validValue);
+        }
       }
     }
+
     debug(`Curated final: ${[...curatedValues]} : ${curatedValues.size}`);
     return curatedValues;
   }
@@ -130,7 +143,7 @@ export class Puzzle {
         (cellValue: number) => { return `${Math.sqrt(cellValue)} times itself (${Math.sqrt(cellValue)}) equals ${cellValue}` },
         (cellValue: number) => { return `There are no whole numbers when multipied by themselves that are equal to ${cellValue}` },
         dataUpperBound,
-        new Set([...perfectSquares])
+        getPerfectSquares()
       ),
       new Puzzle(
         (cellValue: number) => isMultiple(cellValue, randomMultipleBase),
@@ -161,17 +174,13 @@ export class Puzzle {
       ),
       new Puzzle(
         (cellValue: number) => isPrime(cellValue),
-        'Find prime numbers (beta)',
+        'Find prime numbers',
         'a prime number',
-        (cellValue: number) => { return `${cellValue} is not divisible by anything except 1 and itself (${cellValue})`;},
-        (cellValue: number) => { return `${cellValue} has factors such as ${ format_and([...getValidFactors(cellValue)])}`; },
+        (cellValue: number) => { return `${cellValue} is not divisible by anything except 1 and itself (${cellValue})`; },
+        (cellValue: number) => { return `${cellValue} has factors such as ${format_and([...getValidFactors(cellValue)])}`; },
         dataUpperBound,
         getPrimes()
       )
-
-
     ];
   }
-
-
 }

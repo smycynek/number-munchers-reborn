@@ -1,7 +1,7 @@
 export class DataCell {
   constructor(
-    public readonly value: number,
-    public readonly valid: boolean,
+    public value: number,
+    public valid: boolean,
     public discovered: boolean) { }
 
   public toString(): string {

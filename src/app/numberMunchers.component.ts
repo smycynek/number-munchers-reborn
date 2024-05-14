@@ -10,15 +10,20 @@ import { SoundManager } from './soundManager';
 import { PositionManager } from './positionManager';
 import JSConfetti from 'js-confetti';
 import { StringResources } from './strings';
+import { Observable, Subject, takeUntil, timer } from 'rxjs';
+import { getRandomItemFromSetAndRemove } from './sampleRandomValues';
+import { mertinDelay, mertinInterval } from './constants';
+import { ActivatedRoute, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-number-munchers',
   standalone: true,
-  imports: [CommonModule, NgbModule],
+  imports: [CommonModule, NgbModule, RouterOutlet],
   templateUrl: './numberMunchers.component.html',
   styleUrl: './numberMunchers.component.less'
 })
 export class AppComponent implements AfterViewChecked {
+  private mertin: boolean = false;
   private cellData: DataCell[] = [];
   private statusMessage = StringResources.START;
   private statusMessageDetail = StringResources.YOU_CAN_DO_IT;
@@ -28,7 +33,21 @@ export class AppComponent implements AfterViewChecked {
   private soundManager: SoundManager = new SoundManager();
   private positionManager: PositionManager = new PositionManager();
   public title: string = StringResources.TITLE;
-  constructor(private cdr: ChangeDetectorRef) {
+  private timer: Observable<number> = timer(mertinDelay * 1000, mertinInterval * 1000);
+  private interval: number = 1;
+  private pauseNotify: Subject<boolean> = new Subject();
+  public hasInterval(): boolean {
+    return (this.interval > 0);
+  }
+  constructor(private cdr: ChangeDetectorRef, private route: ActivatedRoute) {
+    this.route.queryParams.subscribe(params => {
+      if (params['t']) {
+        this.interval = Number(params['t']);
+        this.timer = timer(mertinDelay * 1000, this.interval * 1000);
+      }
+    });
+
+    this.timerInit();
   }
 
   /* Init */
@@ -37,7 +56,52 @@ export class AppComponent implements AfterViewChecked {
     this.cdr.detectChanges();
   }
 
+  private getRandomNonOccupiedIndex(): number {
+    const activeIndex = (this.positionManager.getActiveRow() * this.positionManager.getColumnCount())
+      + this.positionManager.getActiveColumn();
+    const upperBound = this.positionManager.getColumnCount() * this.positionManager.getRowCount();
+    const base = [...[].constructor(upperBound).keys()]
+    const baseSet = new Set(base);
+    baseSet.delete(activeIndex);
+    baseSet.delete(this.positionManager.getMertinIndex());
+    return getRandomItemFromSetAndRemove(baseSet);
+  }
+
+  public getMertinButtonClass(): string {
+    return "no-border";
+  }
+
+  private setMertin(value: boolean): void {
+    this.mertin = value;
+    if (!this.mertin) {
+      this.positionManager.setMertinIndex(-1);
+      this.pauseNotify.next(true);
+    }
+    else {
+      this.timerInit();
+    }
+
+  }
+  public toggleMertin(): void {
+    this.setMertin(!this.mertin);
+  }
+
+  private timerInit(): void {
+    this.positionManager.setMertinIndex(-1);
+    this.pauseNotify.next(true);
+    this.timer.pipe(takeUntil(this.pauseNotify)).subscribe(() => {
+      if (this.mertin && !this.noRemainingSolutions()) {
+        this.positionManager.setMertinIndex(this.getRandomNonOccupiedIndex());
+        this.resetSquare(this.positionManager.getMertinIndex())
+        if (this.noRemainingSolutions()) {
+          this.pauseNotify.next(true);
+        }
+      }
+    });
+  }
+
   private reset() {
+    this.timerInit();
     this.positionManager.setActiveRow(0);
     this.positionManager.setActiveColumn(0);
     this.statusMessage = StringResources.START;
@@ -52,7 +116,6 @@ export class AppComponent implements AfterViewChecked {
       this.activePuzzle = Puzzle.getRandomPuzzle();
       this.cellData = [...this.activePuzzle.generateCells(this.positionManager.getColumnCount() * this.positionManager.getRowCount())];
       if (this.noRemainingSolutions()) { // should not happen
-        console.log("No solutions");
         this.statusMessage = "No solutions, try a new game";
         this.statusMessageDetail = "-";
       }
@@ -70,6 +133,13 @@ export class AppComponent implements AfterViewChecked {
       return new DataCell(0, false, false);
     }
     return this.cellData[(r * this.positionManager.getColumnCount()) + c];
+  }
+
+  public getRemainingSolutionsCount(): number {
+    if (!this.cellData.length) {
+      return 0;
+    }
+    return this.cellData.filter(cell => cell.valid && !cell.discovered).length
   }
 
   public noRemainingSolutions(): boolean {
@@ -92,6 +162,43 @@ export class AppComponent implements AfterViewChecked {
     return (cellRow == this.positionManager.getActiveRow() && cellColumn == this.positionManager.getActiveColumn());
   }
 
+
+  public getAvatarSizeClass(idxr: number, idxc: number): string {
+    if (this.isActive(idxr, idxc) && this.hasMertin(idxr, idxc)) {
+      return "double";
+    }
+    return "single";
+  }
+
+  public hasMertin(cellRow: number, cellColumn: number): boolean {
+    const idx = (cellRow * this.positionManager.getColumnCount()) + cellColumn;
+    return idx == this.positionManager.getMertinIndex();
+  }
+
+  private resetSquare(squareIndex: number) {
+    this.soundManager.playCackle();
+    const solutionsCount = this.getRemainingSolutionsCount();
+    debug(`Index to replace: ${squareIndex}`);
+    debug(`Remaining solutions: ${solutionsCount}`);
+    let newValues;
+    if (solutionsCount <= 1) {
+      newValues = this.activePuzzle.getValidSamples(); // insert valid choice
+    } else {
+      newValues = this.activePuzzle.getCuratedValues(1, false);  // insert random choice
+    }
+    this.cellData[squareIndex] = this.activePuzzle.generateCell(newValues);
+  }
+
+  public getMertinImage(): string {
+    return "assets/mertin.png";
+  }
+
+  public getMertinButtonImage(): string {
+    if (this.mertin) {
+      return "assets/mertin.png";
+    }
+    else return "assets/no-mertin.png";
+  }
   public getAvatarImage(): string {
     const data = this.getCellData(this.positionManager.getActiveRow(), this.positionManager.getActiveColumn());
     if (data.valid && data.discovered)
@@ -152,6 +259,9 @@ export class AppComponent implements AfterViewChecked {
   public getCellClass(cellRow: number, cellColumn: number): string {
     let classes = "";
     const cell: DataCell = this.getCellData(cellRow, cellColumn);
+    if (this.hasMertin(cellRow, cellColumn)) {
+      classes = "mertin-flip"
+    }
     if (!cell) {
       classes = "status-default";
     }

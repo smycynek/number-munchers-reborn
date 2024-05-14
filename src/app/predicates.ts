@@ -1,5 +1,6 @@
-import { primes } from "./sampleValidValues";
+import { getPrimes } from "./sampleValidValues";
 
+const thePrimes = getPrimes();
 export function isBetween(value: number, lower: number, upper: number, inclusive: boolean): boolean {
   if (inclusive) {
     return value >= lower && value <= upper;
@@ -25,5 +26,5 @@ export function isPerfectSquare(value: number): boolean {
 }
 
 export function isPrime(value: number): boolean {
-  return primes.has(value);
+  return thePrimes.has(value);
 }

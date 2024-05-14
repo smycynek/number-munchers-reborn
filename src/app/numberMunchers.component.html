@@ -6,7 +6,7 @@
       <h3>{{getGeneralInstructions()}}</h3>
       <button id="btnNewGame" class="btn" [ngClass]="getStartButtonClass()"
         (click)="newGame()">{{getStartButtonText()}}</button>
-      <button id="btnSound" (click)="toggleSound()" type="button" class="btn imagebutton">
+      <button id="btnSound" (click)="toggleSound()" type="button" class="btn imagebutton no-border">
         <svg *ngIf="getSoundManager().getSoundOn()" role="img" aria-labelledby="Sound off"
           xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-volume-up"
           viewBox="0 0 16 16">
@@ -24,7 +24,12 @@
             d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06M6 5.04 4.312 6.39A.5.5 0 0 1 4 6.5H2v3h2a.5.5 0 0 1 .312.11L6 10.96zm7.854.606a.5.5 0 0 1 0 .708L12.207 8l1.647 1.646a.5.5 0 0 1-.708.708L11.5 8.707l-1.646 1.647a.5.5 0 0 1-.708-.708L10.793 8 9.146 6.354a.5.5 0 1 1 .708-.708L11.5 7.293l1.646-1.647a.5.5 0 0 1 .708 0" />
         </svg>
       </button>
-      <button id="btnHelp" class="btn imagebutton" onclick="document.getElementById('btnHelp').blur()"
+      <button [disabled]="this.noRemainingSolutions()" *ngIf="this.hasInterval()" id="btnMertin" class="btn imagebutton"
+        [ngClass]="getMertinButtonClass()" onclick="document.getElementById('btnMertin').blur()"
+        (click)="toggleMertin()">
+        <img alt="Mertin avatar" [src]="getMertinButtonImage()" width="40px">
+      </button>
+      <button id="btnHelp" class="btn imagebutton no-border" onclick="document.getElementById('btnHelp').blur()"
         (click)="dialog.showModal()">
         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-question-circle"
           viewBox="0 0 16 16">
@@ -40,13 +45,15 @@
         <div [ngClass]="getCellClass(idxr,idxc)" id="{{idxr}}{{idxc}}"
           *ngFor="let r of [].constructor(getPositionManager().getColumnCount()); index as idxc" class="col cell">
           {{getCellData(idxr,idxc).value}}
-          <img alt="muncher avatar" id="i{{idxr}}{{idxc}}" *ngIf="isActive(idxr, idxc)" width="70px"
-            [src]="getAvatarImage()" />
+          <img alt="muncher avatar" id="i{{idxr}}{{idxc}}" *ngIf="isActive(idxr, idxc)"
+            [ngClass]="getAvatarSizeClass(idxr, idxc)" [src]="getAvatarImage()" />
+          <img alt="mertin avatar" id="i{{idxr}}{{idxc}}m" *ngIf="hasMertin(idxr, idxc)"
+            [ngClass]="getAvatarSizeClass(idxr, idxc)" [src]="getMertinImage()" />
         </div>
       </div>
 
       <div class="container large">
-        <p class="version">||v148||</p>
+        <p class="version">||v154||</p>
       </div>
     </div>
 
@@ -57,8 +64,8 @@
     <form method="dialog">
       <button class="right">X</button>
       <h1 class="centered">{{title}}</h1>
-      <p class="centered">A math game</p>
-      <img class="centered-image" alt="Number Munchers Logo" src="./assets/preview.png" width="20%" />
+      <h2 class="centered">A math game</h2>
+
 
       <p>
         I recommend that children try this game out with a parent. I hope that it will be a fun experience for both!
@@ -83,9 +90,28 @@
           3 is a factor of 6, since 3x2 is 6.
         </details>
       </div>
-      <p>Not all solutions are shown. For example, for "find factors of 21," you might find
+      <p class="trailing">Not all solutions are shown. For example, for "find factors of 21," you might find
         3, 7, 1, or 21, but not necessarily all of them.
       </p>
+
+      <h1>Cast of Characters</h1>
+      <div class="glossary">
+        <details>
+          <summary>Munchy</summary>
+          <img style="display: block;" alt="Number Munchers Logo" src="./assets/preview.png" width="15%" />
+          Our hero, a curious frog who loves numbers and has very specific preferences (that vary) for the kinds of
+          numbers
+          he likes to eat.
+        </details>
+
+        <details *ngIf="this.hasInterval()">
+          <summary>Mertin</summary>
+          <img style="display: block;" alt="Number Munchers Logo" src="./assets/mertin.png" width="15%" />
+          A mischevious gremlin who likes to reset areas of the board according to his own design.
+          (Off by default.)
+        </details>
+      </div>
+
       <hr />
       <ul>
         <li class="credits">Steven Mycynek 2024 </li>

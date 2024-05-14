@@ -210,3 +210,76 @@ dialog {
     display: block;
     float: right;
 }
+
+
+img {
+    padding: 0;
+    margin: 0;
+}
+
+.single {
+    width: 70px;
+}
+
+.double {
+    width: 40px;
+}
+
+
+@keyframes flash {
+    0% {
+        border-style: solid;
+        border-width: 0.0625em;
+        border-color: black;
+        color: lightgray;
+        background-color: lightgray;
+    }
+
+    25% {
+        border-style: solid;
+        border-width: 0.0625em;
+        border-color: black;
+        color: yellow;
+        background-color: yellow;
+    }
+
+    50% {
+        border-style: solid;
+        border-width: 0.0625em;
+        border-color: black;
+        color: orange;
+        background-color: orange;
+    }
+
+    75% {
+        border-style: solid;
+        border-width: 0.0625em;
+        border-color: black;
+        color: black;
+        background-color: lightgray;
+    }
+
+    100% {
+        border-style: solid;
+        border-width: 0.0625em;
+        border-color: black;
+        color: black;
+        background-color: lightgray;
+    }
+}
+
+.trailing {
+    margin-bottom: 2em;
+}
+
+.mertin-flip {
+    border-style: solid;
+    border-width: 0.0625em;
+    animation-name: flash;
+    animation-duration: 5.0s;
+}
+
+.no-border {
+    border: none;
+    border-style: none;
+}

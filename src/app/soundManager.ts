@@ -12,12 +12,26 @@ export class SoundManager {
     this.perfectScore.src = './assets/perfectScore.mp3';
     this.perfectScore.preload = "auto";
     this.perfectScore.load();
+    this.cackle.src = './assets/cackle.mp3';
+    this.cackle.preload = "auto";
+    this.cackle.load();
   }
   private yum = new Audio();
   private yuck = new Audio();
   private whoo = new Audio();
+  private cackle = new Audio();
   private perfectScore = new Audio();
   private sound: boolean = true;
+
+  public playCackle() {
+    if (this.sound) {
+      this.cackle.play();
+      const cacklec = this.cackle.cloneNode() as HTMLAudioElement;
+      cacklec.preload = "auto";
+      cacklec.load();
+      this.cackle = cacklec;
+    }
+  }
 
   public playYum() {
     if (this.sound) {

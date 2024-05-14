@@ -5,6 +5,7 @@ export class PositionManager {
     private columnCount = puzzleColumns;
     private activeRow = 0;
     private activeColumn = 0;
+    private mertinIndex = -1;
 
     public getRowCount(): number {
         return this.rowCount;
@@ -29,5 +30,14 @@ export class PositionManager {
     public setActiveColumn(column: number): void {
         this.activeColumn = column;
     }
+
+    public getMertinIndex(): number {
+        return this.mertinIndex;
+    }
+
+    public setMertinIndex(index : number): void {
+        this.mertinIndex = index;
+    }
+
 
 }

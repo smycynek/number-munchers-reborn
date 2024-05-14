@@ -6,9 +6,9 @@ import {
   isPerfectSquare
 } from "./predicates";
 
-export const perfectSquares = new Set<number>([...getNaturalNumberSet(dataUpperBound)].filter(n => isPerfectSquare(n)));
-export const primes = new Set<number>([0, 1, 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]);
-export const factorTargets = new Set([...getNaturalNumberSet(dataUpperBound)].filter(n => !primes.has(n)));
+const perfectSquares = new Set<number>([...getNaturalNumberSet(dataUpperBound)].filter(n => isPerfectSquare(n)));
+const primes = new Set<number>([1, 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]);
+const factorTargets = new Set([...getNaturalNumberSet(dataUpperBound)].filter(n => !primes.has(n)));
 
 export function getValidMultiples(num: number): Set<number> {
   const multiples: Set<number> = new Set();
@@ -20,6 +20,14 @@ export function getValidMultiples(num: number): Set<number> {
 
 export function getPrimes(): Set<number> {
   return new Set<number>([...primes]);
+}
+
+export function getPerfectSquares(): Set<number> {
+  return new Set<number>([...perfectSquares]);
+}
+
+export function getFactorTargets(): Set<number> {
+  return new Set<number>([...factorTargets]);
 }
 
 export function getValidBetweenValues(lower: number, upper: number, inclusive: boolean): Set<number> {

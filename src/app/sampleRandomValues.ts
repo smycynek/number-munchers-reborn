@@ -6,7 +6,7 @@ import {
   multipleUpperBound
 }
   from "./constants";
-import { factorTargets, getNaturalNumberSet } from "./sampleValidValues";
+import { getFactorTargets, getNaturalNumberSet } from "./sampleValidValues";
 
 // A narrower range used for > and <
 export function getRandomBetweenBounds() {
@@ -22,9 +22,8 @@ export function getRandomBetweenBoundsWide() {
   return [bound1, bound2];
 }
 
-
 export function getRandomFactorTarget(): number {
-  return getRandomItemFromSetAndRemove(factorTargets);
+  return getRandomItemFromSetAndRemove(getFactorTargets());
 }
 
 export function getRandomItemFromSetAndRemove(numberSet: Set<number>): number {
@@ -33,7 +32,6 @@ export function getRandomItemFromSetAndRemove(numberSet: Set<number>): number {
   numberSet.delete(number);
   return number;
 }
-
 
 export function getRandomNaturalNumberSet(upperBound: number, total: number): Set<number> {
   if (total > upperBound) {
@@ -46,7 +44,6 @@ export function getRandomNaturalNumberSet(upperBound: number, total: number): Se
   }
   return collection;
 }
-
 
 export function getRandomNumberWithinRangeFromSeed(seed: number, lower: number, upper: number): number {
   const range = upper - lower;
