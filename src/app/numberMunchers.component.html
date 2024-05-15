@@ -24,9 +24,9 @@
             d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06M6 5.04 4.312 6.39A.5.5 0 0 1 4 6.5H2v3h2a.5.5 0 0 1 .312.11L6 10.96zm7.854.606a.5.5 0 0 1 0 .708L12.207 8l1.647 1.646a.5.5 0 0 1-.708.708L11.5 8.707l-1.646 1.647a.5.5 0 0 1-.708-.708L10.793 8 9.146 6.354a.5.5 0 1 1 .708-.708L11.5 7.293l1.646-1.647a.5.5 0 0 1 .708 0" />
         </svg>
       </button>
-      <button [disabled]="this.noRemainingSolutions()" *ngIf="this.hasInterval()" id="btnMertin" class="btn imagebutton"
+      <button [disabled]="this.noRemainingSolutions()" id="btnMertin" class="btn imagebutton"
         [ngClass]="getMertinButtonClass()" onclick="document.getElementById('btnMertin').blur()"
-        (click)="toggleMertin()">
+        (click)="cycleSpeed()">
         <img alt="Mertin avatar" [src]="getMertinButtonImage()" width="40px">
       </button>
       <button id="btnHelp" class="btn imagebutton no-border" onclick="document.getElementById('btnHelp').blur()"
@@ -53,7 +53,7 @@
       </div>
 
       <div class="container large">
-        <p class="version">||v154||</p>
+        <p class="version">||v155||</p>
       </div>
     </div>
 
@@ -99,16 +99,15 @@
         <details>
           <summary>Munchy</summary>
           <img style="display: block;" alt="Number Munchers Logo" src="./assets/preview.png" width="15%" />
-          Our hero, a curious frog who loves numbers and has very specific preferences (that vary) for the kinds of
-          numbers
-          he likes to eat.
+          Our hero, a curious frog who loves numbers and has very specific tastes (that vary each game) for the kinds of
+          numbers he likes to eat.
         </details>
 
-        <details *ngIf="this.hasInterval()">
+        <details>
           <summary>Mertin</summary>
-          <img style="display: block;" alt="Number Munchers Logo" src="./assets/mertin.png" width="15%" />
+          <img style="display: block;" alt="Mertin Logo" src="./assets/mertin.png" width="15%" />
           A mischevious gremlin who likes to reset areas of the board according to his own design.
-          (Off by default.)
+          (Off by default, with three speed levels for a challenge)
         </details>
       </div>
 

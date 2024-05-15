@@ -84,7 +84,7 @@ export class Puzzle {
     if (addValidValues) {
       const validSamples = this.getValidSamples();
       const replacementCount = validSamples.size < maxReplacements ? validSamples.size : maxReplacements;
-      debug(`Valid samples: ${[...validSamples]}`);
+      debug(`Valid samples for puzzle: ${[...validSamples]}`);
       for (let idx = 0; idx != replacementCount; idx++) {
         const validValue = getRandomItemFromSetAndRemove(validSamples);
         if (curatedValues.has(validValue)) {
@@ -99,7 +99,7 @@ export class Puzzle {
       }
     }
 
-    debug(`Curated final: ${[...curatedValues]} : ${curatedValues.size}`);
+    debug(`Curated final values: ${[...curatedValues]} : ${curatedValues.size}`);
     return curatedValues;
   }
 

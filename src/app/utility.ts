@@ -26,8 +26,9 @@ export function parseId(cellId: string): number[] {
 }
 
 let LOG = false;
-export function toggleLog(): void {
+export function toggleLog(): boolean {
   LOG = !LOG;
+  return LOG;
 }
 
 export function debug(message: string) {

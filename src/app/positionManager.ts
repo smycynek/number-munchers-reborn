@@ -35,7 +35,7 @@ export class PositionManager {
         return this.mertinIndex;
     }
 
-    public setMertinIndex(index : number): void {
+    public setMertinIndex(index: number): void {
         this.mertinIndex = index;
     }
 

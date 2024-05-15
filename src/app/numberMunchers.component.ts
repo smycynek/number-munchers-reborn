@@ -10,7 +10,7 @@ import { SoundManager } from './soundManager';
 import { PositionManager } from './positionManager';
 import JSConfetti from 'js-confetti';
 import { StringResources } from './strings';
-import { Observable, Subject, takeUntil, timer } from 'rxjs';
+import { Observable, timer } from 'rxjs';
 import { getRandomItemFromSetAndRemove } from './sampleRandomValues';
 import { mertinDelay, mertinInterval } from './constants';
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
@@ -23,7 +23,6 @@ import { ActivatedRoute, RouterOutlet } from '@angular/router';
   styleUrl: './numberMunchers.component.less'
 })
 export class AppComponent implements AfterViewChecked {
-  private mertin: boolean = false;
   private cellData: DataCell[] = [];
   private statusMessage = StringResources.START;
   private statusMessageDetail = StringResources.YOU_CAN_DO_IT;
@@ -34,17 +33,24 @@ export class AppComponent implements AfterViewChecked {
   private positionManager: PositionManager = new PositionManager();
   public title: string = StringResources.TITLE;
   private timer: Observable<number> = timer(mertinDelay * 1000, mertinInterval * 1000);
-  private interval: number = 1;
-  private pauseNotify: Subject<boolean> = new Subject();
-  public hasInterval(): boolean {
-    return (this.interval > 0);
+  private speed: number = 0;
+
+  public cycleSpeed(): void {
+    if (this.speed === 0) {
+      this.speed = 3;
+    } else {
+      this.speed--;
+    }
+    if (this.speed === 0) {
+      this.positionManager.setMertinIndex(-1);
+    }
+    debug(`Speed: ${this.speed}`);
   }
+
+
   constructor(private cdr: ChangeDetectorRef, private route: ActivatedRoute) {
     this.route.queryParams.subscribe(params => {
-      if (params['t']) {
-        this.interval = Number(params['t']);
-        this.timer = timer(mertinDelay * 1000, this.interval * 1000);
-      }
+      debug(params.toString());
     });
 
     this.timerInit();
@@ -71,37 +77,20 @@ export class AppComponent implements AfterViewChecked {
     return "no-border";
   }
 
-  private setMertin(value: boolean): void {
-    this.mertin = value;
-    if (!this.mertin) {
-      this.positionManager.setMertinIndex(-1);
-      this.pauseNotify.next(true);
-    }
-    else {
-      this.timerInit();
-    }
-
-  }
-  public toggleMertin(): void {
-    this.setMertin(!this.mertin);
-  }
-
   private timerInit(): void {
     this.positionManager.setMertinIndex(-1);
-    this.pauseNotify.next(true);
-    this.timer.pipe(takeUntil(this.pauseNotify)).subscribe(() => {
-      if (this.mertin && !this.noRemainingSolutions()) {
-        this.positionManager.setMertinIndex(this.getRandomNonOccupiedIndex());
-        this.resetSquare(this.positionManager.getMertinIndex())
-        if (this.noRemainingSolutions()) {
-          this.pauseNotify.next(true);
+    this.timer.subscribe((val) => {
+      if (this.speed !== 0 && !this.noRemainingSolutions()) {
+        if ((val % this.speed) === 0) {
+          debug(`Timer pulse: ${val} speed: ${this.speed}`);
+          this.positionManager.setMertinIndex(this.getRandomNonOccupiedIndex());
+          this.resetSquare(this.positionManager.getMertinIndex())
         }
       }
     });
   }
 
   private reset() {
-    this.timerInit();
     this.positionManager.setActiveRow(0);
     this.positionManager.setActiveColumn(0);
     this.statusMessage = StringResources.START;
@@ -114,7 +103,10 @@ export class AppComponent implements AfterViewChecked {
   private init() {
     if (!this.cellData.length) {
       this.activePuzzle = Puzzle.getRandomPuzzle();
+      debug(`Puzzle: ${this.activePuzzle.questionText}`);
+      debug('Set up puzzle data:')
       this.cellData = [...this.activePuzzle.generateCells(this.positionManager.getColumnCount() * this.positionManager.getRowCount())];
+      debug('--');
       if (this.noRemainingSolutions()) { // should not happen
         this.statusMessage = "No solutions, try a new game";
         this.statusMessageDetail = "-";
@@ -123,6 +115,7 @@ export class AppComponent implements AfterViewChecked {
   }
 
   public newGame() {
+    debug("New game");
     document.getElementById("btnNewGame")?.blur();
     this.reset();
     this.init();
@@ -176,8 +169,13 @@ export class AppComponent implements AfterViewChecked {
   }
 
   private resetSquare(squareIndex: number) {
+    if (squareIndex < 0) {
+      debug('Invalid reset index!');
+      return;
+    }
     this.soundManager.playCackle();
     const solutionsCount = this.getRemainingSolutionsCount();
+    debug('--Reset Square--')
     debug(`Index to replace: ${squareIndex}`);
     debug(`Remaining solutions: ${solutionsCount}`);
     let newValues;
@@ -187,6 +185,7 @@ export class AppComponent implements AfterViewChecked {
       newValues = this.activePuzzle.getCuratedValues(1, false);  // insert random choice
     }
     this.cellData[squareIndex] = this.activePuzzle.generateCell(newValues);
+    debug('---');
   }
 
   public getMertinImage(): string {
@@ -194,10 +193,7 @@ export class AppComponent implements AfterViewChecked {
   }
 
   public getMertinButtonImage(): string {
-    if (this.mertin) {
-      return "assets/mertin.png";
-    }
-    else return "assets/no-mertin.png";
+    return `assets/mertin-${this.speed}.png`;
   }
   public getAvatarImage(): string {
     const data = this.getCellData(this.positionManager.getActiveRow(), this.positionManager.getActiveColumn());
@@ -301,15 +297,15 @@ export class AppComponent implements AfterViewChecked {
   @HostListener('document:click', ['$event'])
   handleClickEvent(event: UIEvent) {
     debug("---document:click---");
-    debug("touch event? " + (('touches' in event)));
-    debug("mouse event? " + (event instanceof PointerEvent));
-    debug("device has touch? " + hasTouch());
-    debug("---");
+    // debug("touch event? " + (('touches' in event)));
+    // debug("mouse event? " + (event instanceof PointerEvent));
+    // debug("device has touch? " + hasTouch());
+    // debug("---");
     if (hasTouch() || ('touches' in event)) {
       debug('Skipping mouse event if touch event.')
       return;
     }
-    debug(`TouchOrClick: ${event}`);
+    // debug(`TouchOrClick: ${event}`);
     if (this.noRemainingSolutions()) {
       return;
     }
@@ -319,15 +315,15 @@ export class AppComponent implements AfterViewChecked {
   @HostListener('document:touchstart', ['$event'])
   handleTouchEvent(event: UIEvent) {
     debug("---document:touch---");
-    debug("touch event? " + ('touches' in event));
-    debug("mouse event? " + (event instanceof PointerEvent));
-    debug("device has touch? " + hasTouch());
-    debug("---");
+    // debug("touch event? " + ('touches' in event));
+    // debug("mouse event? " + (event instanceof PointerEvent));
+    // debug("device has touch? " + hasTouch());
+    // debug("---");
     if (!hasTouch() || event instanceof PointerEvent) {
       debug('Skipping touch event if pointer event.')
       return;
     }
-    debug(`TouchOrClick: ${event}`);
+    // debug(`TouchOrClick: ${event}`);
     if (this.noRemainingSolutions()) {
       return;
     }
@@ -382,12 +378,14 @@ export class AppComponent implements AfterViewChecked {
     if (data.valid) {
       this.foundNumbers.add(data.value);
       if (this.noRemainingSolutions()) {
+        debug('Game Over');
         this.statusMessageClass = "status-success";
         this.statusMessage = StringResources.FOUND_ALL;
         this.statusMessageDetail = this.activePuzzle.successDetails(data.value);
         if (this.perfectScore()) {
           this.soundManager.playWhooAndPerfectScore();
           this.statusMessage = `${this.statusMessage} ${StringResources.PERFECT_SCORE}`;
+          debug(StringResources.PERFECT_SCORE);
           const jsConfetti = new JSConfetti();
           jsConfetti.addConfetti();
         } else {
@@ -423,9 +421,11 @@ export class AppComponent implements AfterViewChecked {
   public toggleSound(): void {
     this.soundManager.toggleSound();
     document.getElementById("btnSound")?.blur();
+    debug(`Sound: ${this.soundManager.getSoundOn()}`);
   }
 
   public toggleDebug(): void {
-    toggleLog();
+    const logStatus = toggleLog();
+    debug(`Logging: ${logStatus}`);
   }
 }

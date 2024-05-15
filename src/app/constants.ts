@@ -6,5 +6,5 @@ export const multipleUpperBound = 9;
 export const boundoffsetMin = 6;
 export const boundOffsetMax = 15;
 export const maxReplacements = 3;  // max number of extra correct answers to insert
-export const mertinDelay = 10;
-export const mertinInterval = 20;
+export const mertinDelay = 1;
+export const mertinInterval = 5;
