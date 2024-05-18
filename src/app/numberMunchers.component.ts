@@ -2,8 +2,8 @@ import { AfterViewChecked, Component } from '@angular/core';
 import { CommonModule } from '@angular/common'
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChangeDetectorRef } from '@angular/core';
-import { DataCell } from './dataCell';
-import { Puzzle } from './puzzle';
+import { DataCell, ValuePair } from './dataCell';
+import { Puzzle, PuzzleType } from './puzzle';
 import { debug, hasTouch, parseId, toggleLog, wrapDown, wrapUp } from './utility';
 import { HostListener } from '@angular/core';
 import { SoundManager } from './soundManager';
@@ -14,20 +14,31 @@ import { Observable, timer } from 'rxjs';
 import { getRandomItemFromSetAndRemove } from './sampleRandomValues';
 import { mertinDelay, mertinInterval } from './constants';
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+
+const allPuzzles = new Set<PuzzleType>([
+  PuzzleType.MISC,
+  PuzzleType.DIVISION, 
+  PuzzleType.GREATER_LESS_THAN,
+  PuzzleType.MULTIPLICATION,
+  PuzzleType.MULTIPLICATION_EXPRESSIONS,
+]);
 
 @Component({
   selector: 'app-number-munchers',
   standalone: true,
-  imports: [CommonModule, NgbModule, RouterOutlet],
+  imports: [CommonModule, NgbModule, RouterOutlet, FormsModule],
   templateUrl: './numberMunchers.component.html',
   styleUrl: './numberMunchers.component.less'
 })
+
 export class AppComponent implements AfterViewChecked {
+  private puzzleTypes = allPuzzles;
   private cellData: DataCell[] = [];
   private statusMessage = StringResources.START;
   private statusMessageDetail = StringResources.YOU_CAN_DO_IT;
   private statusMessageClass = "status-default";
-  private activePuzzle: Puzzle = Puzzle.getRandomPuzzle();
+  private activePuzzle: Puzzle = Puzzle.getRandomPuzzle(this.puzzleTypes);
   private foundNumbers: Set<number> = new Set<number>();
   private soundManager: SoundManager = new SoundManager();
   private positionManager: PositionManager = new PositionManager();
@@ -52,7 +63,7 @@ export class AppComponent implements AfterViewChecked {
     this.route.queryParams.subscribe(params => {
       debug(params.toString());
     });
-
+    this.puzzleTypes = allPuzzles;
     this.timerInit();
   }
 
@@ -102,7 +113,7 @@ export class AppComponent implements AfterViewChecked {
 
   private init() {
     if (!this.cellData.length) {
-      this.activePuzzle = Puzzle.getRandomPuzzle();
+      this.activePuzzle = Puzzle.getRandomPuzzle(this.puzzleTypes);
       debug(`Puzzle: ${this.activePuzzle.questionText}`);
       debug('Set up puzzle data:')
       this.cellData = [...this.activePuzzle.generateCells(this.positionManager.getColumnCount() * this.positionManager.getRowCount())];
@@ -123,7 +134,7 @@ export class AppComponent implements AfterViewChecked {
 
   public getCellData(r: number, c: number): DataCell {
     if (!this.cellData.length) {
-      return new DataCell(0, false, false);
+      return new DataCell(new ValuePair(0, "0"), false, false);
     }
     return this.cellData[(r * this.positionManager.getColumnCount()) + c];
   }
@@ -180,9 +191,11 @@ export class AppComponent implements AfterViewChecked {
     debug(`Remaining solutions: ${solutionsCount}`);
     let newValues;
     if (solutionsCount <= 1) {
+      debug ('Adding correct answer');
       newValues = this.activePuzzle.getValidSamples(); // insert valid choice
     } else {
-      newValues = this.activePuzzle.getCuratedValues(1, false);  // insert random choice
+      debug('Adding random answer')
+      newValues = this.activePuzzle.getRandomSamples(1, this.activePuzzle.maxValue);
     }
     this.cellData[squareIndex] = this.activePuzzle.generateCell(newValues);
     debug('---');
@@ -376,12 +389,12 @@ export class AppComponent implements AfterViewChecked {
     data.discovered = true;
 
     if (data.valid) {
-      this.foundNumbers.add(data.value);
+      this.foundNumbers.add(data.valuePair.value);
       if (this.noRemainingSolutions()) {
         debug('Game Over');
         this.statusMessageClass = "status-success";
         this.statusMessage = StringResources.FOUND_ALL;
-        this.statusMessageDetail = this.activePuzzle.successDetails(data.value);
+        this.statusMessageDetail = this.activePuzzle.successDetails(data.valuePair);
         if (this.perfectScore()) {
           this.soundManager.playWhooAndPerfectScore();
           this.statusMessage = `${this.statusMessage} ${StringResources.PERFECT_SCORE}`;
@@ -394,18 +407,18 @@ export class AppComponent implements AfterViewChecked {
         return;
       }
       this.soundManager.playYum();
-      this.statusMessage = `${StringResources.CORRECT} ${data.value} ${StringResources.IS} ${this.activePuzzle.responseText}`;
-      this.statusMessageDetail = this.activePuzzle.successDetails(data.value);
+      this.statusMessage = `${StringResources.CORRECT} ${data.valuePair.valueAsString} ${StringResources.IS} ${this.activePuzzle.responseText}`;
+      this.statusMessageDetail = this.activePuzzle.successDetails(data.valuePair);
       this.statusMessageClass = "status-success";
 
     } else {
       this.soundManager.playYuck();
-      this.statusMessage = `${StringResources.SORRY} ${data.value} ${StringResources.IS} ${StringResources.NOT} ${this.activePuzzle.responseText}`;
-      this.statusMessageDetail = this.activePuzzle.errorDetails(data.value);
+      this.statusMessage = `${StringResources.SORRY} ${data.valuePair.valueAsString} ${StringResources.IS} ${StringResources.NOT} ${this.activePuzzle.responseText}`;
+      this.statusMessageDetail = this.activePuzzle.errorDetails(data.valuePair);
       this.statusMessageClass = "status-error";
     }
 
-    debug(`Correct? ${data.valid}, Value: ${data.value}, Question: ${this.activePuzzle.questionText}`)
+    debug(`Correct? ${data.valid}, ${data.valuePair.toString()}, Question: ${this.activePuzzle.questionText}`)
   }
 
   /* Position */
@@ -427,5 +440,14 @@ export class AppComponent implements AfterViewChecked {
   public toggleDebug(): void {
     const logStatus = toggleLog();
     debug(`Logging: ${logStatus}`);
+  }
+
+  public toggleJustMultiplication(): void {
+     if (this.puzzleTypes.size === 1) {
+      this.puzzleTypes = allPuzzles;
+     }
+     else {
+      this.puzzleTypes = new Set<PuzzleType>([PuzzleType.MULTIPLICATION_EXPRESSIONS]);
+     }
   }
 }

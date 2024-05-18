@@ -3,7 +3,6 @@
     <div class="container">
       <h1>{{title}}<img (click)="toggleDebug()" alt="muncher logo" src="assets/muncher-happy.png" width="40px" /></h1>
       <h2>{{getQuestionPrompt()}}</h2>
-      <h3>{{getGeneralInstructions()}}</h3>
       <button id="btnNewGame" class="btn" [ngClass]="getStartButtonClass()"
         (click)="newGame()">{{getStartButtonText()}}</button>
       <button id="btnSound" (click)="toggleSound()" type="button" class="btn imagebutton no-border">
@@ -44,16 +43,15 @@
       <div *ngFor="let r of [].constructor(getPositionManager().getRowCount()); index as idxr" class="row">
         <div [ngClass]="getCellClass(idxr,idxc)" id="{{idxr}}{{idxc}}"
           *ngFor="let r of [].constructor(getPositionManager().getColumnCount()); index as idxc" class="col cell">
-          {{getCellData(idxr,idxc).value}}
+          {{getCellData(idxr,idxc).valuePair.valueAsString}}
           <img alt="muncher avatar" id="i{{idxr}}{{idxc}}" *ngIf="isActive(idxr, idxc)"
             [ngClass]="getAvatarSizeClass(idxr, idxc)" [src]="getAvatarImage()" />
           <img alt="mertin avatar" id="i{{idxr}}{{idxc}}m" *ngIf="hasMertin(idxr, idxc)"
             [ngClass]="getAvatarSizeClass(idxr, idxc)" [src]="getMertinImage()" />
         </div>
       </div>
-
-      <div class="container large">
-        <p class="version">||v155||</p>
+      <div (click)="toggleJustMultiplication()" class="container large">
+        <p class="version">||v157||</p>
       </div>
     </div>
 
@@ -66,8 +64,7 @@
       <h1 class="centered">{{title}}</h1>
       <h2 class="centered">A math game</h2>
 
-
-      <p>
+      <p>{{getGeneralInstructions()}}
         I recommend that children try this game out with a parent. I hope that it will be a fun experience for both!
         Some of the math terms are defined as follows:
       </p>

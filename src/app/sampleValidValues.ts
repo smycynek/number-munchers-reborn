@@ -1,4 +1,5 @@
 import { dataUpperBound } from "./constants";
+import { ValuePair } from "./dataCell";
 import {
   isBetween,
   isOutsideExclusive,
@@ -8,7 +9,6 @@ import {
 
 const perfectSquares = new Set<number>([...getNaturalNumberSet(dataUpperBound)].filter(n => isPerfectSquare(n)));
 const primes = new Set<number>([1, 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]);
-const factorTargets = new Set([...getNaturalNumberSet(dataUpperBound)].filter(n => !primes.has(n)));
 
 export function getValidMultiples(num: number): Set<number> {
   const multiples: Set<number> = new Set();
@@ -26,7 +26,9 @@ export function getPerfectSquares(): Set<number> {
   return new Set<number>([...perfectSquares]);
 }
 
-export function getFactorTargets(): Set<number> {
+export function getFactorTargets(minimumFactors: number = 2): Set<number> {
+  const baseSet = getNaturalNumberSet(dataUpperBound);
+  const factorTargets = [...baseSet].filter(f => getValidFactors(f).size >= minimumFactors)
   return new Set<number>([...factorTargets]);
 }
 
@@ -53,4 +55,13 @@ export function getNaturalNumberSet(upperBound: number): Set<number> {
   const baseSet = new Set(base);
   baseSet.delete(0);
   return baseSet
+}
+
+export function getValidMultiplicationPairs(target: number): Set<ValuePair> {
+  const pairs:Set<ValuePair> = new Set();
+  const factors = getValidFactors(target);
+  factors.forEach (val => pairs.add(new ValuePair(target, `${val}x${target/val}`)));
+  console.log("-- " + target);
+  pairs.forEach(p => console.log(p.toString()))
+  return pairs;
 }

@@ -1,4 +1,5 @@
 import {
+    getFactorTargets,
     getNaturalNumberSet,
     getValidBetweenValues,
     getValidFactors,
@@ -66,5 +67,10 @@ describe('PseudoUnitTests-SampleValidValues', () => {
         expect(multiples.has(27)).toBeTrue();
     });
 
+    it('getFactorTargets should give numbers with a minimum number of factors', () => {
+        // Note, we do not include 1 and the number itself here
+        const factorTargets_10 = getFactorTargets(10);
+        expect(factorTargets_10.size).toEqual(5)
+    });
 
 });

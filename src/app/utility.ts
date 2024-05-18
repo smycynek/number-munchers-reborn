@@ -1,3 +1,12 @@
+import { ValuePair } from "./dataCell";
+
+export function simpleToValuePair(value: number): ValuePair {
+  return new ValuePair(value, value.toString());
+}
+
+export function toValuePairSet(values: Set<number>): Set<ValuePair> {
+  return new Set<ValuePair>( [...values].map(v => simpleToValuePair(v)));
+}
 export function hasTouch(): boolean {
   return ('ontouchstart' in window);
 }
@@ -50,4 +59,9 @@ export function format_and(items: number[]): string {
   let formatted = items.slice(0, items.length - 1).join(', ');
   formatted = `${formatted}, and ${items[items.length - 1]}`;
   return formatted;
+}
+
+export function ValuePairSetHas(valuePair: ValuePair, set: Set<ValuePair>): boolean {
+  const setVals = [...set].map(vp => vp.valueAsString);
+  return setVals.includes(valuePair.valueAsString);
 }
