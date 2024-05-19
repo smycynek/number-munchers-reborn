@@ -1,11 +1,11 @@
-import { ValuePair } from "./dataCell";
+import { ValuePair } from './dataCell';
 
 export function simpleToValuePair(value: number): ValuePair {
   return new ValuePair(value, value.toString());
 }
 
 export function toValuePairSet(values: Set<number>): Set<ValuePair> {
-  return new Set<ValuePair>( [...values].map(v => simpleToValuePair(v)));
+  return new Set<ValuePair>([...values].map(v => simpleToValuePair(v)));
 }
 export function hasTouch(): boolean {
   return ('ontouchstart' in window);
@@ -26,10 +26,10 @@ export function wrapDown(value: number, max: number): number {
 }
 
 export function parseId(cellId: string): number[] {
-  cellId = cellId.replace("i", "");
+  cellId = cellId.replace('i', '');
   const parsed = [Number(cellId[0]), Number(cellId[1])];
   if (parsed.length != 2 || isNaN(parsed[0]) || isNaN(parsed[1])) {
-    throw new Error("Not a cell id");
+    throw new Error('Not a cell id');
   }
   return parsed;
 }

@@ -1,8 +1,7 @@
 export class ValuePair {
   constructor(
-  public value: number,
-  public valueAsString: string) 
-  {}
+    public value: number,
+    public valueAsString: string) { }
   public toString(): string {
     return `Value: ${this.value}, ValueAsString: ${this.valueAsString}`;
   }

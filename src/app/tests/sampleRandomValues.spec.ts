@@ -3,8 +3,8 @@ import {
     getRandomNaturalNumberSet,
     getRandomNumberWithinRange,
     getRandomNumberWithinRangeFromSeed
-} from "../sampleRandomValues";
-import { getNaturalNumberSet } from "../sampleValidValues";
+} from '../sampleRandomValues';
+import { getNaturalNumberSet } from '../sampleValidValues';
 /*
 This is a little bit of overkill, but if I'm making a game
 for kids, I want to make sure output is correct.

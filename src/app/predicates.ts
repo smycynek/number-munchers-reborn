@@ -1,4 +1,4 @@
-import { getPrimes } from "./sampleValidValues";
+import { getPrimes } from './sampleValidValues';
 
 const thePrimes = getPrimes();
 export function isBetween(value: number, lower: number, upper: number, inclusive: boolean): boolean {

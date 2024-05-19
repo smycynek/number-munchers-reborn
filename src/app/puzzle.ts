@@ -2,15 +2,15 @@ import {
   dataUpperBound,
   dataUpperBoundLow,
   maxReplacements
-} from "./constants";
-import { DataCell, ValuePair } from "./dataCell";
+} from './constants';
+import { DataCell, ValuePair } from './dataCell';
 
 import {
   ValuePairSetHas,
   debug,
   format_and,
   toValuePairSet,
-} from "./utility";
+} from './utility';
 
 import {
   isBetween,
@@ -19,7 +19,7 @@ import {
   isPerfectSquare,
   isOutsideExclusive,
   isPrime,
-} from "./predicates";
+} from './predicates';
 
 import {
   getPrimes,
@@ -30,7 +30,7 @@ import {
   getPerfectSquares,
   getValidMultiplicationPairs
 }
-  from "./sampleValidValues";
+  from './sampleValidValues';
 
 import {
   getRandomNumberWithinRange,
@@ -42,7 +42,7 @@ import {
   getRandomItemFromSetAndRemove,
   getRandomMultiplicationPairs,
 }
-  from "./sampleRandomValues";
+  from './sampleRandomValues';
 
 export enum PuzzleType {
   MULTIPLICATION,
@@ -84,7 +84,7 @@ export class Puzzle {
     public getRandomSamples: (count: number, maxValue: number) => Set<ValuePair>,
     public type: PuzzleType,
     public include: boolean = true,
-    public name: string = ""
+    public name: string = ''
   ) { }
 
   public getCuratedValue(): number {
@@ -97,7 +97,7 @@ export class Puzzle {
       const validSamples = this.getValidSamples();
       let replacements = maxReplacements;
       if (this.type === PuzzleType.MULTIPLICATION) {
-        replacements *=2;
+        replacements *= 2;
       }
       const replacementCount = validSamples.size < replacements ? validSamples.size : replacements;
       debug(`Valid samples for puzzle: ${[...validSamples]}`);
@@ -108,9 +108,9 @@ export class Puzzle {
           continue;
         } else {
           const valueToRemove = getRandomItemFromSetAndRemove(curatedValues);
-          debug("Value to remove: " + valueToRemove);
+          debug('Value to remove: ' + valueToRemove);
           curatedValues.add(validValue);
-          debug("Adding valid value: " + validValue);
+          debug('Adding valid value: ' + validValue);
         }
       }
     }
@@ -129,8 +129,8 @@ export class Puzzle {
       new Puzzle(
         (cellValue: ValuePair) => isPerfectSquare(cellValue.value),
         dataUpperBound,
-        "Find perfect squares",
-        "a perfect square.",
+        'Find perfect squares',
+        'a perfect square.',
         (cellValue: ValuePair) => { return `${Math.sqrt(cellValue.value)} times itself (${Math.sqrt(cellValue.value)}) equals ${cellValue.value}` },
         (cellValue: ValuePair) => { return `There are no whole numbers when multiplied by themselves that are equal to ${cellValue.value}` },
         () => toValuePairSet(getPerfectSquares()),
@@ -207,7 +207,7 @@ export class Puzzle {
         (cellValue: ValuePair) => { return `${cellValue.value} divided by ${randomMultipleBase} is ${Math.round((cellValue.value / randomMultipleBase) * 100) / 100}, not a whole number` },
         () => toValuePairSet(getValidMultiples(randomMultipleBase)),
         (count: number) => toValuePairSet(getRandomNaturalNumberSet(dataUpperBound, count)),
-        PuzzleType.DIVISION, 
+        PuzzleType.DIVISION,
         true
       ),
       new Puzzle(
@@ -229,13 +229,13 @@ export class Puzzle {
         `equal to ${randomMultiplicationTarget}`,
         (cellValue: ValuePair) => { return `${cellValue.valueAsString} = ${randomMultiplicationTarget}`; },
         (cellValue: ValuePair) => { return `${cellValue.valueAsString} = ${cellValue.value}, not ${randomMultiplicationTarget}`; },
-        () =>  getValidMultiplicationPairs(randomMultiplicationTarget),
+        () => getValidMultiplicationPairs(randomMultiplicationTarget),
         (count: number) => getRandomMultiplicationPairs(count),
         PuzzleType.MULTIPLICATION,
         true,
-        "Multiplication Expressions"
+        'Multiplication Expressions'
       ),
     ];
-  
+
   }
 }

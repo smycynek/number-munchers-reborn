@@ -5,9 +5,9 @@ import {
   multipleLowerBound,
   multipleUpperBound
 }
-  from "./constants";
-import { ValuePair } from "./dataCell";
-import { getFactorTargets, getNaturalNumberSet } from "./sampleValidValues";
+  from './constants';
+import { ValuePair } from './dataCell';
+import { getFactorTargets, getNaturalNumberSet } from './sampleValidValues';
 
 // A narrower range used for > and <
 export function getRandomBetweenBounds() {
@@ -36,7 +36,7 @@ export function getRandomItemFromSetAndRemove<T>(numberSet: Set<T>): T {
 
 export function getRandomNaturalNumberSet(upperBound: number, total: number): Set<number> {
   if (total > upperBound) {
-    throw Error("upper bound too low");
+    throw Error('upper bound too low');
   }
   const numberSet = getNaturalNumberSet(upperBound);
   const collection: Set<number> = new Set();
@@ -60,13 +60,13 @@ export function getRandomMultipleBase(): number {
   return getRandomNumberWithinRange(multipleLowerBound, multipleUpperBound);
 }
 
-export function getRandomMultiplicationPairs(count: number) : Set<ValuePair> {
+export function getRandomMultiplicationPairs(count: number): Set<ValuePair> {
   const valueSet: Set<ValuePair> = new Set();
   for (let idx = 2; idx < 16; idx++) {
     for (let idy = 2; idy < 16; idy++) {
-      valueSet.add(new ValuePair(idx*idy, `${idx}x${idy}`));
+      valueSet.add(new ValuePair(idx * idy, `${idx}x${idy}`));
     }
-   }
+  }
   const returnSet: Set<ValuePair> = new Set();
   for (let ic = 0; ic !== count; ic++) {
     returnSet.add(getRandomItemFromSetAndRemove(valueSet))

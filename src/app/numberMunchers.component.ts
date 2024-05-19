@@ -36,7 +36,7 @@ export class AppComponent implements AfterViewChecked {
   private cellData: DataCell[] = [];
   private statusMessage = StringResources.START;
   private statusMessageDetail = StringResources.YOU_CAN_DO_IT;
-  private statusMessageClass = "status-default";
+  private statusMessageClass = 'status-default';
   private activePuzzle: Puzzle = Puzzle.getRandomPuzzle(this.puzzleTypes);
   private foundNumbers: Set<string> = new Set<string>();
   private soundManager: SoundManager = new SoundManager();
@@ -54,8 +54,6 @@ export class AppComponent implements AfterViewChecked {
     return PuzzleType;
   }
 
-
-
   constructor(private cdr: ChangeDetectorRef, private route: ActivatedRoute) {
     this.route.queryParams.subscribe(params => {
       debug(params.toString());
@@ -67,23 +65,7 @@ export class AppComponent implements AfterViewChecked {
 
   /* Init */
   ngAfterViewChecked() {
-
     this.cdr.detectChanges();
-  }
-
-  private getRandomNonOccupiedIndex(): number {
-    const activeIndex = (this.positionManager.getActiveRow() * this.positionManager.getColumnCount())
-      + this.positionManager.getActiveColumn();
-    const upperBound = this.positionManager.getColumnCount() * this.positionManager.getRowCount();
-    const base = [...[].constructor(upperBound).keys()]
-    const baseSet = new Set(base);
-    baseSet.delete(activeIndex);
-    baseSet.delete(this.positionManager.getMertinIndex());
-    return getRandomItemFromSetAndRemove(baseSet);
-  }
-
-  public getMertinButtonClass(): string {
-    return "no-border";
   }
 
   private timerInit(): void {
@@ -99,16 +81,6 @@ export class AppComponent implements AfterViewChecked {
     });
   }
 
-  private reset() {
-    this.positionManager.setActiveRow(0);
-    this.positionManager.setActiveColumn(0);
-    this.statusMessage = StringResources.START;
-    this.statusMessageDetail = StringResources.YOU_CAN_DO_IT;
-    this.statusMessageClass = "status-default";
-    this.cellData = [];
-    this.foundNumbers = new Set<string>();
-  }
-
   private init() {
     if (!this.cellData.length) {
       this.activePuzzle = Puzzle.getRandomPuzzle(this.puzzleTypes);
@@ -117,12 +89,13 @@ export class AppComponent implements AfterViewChecked {
       this.cellData = [...this.activePuzzle.generateCells(this.positionManager.getColumnCount() * this.positionManager.getRowCount())];
       debug('--');
       if (this.noRemainingSolutions()) { // should not happen
-        this.statusMessage = "No solutions, try a new game";
-        this.statusMessageDetail = "-";
+        this.statusMessage = 'No solutions, try a new game';
+        this.statusMessageDetail = '-';
       }
     }
   }
 
+/* Options */
   public isCheckboxDisabled(val: boolean) {
     if (val && this.puzzleTypes.size <= 1)
       return true;
@@ -150,16 +123,39 @@ export class AppComponent implements AfterViewChecked {
     debug(`Speed: ${this.speed}`);
   }
 
+  /* Game state */
+
+  private reset() {
+    this.positionManager.setActiveRow(0);
+    this.positionManager.setActiveColumn(0);
+    this.statusMessage = StringResources.START;
+    this.statusMessageDetail = StringResources.YOU_CAN_DO_IT;
+    this.statusMessageClass = 'status-default';
+    this.cellData = [];
+    this.foundNumbers = new Set<string>();
+  }
+
   public newGame() {
-    debug("New game");
-    document.getElementById("btnNewGame")?.blur();
+    debug('New game');
+    document.getElementById('btnNewGame')?.blur();
     this.reset();
     this.init();
   }
 
+  private getRandomNonOccupiedIndex(): number {
+    const activeIndex = (this.positionManager.getActiveRow() * this.positionManager.getColumnCount())
+      + this.positionManager.getActiveColumn();
+    const upperBound = this.positionManager.getColumnCount() * this.positionManager.getRowCount();
+    const base = [...[].constructor(upperBound).keys()]
+    const baseSet = new Set(base);
+    baseSet.delete(activeIndex);
+    baseSet.delete(this.positionManager.getMertinIndex());
+    return getRandomItemFromSetAndRemove(baseSet);
+  }
+
   public getCellData(r: number, c: number): DataCell {
     if (!this.cellData.length) {
-      return new DataCell(new ValuePair(0, "0"), false, false);
+      return new DataCell(new ValuePair(0, '0'), false, false);
     }
     return this.cellData[(r * this.positionManager.getColumnCount()) + c];
   }
@@ -187,6 +183,10 @@ export class AppComponent implements AfterViewChecked {
   }
 
   /* UI State */
+  public getMertinButtonClass(): string {
+    return 'no-border';
+  }
+
   public isActive(cellRow: number, cellColumn: number): boolean {
     return (cellRow == this.positionManager.getActiveRow() && cellColumn == this.positionManager.getActiveColumn());
   }
@@ -194,9 +194,9 @@ export class AppComponent implements AfterViewChecked {
 
   public getAvatarSizeClass(idxr: number, idxc: number): string {
     if (this.isActive(idxr, idxc) && this.hasMertin(idxr, idxc)) {
-      return "double";
+      return 'double';
     }
-    return "single";
+    return 'single';
   }
 
   public hasMertin(cellRow: number, cellColumn: number): boolean {
@@ -227,7 +227,7 @@ export class AppComponent implements AfterViewChecked {
   }
 
   public getMertinImage(): string {
-    return "assets/mertin.png";
+    return 'assets/mertin.png';
   }
 
   public getMertinButtonImage(): string {
@@ -236,12 +236,12 @@ export class AppComponent implements AfterViewChecked {
   public getAvatarImage(): string {
     const data = this.getCellData(this.positionManager.getActiveRow(), this.positionManager.getActiveColumn());
     if (data.valid && data.discovered)
-      return "assets/muncher-happy.png";
+      return 'assets/muncher-happy.png';
     else if (!data.valid && data.discovered) {
-      return "assets/muncher-sad.png";
+      return 'assets/muncher-sad.png';
     }
     else {
-      return "assets/muncher-neutral.png";
+      return 'assets/muncher-neutral.png';
     }
   }
 
@@ -282,39 +282,39 @@ export class AppComponent implements AfterViewChecked {
   }
 
   public getFoundNumbers(): string {
-    return `${StringResources.FOUND} ${[...this.foundNumbers].join(", ")}`;
+    return `${StringResources.FOUND} ${[...this.foundNumbers].join(', ')}`;
   }
 
   public getStartButtonClass(): string {
-    const done = this.noRemainingSolutions() ? "btn-success button-success" : "btn-primary";
+    const done = this.noRemainingSolutions() ? 'btn-success button-success' : 'btn-primary';
     return done;
   }
 
   public getCellClass(cellRow: number, cellColumn: number): string {
-    let classes = "";
-    
+    let classes = '';
+
     const cell: DataCell = this.getCellData(cellRow, cellColumn);
 
     if (this.hasMertin(cellRow, cellColumn)) {
-      classes = "mertin-flip"
+      classes = 'mertin-flip'
     }
     if (!cell) {
-      classes = "status-default";
+      classes = 'status-default';
     }
     if (cell.discovered && cell.valid) {
-      classes = "discovered-valid";
+      classes = 'discovered-valid';
     }
     if (cell.discovered && !cell.valid) {
-      classes = "discovered-invalid";
+      classes = 'discovered-invalid';
     }
     if (cellRow == this.positionManager.getActiveRow() && cellColumn == this.positionManager.getActiveColumn()) {
-      classes += " cell-active";
+      classes += ' cell-active';
     }
     if (this.noRemainingSolutions()) {
-      classes += " game-over";
+      classes += ' game-over';
     }
-    if (cell.valuePair.valueAsString.includes("x")) {
-      classes += " smaller"
+    if (cell.valuePair.valueAsString.includes('x')) {
+      classes += ' smaller'
     }
     return classes;
   }
@@ -322,24 +322,24 @@ export class AppComponent implements AfterViewChecked {
   /* Mouse and Keyboard */
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
-    if (event.key == "ArrowUp") {
+    if (event.key == 'ArrowUp') {
       this.down();
-    } else if (event.key == "ArrowDown") {
+    } else if (event.key == 'ArrowDown') {
       this.up();
-    } else if (event.key === "ArrowLeft") {
+    } else if (event.key === 'ArrowLeft') {
       this.left();
-    } else if (event.key === "ArrowRight") {
+    } else if (event.key === 'ArrowRight') {
       this.right();
-    } else if (event.key === " ") {
+    } else if (event.key === ' ') {
       this.choiceAction();
-    } else if (event.key.toUpperCase() === "N") {
+    } else if (event.key.toUpperCase() === 'N') {
       this.newGame();
     }
   }
 
   @HostListener('document:click', ['$event'])
   handleClickEvent(event: UIEvent) {
-    debug("---document:click---");
+    debug('---document:click---');
     // debug("touch event? " + (('touches' in event)));
     // debug("mouse event? " + (event instanceof PointerEvent));
     // debug("device has touch? " + hasTouch());
@@ -357,7 +357,7 @@ export class AppComponent implements AfterViewChecked {
 
   @HostListener('document:touchstart', ['$event'])
   handleTouchEvent(event: UIEvent) {
-    debug("---document:touch---");
+    debug('---document:touch---');
     // debug("touch event? " + ('touches' in event));
     // debug("mouse event? " + (event instanceof PointerEvent));
     // debug("device has touch? " + hasTouch());
@@ -388,25 +388,24 @@ export class AppComponent implements AfterViewChecked {
     this.choiceAction();
   }
 
-
   private up() {
     this.positionManager.setActiveRow(wrapUp(this.positionManager.getActiveRow(), this.positionManager.getRowCount()));
-    debug(this.positionManager.getActiveRow() + ", " + this.positionManager.getActiveColumn());
+    debug(this.positionManager.getActiveRow() + ', ' + this.positionManager.getActiveColumn());
   }
 
   private down() {
     this.positionManager.setActiveRow(wrapDown(this.positionManager.getActiveRow(), this.positionManager.getRowCount()));
-    debug(this.positionManager.getActiveRow() + ", " + this.positionManager.getActiveColumn());
+    debug(this.positionManager.getActiveRow() + ', ' + this.positionManager.getActiveColumn());
   }
 
   private left() {
     this.positionManager.setActiveColumn(wrapDown(this.positionManager.getActiveColumn(), this.positionManager.getColumnCount()));
-    debug(this.positionManager.getActiveRow() + ", " + this.positionManager.getActiveColumn());
+    debug(this.positionManager.getActiveRow() + ', ' + this.positionManager.getActiveColumn());
   }
 
   private right() {
     this.positionManager.setActiveColumn(wrapUp(this.positionManager.getActiveColumn(), this.positionManager.getColumnCount()));
-    debug(this.positionManager.getActiveRow() + ", " + this.positionManager.getActiveColumn());
+    debug(this.positionManager.getActiveRow() + ', ' + this.positionManager.getActiveColumn());
   }
 
   /* Action */
@@ -414,7 +413,7 @@ export class AppComponent implements AfterViewChecked {
     if (this.noRemainingSolutions()) {
       return;
     }
-    debug(this.positionManager.getActiveRow() + ", " + this.positionManager.getActiveColumn());
+    debug(this.positionManager.getActiveRow() + ', ' + this.positionManager.getActiveColumn());
     const data = this.getCellData(this.positionManager.getActiveRow(), this.positionManager.getActiveColumn());
     data.discovered = true;
 
@@ -422,7 +421,7 @@ export class AppComponent implements AfterViewChecked {
       this.foundNumbers.add(data.valuePair.valueAsString);
       if (this.noRemainingSolutions()) {
         debug('Game Over');
-        this.statusMessageClass = "status-success";
+        this.statusMessageClass = 'status-success';
         this.statusMessage = StringResources.FOUND_ALL;
         this.statusMessageDetail = this.activePuzzle.successDetails(data.valuePair);
         if (this.perfectScore()) {
@@ -439,13 +438,13 @@ export class AppComponent implements AfterViewChecked {
       this.soundManager.playYum();
       this.statusMessage = `${StringResources.CORRECT} ${data.valuePair.valueAsString} ${StringResources.IS} ${this.activePuzzle.responseText}`;
       this.statusMessageDetail = this.activePuzzle.successDetails(data.valuePair);
-      this.statusMessageClass = "status-success";
+      this.statusMessageClass = 'status-success';
 
     } else {
       this.soundManager.playYuck();
       this.statusMessage = `${StringResources.SORRY} ${data.valuePair.valueAsString} ${StringResources.IS} ${StringResources.NOT} ${this.activePuzzle.responseText}`;
       this.statusMessageDetail = this.activePuzzle.errorDetails(data.valuePair);
-      this.statusMessageClass = "status-error";
+      this.statusMessageClass = 'status-error';
     }
 
     debug(`Correct? ${data.valid}, ${data.valuePair.toString()}, Question: ${this.activePuzzle.questionText}`)
@@ -463,7 +462,7 @@ export class AppComponent implements AfterViewChecked {
 
   public toggleSound(): void {
     this.soundManager.toggleSound();
-    document.getElementById("btnSound")?.blur();
+    document.getElementById('btnSound')?.blur();
     debug(`Sound: ${this.soundManager.getSoundOn()}`);
   }
 

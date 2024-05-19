@@ -1,19 +1,19 @@
 export class SoundManager {
   constructor() {
     this.yum.src = './assets/yum.mp3';
-    this.yum.preload = "auto";
+    this.yum.preload = 'auto';
     this.yum.load();
     this.yuck.src = './assets/yuck.mp3';
-    this.yuck.preload = "auto";
+    this.yuck.preload = 'auto';
     this.yuck.load();
     this.whoo.src = './assets/whoo.mp3';
-    this.whoo.preload = "auto";
+    this.whoo.preload = 'auto';
     this.whoo.load();
     this.perfectScore.src = './assets/perfectScore.mp3';
-    this.perfectScore.preload = "auto";
+    this.perfectScore.preload = 'auto';
     this.perfectScore.load();
     this.cackle.src = './assets/cackle.mp3';
-    this.cackle.preload = "auto";
+    this.cackle.preload = 'auto';
     this.cackle.load();
   }
   private yum = new Audio();
@@ -27,7 +27,7 @@ export class SoundManager {
     if (this.sound) {
       this.cackle.play();
       const cacklec = this.cackle.cloneNode() as HTMLAudioElement;
-      cacklec.preload = "auto";
+      cacklec.preload = 'auto';
       cacklec.load();
       this.cackle = cacklec;
     }
@@ -37,7 +37,7 @@ export class SoundManager {
     if (this.sound) {
       this.yum.play();
       const yumc = this.yum.cloneNode() as HTMLAudioElement;
-      yumc.preload = "auto";
+      yumc.preload = 'auto';
       yumc.load();
       this.yum = yumc;
     }
@@ -47,7 +47,7 @@ export class SoundManager {
     if (this.sound) {
       this.yuck.play();
       const yuckc = this.yuck.cloneNode() as HTMLAudioElement;
-      yuckc.preload = "auto";
+      yuckc.preload = 'auto';
       yuckc.load();
       this.yuck = yuckc;
     }
@@ -57,7 +57,7 @@ export class SoundManager {
     if (this.sound) {
       this.whoo.play();
       const whooc = this.whoo.cloneNode() as HTMLAudioElement;
-      whooc.preload = "auto";
+      whooc.preload = 'auto';
       whooc.load();
       this.whoo = whooc;
     }
@@ -67,14 +67,14 @@ export class SoundManager {
     if (this.sound) {
       this.perfectScore.play();
       const perfectScorec = this.perfectScore.cloneNode() as HTMLAudioElement;
-      perfectScorec.preload = "auto";
+      perfectScorec.preload = 'auto';
       perfectScorec.load();
       this.perfectScore = perfectScorec;
     }
   }
 
   public playWhooAndPerfectScore() {
-    this.whoo.addEventListener("ended", () => this.playPerfectScore());
+    this.whoo.addEventListener('ended', () => this.playPerfectScore());
     this.playWhoo();
   }
 

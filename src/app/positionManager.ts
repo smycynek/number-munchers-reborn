@@ -1,4 +1,4 @@
-import { puzzleRows, puzzleColumns } from "./constants";
+import { puzzleRows, puzzleColumns } from './constants';
 
 export class PositionManager {
     private rowCount = puzzleRows;

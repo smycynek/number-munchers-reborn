@@ -96,7 +96,7 @@
 
 
       <div class="container large">
-        <p class="version">||v161||</p>
+        <p class="version">||v162||</p>
       </div>
     </div>
 
@@ -109,27 +109,27 @@
 
     <div>
       <h1>Puzzle Types</h1>
-      <div class="choice-group">
+      <div>
         <div class="choice-group">
-          <input class="choice-group" id="cbGlt" [disabled]="isCheckboxDisabled(glt)" [(ngModel)]="glt"
+          <input id="cbGlt" [disabled]="isCheckboxDisabled(glt)" [(ngModel)]="glt"
             (change)="toggleType(glt, puzzleType.GREATER_LESS_THAN)" type="checkbox" />
-          <label class="choice-group" for="cbGlt">Greater or Less Than</label>
+          <label for="cbGlt">Greater or Less Than</label>
         </div>
         <div class="choice-group">
-          <input class="choice-group" id="cbMult" [disabled]="isCheckboxDisabled(multiplication)"
+          <input id="cbMult" [disabled]="isCheckboxDisabled(multiplication)"
             [(ngModel)]="multiplication" (change)="toggleType(multiplication, puzzleType.MULTIPLICATION)"
             type="checkbox" />
-          <label class="choice-group" for="cbMult">Multiplication</label>
+          <label for="cbMult">Multiplication</label>
         </div>
         <div class="choice-group">
-          <input class="choice-group" id="cbDiv" [disabled]="isCheckboxDisabled(division)" [(ngModel)]="division"
+          <input id="cbDiv" [disabled]="isCheckboxDisabled(division)" [(ngModel)]="division"
             (change)="toggleType(division, puzzleType.DIVISION)" type="checkbox" />
-          <label class="hoice-group" for="cbDiv">Division</label>
+          <label for="cbDiv">Division</label>
         </div>
         <div class="choice-group">
-          <input class="choice-group" id="cbMisc" [disabled]="isCheckboxDisabled(misc)" [(ngModel)]="misc"
+          <input id="cbMisc" [disabled]="isCheckboxDisabled(misc)" [(ngModel)]="misc"
             (change)="toggleType(misc, puzzleType.MISC)" type="checkbox" />
-          <label class="choice-group" for="cbMisc">Misc</label>
+          <label for="cbMisc">Misc</label>
         </div>
       </div>
 
@@ -153,14 +153,14 @@
       <div class="glossary">
         <details>
           <summary>Perfect square</summary>
-          A number that can be expressed as another whole number multipled by itself. For example, 9 is a perfect
+          A number that can be expressed as another whole number multiplied by itself. For example, 9 is a perfect
           square,
           because 3x3 is 9.
         </details>
 
         <details>
           <summary>Multiple</summary>
-          A number equal to a base number multipled by a whole number. For example, multiples of 3 include 6, 9, and 12.
+          A number equal to a base number multiplied by a whole number. For example, multiples of 3 include 6, 9, and 12.
         </details>
 
         <details>
@@ -185,7 +185,7 @@
         <details>
           <summary>Mertin</summary>
           <img style="display: block;" alt="Mertin Logo" src="./assets/mertin.png" width="15%" />
-          A mischevious gremlin who likes to reset areas of the board according to his own design.
+          A mischievous gremlin who likes to reset areas of the board according to his own design.
           (Off by default, with three speed levels for a challenge)
         </details>
       </div>
