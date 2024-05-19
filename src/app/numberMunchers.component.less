@@ -20,7 +20,7 @@
 }
 
 .cell {
-    margin: 0.125em;
+    margin: 2px;
     width: 120px;
     height: 90px;
     align-items: center;
@@ -28,7 +28,7 @@
     vertical-align: center;
     text-align: center;
     border-style: solid;
-    border-width: 0.0625em;
+    border-width: 2px;
     font-size: x-large;
     background-color: lightgrey;
     padding: 0px;
@@ -40,7 +40,9 @@
 
 .cell-active {
     font-weight: bolder;
-    border-width: 0.125em;
+    border-width: 3px;
+    width: 119px;
+    height: 89px;
 }
 
 .large {
@@ -229,7 +231,7 @@ img {
 @keyframes flash {
     0% {
         border-style: solid;
-        border-width: 0.0625em;
+        border-width: 2px;
         border-color: black;
         color: lightgray;
         background-color: lightgray;
@@ -237,7 +239,7 @@ img {
 
     25% {
         border-style: solid;
-        border-width: 0.0625em;
+        border-width:  2px;
         border-color: black;
         color: yellow;
         background-color: yellow;
@@ -245,7 +247,7 @@ img {
 
     50% {
         border-style: solid;
-        border-width: 0.0625em;
+        border-width:  2px;
         border-color: black;
         color: orange;
         background-color: orange;
@@ -253,7 +255,7 @@ img {
 
     75% {
         border-style: solid;
-        border-width: 0.0625em;
+        border-width:  2px;
         border-color: black;
         color: black;
         background-color: lightgray;
@@ -261,7 +263,7 @@ img {
 
     100% {
         border-style: solid;
-        border-width: 0.0625em;
+        border-width:  2px;
         border-color: black;
         color: black;
         background-color: lightgray;
@@ -274,7 +276,7 @@ img {
 
 .mertin-flip {
     border-style: solid;
-    border-width: 0.0625em;
+    border-width:  2px;
     animation-name: flash;
     animation-duration: 2.0s;
 }
@@ -287,7 +289,20 @@ img {
 .option {
     display: block;
 }
-input {
-    padding-left: 0.5em;
-    margin-left: 0.5em;
+
+.choice-group {
+    margin: 0.1em;
+    padding: 0.1em;
+}
+
+.config {
+    font-size: small;
+}
+
+.smaller {
+    font-size: medium;
+}
+
+.greenfill {
+    fill: green;
 }

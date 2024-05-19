@@ -18,10 +18,9 @@ import { FormsModule } from '@angular/forms';
 
 const allPuzzles = new Set<PuzzleType>([
   PuzzleType.MISC,
-  PuzzleType.DIVISION, 
+  PuzzleType.DIVISION,
   PuzzleType.GREATER_LESS_THAN,
   PuzzleType.MULTIPLICATION,
-  PuzzleType.MULTIPLICATION_EXPRESSIONS,
 ]);
 
 @Component({
@@ -39,24 +38,22 @@ export class AppComponent implements AfterViewChecked {
   private statusMessageDetail = StringResources.YOU_CAN_DO_IT;
   private statusMessageClass = "status-default";
   private activePuzzle: Puzzle = Puzzle.getRandomPuzzle(this.puzzleTypes);
-  private foundNumbers: Set<number> = new Set<number>();
+  private foundNumbers: Set<string> = new Set<string>();
   private soundManager: SoundManager = new SoundManager();
   private positionManager: PositionManager = new PositionManager();
   public title: string = StringResources.TITLE;
   private timer: Observable<number> = timer(mertinDelay * 1000, mertinInterval * 1000);
   private speed: number = 0;
 
-  public cycleSpeed(): void {
-    if (this.speed === 0) {
-      this.speed = 3;
-    } else {
-      this.speed--;
-    }
-    if (this.speed === 0) {
-      this.positionManager.setMertinIndex(-1);
-    }
-    debug(`Speed: ${this.speed}`);
+  public multiplication: boolean = true;
+  public glt: boolean = true;
+  public division: boolean = true;
+  public misc: boolean = true;
+
+  public get puzzleType(): typeof PuzzleType {
+    return PuzzleType;
   }
+
 
 
   constructor(private cdr: ChangeDetectorRef, private route: ActivatedRoute) {
@@ -65,11 +62,12 @@ export class AppComponent implements AfterViewChecked {
     });
     this.puzzleTypes = allPuzzles;
     this.timerInit();
+    this.init();
   }
 
   /* Init */
   ngAfterViewChecked() {
-    this.init();
+
     this.cdr.detectChanges();
   }
 
@@ -108,7 +106,7 @@ export class AppComponent implements AfterViewChecked {
     this.statusMessageDetail = StringResources.YOU_CAN_DO_IT;
     this.statusMessageClass = "status-default";
     this.cellData = [];
-    this.foundNumbers = new Set<number>();
+    this.foundNumbers = new Set<string>();
   }
 
   private init() {
@@ -123,6 +121,33 @@ export class AppComponent implements AfterViewChecked {
         this.statusMessageDetail = "-";
       }
     }
+  }
+
+  public isCheckboxDisabled(val: boolean) {
+    if (val && this.puzzleTypes.size <= 1)
+      return true;
+    else
+      return false;
+  }
+
+  public toggleType(value: boolean, type: PuzzleType) {
+    if (value) {
+      this.puzzleTypes.add(type);
+    } else {
+      this.puzzleTypes.delete(type);
+    }
+  }
+
+  public cycleSpeed(): void {
+    if (this.speed === 0) {
+      this.speed = 3;
+    } else {
+      this.speed--;
+    }
+    if (this.speed === 0) {
+      this.positionManager.setMertinIndex(-1);
+    }
+    debug(`Speed: ${this.speed}`);
   }
 
   public newGame() {
@@ -191,7 +216,7 @@ export class AppComponent implements AfterViewChecked {
     debug(`Remaining solutions: ${solutionsCount}`);
     let newValues;
     if (solutionsCount <= 1) {
-      debug ('Adding correct answer');
+      debug('Adding correct answer');
       newValues = this.activePuzzle.getValidSamples(); // insert valid choice
     } else {
       debug('Adding random answer')
@@ -267,7 +292,9 @@ export class AppComponent implements AfterViewChecked {
 
   public getCellClass(cellRow: number, cellColumn: number): string {
     let classes = "";
+    
     const cell: DataCell = this.getCellData(cellRow, cellColumn);
+
     if (this.hasMertin(cellRow, cellColumn)) {
       classes = "mertin-flip"
     }
@@ -285,6 +312,9 @@ export class AppComponent implements AfterViewChecked {
     }
     if (this.noRemainingSolutions()) {
       classes += " game-over";
+    }
+    if (cell.valuePair.valueAsString.includes("x")) {
+      classes += " smaller"
     }
     return classes;
   }
@@ -389,7 +419,7 @@ export class AppComponent implements AfterViewChecked {
     data.discovered = true;
 
     if (data.valid) {
-      this.foundNumbers.add(data.valuePair.value);
+      this.foundNumbers.add(data.valuePair.valueAsString);
       if (this.noRemainingSolutions()) {
         debug('Game Over');
         this.statusMessageClass = "status-success";
@@ -442,12 +472,4 @@ export class AppComponent implements AfterViewChecked {
     debug(`Logging: ${logStatus}`);
   }
 
-  public toggleJustMultiplication(): void {
-     if (this.puzzleTypes.size === 1) {
-      this.puzzleTypes = allPuzzles;
-     }
-     else {
-      this.puzzleTypes = new Set<PuzzleType>([PuzzleType.MULTIPLICATION_EXPRESSIONS]);
-     }
-  }
 }

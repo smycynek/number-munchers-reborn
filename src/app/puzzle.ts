@@ -46,7 +46,6 @@ import {
 
 export enum PuzzleType {
   MULTIPLICATION,
-  MULTIPLICATION_EXPRESSIONS,
   DIVISION,
   GREATER_LESS_THAN,
   MISC
@@ -232,7 +231,7 @@ export class Puzzle {
         (cellValue: ValuePair) => { return `${cellValue.valueAsString} = ${cellValue.value}, not ${randomMultiplicationTarget}`; },
         () =>  getValidMultiplicationPairs(randomMultiplicationTarget),
         (count: number) => getRandomMultiplicationPairs(count),
-        PuzzleType.MULTIPLICATION_EXPRESSIONS,
+        PuzzleType.MULTIPLICATION,
         true,
         "Multiplication Expressions"
       ),
