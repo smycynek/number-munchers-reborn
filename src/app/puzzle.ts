@@ -6,9 +6,10 @@ import {
 import { DataCell, ValuePair } from './dataCell';
 
 import {
-  ValuePairSetHas,
+  valuePairSetHas,
   debug,
   format_and,
+  round3,
   toValuePairSet,
 } from './utility';
 
@@ -28,7 +29,8 @@ import {
   getValidMultiples,
   getValidOutsideExclusiveValues,
   getPerfectSquares,
-  getValidMultiplicationPairs
+  getValidMultiplicationPairs,
+  getValidDivisionPairs
 }
   from './sampleValidValues';
 
@@ -41,6 +43,7 @@ import {
   getRandomMultipleBase,
   getRandomItemFromSetAndRemove,
   getRandomMultiplicationPairs,
+  getRandomDivisionPairs,
 }
   from './sampleRandomValues';
 
@@ -59,6 +62,7 @@ export class Puzzle {
 
   public generateCell(curatedValues: Set<ValuePair>) {
     const value = getRandomItemFromSetAndRemove(curatedValues)
+    debug(`Value to set: ${value}`)
     const valid = this.predicate(value);
     return new DataCell(value, valid, false);
   }
@@ -87,10 +91,6 @@ export class Puzzle {
     public name: string = ''
   ) { }
 
-  public getCuratedValue(): number {
-    return getRandomNumberWithinRange(1, this.maxValue)
-  }
-
   private getCuratedValues(count: number, addValidValues: boolean = true): Set<ValuePair> {
     const curatedValues = this.getRandomSamples(count, this.maxValue);
     if (addValidValues) {
@@ -101,9 +101,10 @@ export class Puzzle {
       }
       const replacementCount = validSamples.size < replacements ? validSamples.size : replacements;
       debug(`Valid samples for puzzle: ${[...validSamples]}`);
+      debug(`Substituting in ${replacements} correct answers.`);
       for (let idx = 0; idx != replacementCount; idx++) {
         const validValue = getRandomItemFromSetAndRemove(validSamples);
-        if (ValuePairSetHas(validValue, curatedValues)) {
+        if (valuePairSetHas(validValue, curatedValues)) {
           debug(`Value exists: ${validValue}`);
           continue;
         } else {
@@ -122,6 +123,7 @@ export class Puzzle {
   private static createPuzzles(): Puzzle[] {
     const randomFactorTarget = getRandomFactorTarget(2);
     const randomMultiplicationTarget = getRandomFactorTarget(3);
+    const randomQuotientTarget = getRandomNumberWithinRange(2, 11);
     const randomBetweenBounds = getRandomBetweenBounds();
     const randomBetweenBoundsWide = getRandomBetweenBoundsWide();
     const randomMultipleBase = getRandomMultipleBase();
@@ -204,7 +206,7 @@ export class Puzzle {
         `Find numbers divisible by ${randomMultipleBase}`,
         `divisible by ${randomMultipleBase}.`,
         (cellValue: ValuePair) => { return `${cellValue.value} divided by ${randomMultipleBase} equals ${cellValue.value / randomMultipleBase}` },
-        (cellValue: ValuePair) => { return `${cellValue.value} divided by ${randomMultipleBase} is ${Math.round((cellValue.value / randomMultipleBase) * 100) / 100}, not a whole number` },
+        (cellValue: ValuePair) => { return `${cellValue.value} divided by ${randomMultipleBase} is ${round3(cellValue.value / randomMultipleBase) }, not a whole number` },
         () => toValuePairSet(getValidMultiples(randomMultipleBase)),
         (count: number) => toValuePairSet(getRandomNaturalNumberSet(dataUpperBound, count)),
         PuzzleType.DIVISION,
@@ -235,6 +237,20 @@ export class Puzzle {
         true,
         'Multiplication Expressions'
       ),
+      new Puzzle(
+        (cellValue: ValuePair) => cellValue.value === randomQuotientTarget,
+        dataUpperBoundLow,
+        `Find expressions equal to ${randomQuotientTarget}`,
+        `equal to ${randomQuotientTarget}`,
+        (cellValue: ValuePair) => { return `${cellValue.valueAsString} = ${randomQuotientTarget}`; },
+        (cellValue: ValuePair) => { return `${cellValue.valueAsString} = ${round3(cellValue.value)}, not ${randomQuotientTarget}`; },
+        () => getValidDivisionPairs(randomQuotientTarget),
+        (count: number) => getRandomDivisionPairs(count),
+        PuzzleType.DIVISION,
+        true,
+        'Division Expressions'
+      ),
+
     ];
 
   }

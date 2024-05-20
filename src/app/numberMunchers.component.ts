@@ -12,7 +12,7 @@ import JSConfetti from 'js-confetti';
 import { StringResources } from './strings';
 import { Observable, timer } from 'rxjs';
 import { getRandomItemFromSetAndRemove } from './sampleRandomValues';
-import { mertinDelay, mertinInterval } from './constants';
+import { divSymbol, mertinDelay, mertinInterval } from './constants';
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
@@ -73,7 +73,7 @@ export class AppComponent implements AfterViewChecked {
     this.timer.subscribe((val) => {
       if (this.speed !== 0 && !this.noRemainingSolutions()) {
         if ((val % this.speed) === 0) {
-          debug(`Timer pulse: ${val} speed: ${this.speed}`);
+          debug(`Timer pulse: ${val}, Interval length: ${this.speed*mertinInterval}`);
           this.positionManager.setMertinIndex(this.getRandomNonOccupiedIndex());
           this.resetSquare(this.positionManager.getMertinIndex())
         }
@@ -95,7 +95,7 @@ export class AppComponent implements AfterViewChecked {
     }
   }
 
-/* Options */
+  /* Options */
   public isCheckboxDisabled(val: boolean) {
     if (val && this.puzzleTypes.size <= 1)
       return true;
@@ -105,8 +105,10 @@ export class AppComponent implements AfterViewChecked {
 
   public toggleType(value: boolean, type: PuzzleType) {
     if (value) {
+      debug(`Add: ${PuzzleType[type]}`);
       this.puzzleTypes.add(type);
     } else {
+      debug(`Remove: ${PuzzleType[type]}`);
       this.puzzleTypes.delete(type);
     }
   }
@@ -120,7 +122,7 @@ export class AppComponent implements AfterViewChecked {
     if (this.speed === 0) {
       this.positionManager.setMertinIndex(-1);
     }
-    debug(`Speed: ${this.speed}`);
+    debug(`Interval length: ${this.speed*mertinInterval}`);
   }
 
   /* Game state */
@@ -209,20 +211,24 @@ export class AppComponent implements AfterViewChecked {
       debug('Invalid reset index!');
       return;
     }
+    // TODO, ensure new value not duplicate of existing square
+
     this.soundManager.playCackle();
     const solutionsCount = this.getRemainingSolutionsCount();
     debug('--Reset Square--')
     debug(`Index to replace: ${squareIndex}`);
     debug(`Remaining solutions: ${solutionsCount}`);
-    let newValues;
+    debug(`Removing: ${this.cellData[squareIndex].valuePair.toString()}`)
+    let newValue;
     if (solutionsCount <= 1) {
-      debug('Adding correct answer');
-      newValues = this.activePuzzle.getValidSamples(); // insert valid choice
+
+      newValue = this.activePuzzle.getValidSamples(); // insert valid choice
+      debug('Adding correct answer:');
     } else {
-      debug('Adding random answer')
-      newValues = this.activePuzzle.getRandomSamples(1, this.activePuzzle.maxValue);
+      newValue = this.activePuzzle.getRandomSamples(1, this.activePuzzle.maxValue);
+      debug('Adding random answer');
     }
-    this.cellData[squareIndex] = this.activePuzzle.generateCell(newValues);
+    this.cellData[squareIndex] = this.activePuzzle.generateCell(newValue);
     debug('---');
   }
 
@@ -313,7 +319,8 @@ export class AppComponent implements AfterViewChecked {
     if (this.noRemainingSolutions()) {
       classes += ' game-over';
     }
-    if (cell.valuePair.valueAsString.includes('x')) {
+    if (cell.valuePair.valueAsString.includes('x')
+      || cell.valuePair.valueAsString.includes(divSymbol)) {
       classes += ' smaller'
     }
     return classes;
@@ -388,24 +395,28 @@ export class AppComponent implements AfterViewChecked {
     this.choiceAction();
   }
 
+  private getPosition(): string {
+    return `${this.positionManager.getActiveRow()}, ${this.positionManager.getActiveColumn()}`;
+  }
+
   private up() {
     this.positionManager.setActiveRow(wrapUp(this.positionManager.getActiveRow(), this.positionManager.getRowCount()));
-    debug(this.positionManager.getActiveRow() + ', ' + this.positionManager.getActiveColumn());
+    debug(`Up: ${this.getPosition()}`);
   }
 
   private down() {
     this.positionManager.setActiveRow(wrapDown(this.positionManager.getActiveRow(), this.positionManager.getRowCount()));
-    debug(this.positionManager.getActiveRow() + ', ' + this.positionManager.getActiveColumn());
+    debug(`Down: ${this.getPosition()}`);
   }
 
   private left() {
     this.positionManager.setActiveColumn(wrapDown(this.positionManager.getActiveColumn(), this.positionManager.getColumnCount()));
-    debug(this.positionManager.getActiveRow() + ', ' + this.positionManager.getActiveColumn());
+    debug(`Left: ${this.getPosition()}`);
   }
 
   private right() {
     this.positionManager.setActiveColumn(wrapUp(this.positionManager.getActiveColumn(), this.positionManager.getColumnCount()));
-    debug(this.positionManager.getActiveRow() + ', ' + this.positionManager.getActiveColumn());
+    debug(`Right: ${this.getPosition()}`);
   }
 
   /* Action */
@@ -413,7 +424,7 @@ export class AppComponent implements AfterViewChecked {
     if (this.noRemainingSolutions()) {
       return;
     }
-    debug(this.positionManager.getActiveRow() + ', ' + this.positionManager.getActiveColumn());
+    debug(`Choice: ${this.getPosition()}`);
     const data = this.getCellData(this.positionManager.getActiveRow(), this.positionManager.getActiveColumn());
     data.discovered = true;
 
@@ -447,7 +458,7 @@ export class AppComponent implements AfterViewChecked {
       this.statusMessageClass = 'status-error';
     }
 
-    debug(`Correct? ${data.valid}, ${data.valuePair.toString()}, Question: ${this.activePuzzle.questionText}`)
+    debug(`Correct? ${data.valid}, ${data.valuePair.toString()}`);
   }
 
   /* Position */
@@ -468,7 +479,7 @@ export class AppComponent implements AfterViewChecked {
 
   public toggleDebug(): void {
     const logStatus = toggleLog();
-    debug(`Logging: ${logStatus}`);
+    console.log(`Logging: ${logStatus}`);
   }
 
 }

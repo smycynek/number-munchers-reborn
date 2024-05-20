@@ -3,11 +3,12 @@ import {
   boundoffsetMin,
   boundOffsetMax,
   multipleLowerBound,
-  multipleUpperBound
+  multipleUpperBound,
 }
   from './constants';
 import { ValuePair } from './dataCell';
-import { getFactorTargets, getNaturalNumberSet } from './sampleValidValues';
+import { getFactorTargets, getNaturalNumberSet, getValidDivisionPairs } from './sampleValidValues';
+import { valuePairSetHas } from './utility';
 
 // A narrower range used for > and <
 export function getRandomBetweenBounds() {
@@ -64,12 +65,31 @@ export function getRandomMultiplicationPairs(count: number): Set<ValuePair> {
   const valueSet: Set<ValuePair> = new Set();
   for (let idx = 2; idx < 16; idx++) {
     for (let idy = 2; idy < 16; idy++) {
-      valueSet.add(new ValuePair(idx * idy, `${idx}x${idy}`));
+      const pair = new ValuePair(idx * idy, `${idx}x${idy}`);
+      if (!valuePairSetHas(pair, valueSet)) {
+        valueSet.add(pair);
+      }
     }
   }
   const returnSet: Set<ValuePair> = new Set();
   for (let ic = 0; ic !== count; ic++) {
     returnSet.add(getRandomItemFromSetAndRemove(valueSet))
+  }
+  return returnSet;
+}
+
+export function getRandomDivisionPairs(count: number): Set<ValuePair> {
+  const valueSet: Set<ValuePair> = new Set();
+  const returnSet: Set<ValuePair> = new Set();
+  for (let idq = 2; idq < 12; idq++) {
+    getValidDivisionPairs(idq).forEach(v => {
+      if (!valuePairSetHas(v, valueSet)) {
+        valueSet.add(v);
+      }
+    });
+  }
+  for (let idc = 0; idc != count; idc++) {
+    returnSet.add(getRandomItemFromSetAndRemove(valueSet));
   }
   return returnSet;
 }

@@ -1,4 +1,4 @@
-import { dataUpperBound } from './constants';
+import { dataUpperBound, divSymbol } from './constants';
 import { ValuePair } from './dataCell';
 import {
   isBetween,
@@ -61,7 +61,18 @@ export function getValidMultiplicationPairs(target: number): Set<ValuePair> {
   const pairs: Set<ValuePair> = new Set();
   const factors = getValidFactors(target);
   factors.forEach(val => pairs.add(new ValuePair(target, `${val}x${target / val}`)));
-  console.log('-- ' + target);
-  pairs.forEach(p => console.log(p.toString()))
   return pairs;
 }
+
+export function getValidDivisionPairs(target: number): Set<ValuePair> {
+  const pairs: Set<ValuePair> = new Set();
+  const multiples = getValidMultiples(target);
+
+  multiples.forEach(mul => {
+    const otherParam = mul / target;
+    pairs.add(new ValuePair(target,  mul.toString() + divSymbol + otherParam.toString()));
+  });
+  return pairs;
+}
+
+

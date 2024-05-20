@@ -9,3 +9,4 @@ export const boundOffsetMax = 15;
 export const maxReplacements = 3;  // max number of extra correct answers to insert
 export const mertinDelay = 1;
 export const mertinInterval = 5;
+export const divSymbol = '\u{00F7}';

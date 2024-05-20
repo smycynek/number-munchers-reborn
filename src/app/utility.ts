@@ -61,7 +61,12 @@ export function format_and(items: number[]): string {
   return formatted;
 }
 
-export function ValuePairSetHas(valuePair: ValuePair, set: Set<ValuePair>): boolean {
+// Necessary because TypeScript's Set equality doesn't work on complex objects.
+export function valuePairSetHas(valuePair: ValuePair, set: Set<ValuePair>): boolean {
   const setVals = [...set].map(vp => vp.valueAsString);
   return setVals.includes(valuePair.valueAsString);
+}
+
+export function round3(value: number) {
+  return Math.round(value*1000)/1000;
 }
