@@ -32,7 +32,14 @@ const allPuzzles = new Set<PuzzleType>([
 })
 
 export class AppComponent implements AfterViewChecked, AfterViewInit {
-  @ViewChild('welcomeDialog') welcomeDialog: ElementRef | undefined;
+  @ViewChild('welcomeDialog') welcomeDialog!: ElementRef;
+  @ViewChild('helpDialog') helpDialog!: ElementRef;
+  @ViewChild('puzzleTypeDialog') puzzleTypeDialog!: ElementRef;
+  @ViewChild('btnNewGame') btnNewGame!: ElementRef;
+  @ViewChild('btnSound') btnSound!: ElementRef;
+  @ViewChild('btnMertin') btnMertin!: ElementRef;
+  @ViewChild('btnShowPuzzleTypes') btnShowPuzzleTypes!: ElementRef;
+  @ViewChild('btnHelp') btnHelp!: ElementRef;
 
   private puzzleTypes = allPuzzles;
   private cellData: DataCell[] = [];
@@ -51,6 +58,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   public glt: boolean = true;
   public division: boolean = true;
   public misc: boolean = true;
+  private welcomeDone: boolean = false;
 
   public get puzzleType(): typeof PuzzleType {
     return PuzzleType;
@@ -72,8 +80,11 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.welcomeDialog?.nativeElement.showModal();
-    setInterval(() => this.welcomeDialog?.nativeElement.close(), 20000);
+    if (!this.welcomeDone) {
+      this.welcomeDialog.nativeElement.showModal();
+      this.welcomeDone = true;
+    }
+    setInterval(() => this.welcomeDialog.nativeElement.close(), 15000);
   }
 
   private timerInit(): void {
@@ -121,17 +132,6 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     }
   }
 
-  public cycleSpeed(): void {
-    if (this.speed === 0) {
-      this.speed = 3;
-    } else {
-      this.speed--;
-    }
-    if (this.speed === 0) {
-      this.positionManager.setMertinIndex(-1);
-    }
-    debug(`Interval length: ${this.speed * mertinInterval}`);
-  }
 
   /* Game state */
 
@@ -147,9 +147,9 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
 
   public newGame() {
     debug('New game');
-    document.getElementById('btnNewGame')?.blur();
     this.reset();
     this.init();
+    this.btnNewGame.nativeElement.blur();
   }
 
   private getRandomNonOccupiedIndex(): number {
@@ -481,8 +481,33 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
 
   public toggleSound(): void {
     this.soundManager.toggleSound();
-    document.getElementById('btnSound')?.blur();
     debug(`Sound: ${this.soundManager.getSoundOn()}`);
+    this.btnSound.nativeElement.blur();
+  }
+
+  public toggleMertin(): void {
+    if (this.speed === 0) {
+      this.speed = 3;
+    } else {
+      this.speed--;
+    }
+    if (this.speed === 0) {
+      this.positionManager.setMertinIndex(-1);
+    }
+    debug(`Toggle/change interval length: ${this.speed * mertinInterval}`);
+    this.btnMertin.nativeElement.blur();
+  }
+
+  public showPuzzleTypes(): void {
+    this.btnShowPuzzleTypes.nativeElement.blur();
+    this.puzzleTypeDialog.nativeElement.showModal();
+    console.log('Show puzzle types');
+  }
+
+  public showHelp(): void {
+    this.btnHelp.nativeElement.blur();
+    this.helpDialog.nativeElement.showModal();
+    console.log('Show help');
   }
 
   public toggleDebug(): void {

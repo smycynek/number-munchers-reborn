@@ -1,19 +1,18 @@
-
-
 <main id="keytarget" class="main disable-dbl-tap-zoom">
   <div class="content">
     <div class="container">
       <h1>{{title}}<img title="Our hero!" (click)="toggleDebug()" alt="muncher logo" src="assets/muncher-happy.png"
-          width="40px" /></h1>
+          width="50" /></h1>
       <h2>{{getQuestionPrompt()}}</h2>
 
 
-      <button title="Start a new game" id="btnNewGame" class="btn" [ngClass]="getStartButtonClass()"
+      <button id="btnNewGame" #btnNewGame title="Start a new game" class="btn row-button highlighted"
+        style="margin-right:12px;" [ngClass]="getStartButtonClass()"
         (click)="newGame()">{{getStartButtonText()}}</button>
-      <button title="Sound Effects" id="btnSound" (click)="toggleSound()" type="button"
-        class="btn imagebutton no-border">
+      <button #btnSound title="Sound Effects" (click)="toggleSound()" type="button"
+        class="btn imagebutton row-button highlighted">
         <svg *ngIf="getSoundManager().getSoundOn()" role="img" aria-labelledby="Sound off"
-          xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-volume-up"
+          xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-volume-up"
           viewBox="0 0 16 16">
           <path
             d="M11.536 14.01A8.47 8.47 0 0 0 14.026 8a8.47 8.47 0 0 0-2.49-6.01l-.708.707A7.48 7.48 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303z" />
@@ -23,32 +22,30 @@
             d="M10.025 8a4.5 4.5 0 0 1-1.318 3.182L8 10.475A3.5 3.5 0 0 0 9.025 8c0-.966-.392-1.841-1.025-2.475l.707-.707A4.5 4.5 0 0 1 10.025 8M7 4a.5.5 0 0 0-.812-.39L3.825 5.5H1.5A.5.5 0 0 0 1 6v4a.5.5 0 0 0 .5.5h2.325l2.363 1.89A.5.5 0 0 0 7 12zM4.312 6.39 6 5.04v5.92L4.312 9.61A.5.5 0 0 0 4 9.5H2v-3h2a.5.5 0 0 0 .312-.11" />
         </svg>
         <svg *ngIf="!getSoundManager().getSoundOn()" role="img" aria-labelledby="Sound on"
-          xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-volume-mute"
+          xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-volume-mute"
           viewBox="0 0 16 16">
           <path
             d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06M6 5.04 4.312 6.39A.5.5 0 0 1 4 6.5H2v3h2a.5.5 0 0 1 .312.11L6 10.96zm7.854.606a.5.5 0 0 1 0 .708L12.207 8l1.647 1.646a.5.5 0 0 1-.708.708L11.5 8.707l-1.646 1.647a.5.5 0 0 1-.708-.708L10.793 8 9.146 6.354a.5.5 0 1 1 .708-.708L11.5 7.293l1.646-1.647a.5.5 0 0 1 .708 0" />
         </svg>
       </button>
 
-
-      <button [disabled]="this.noRemainingSolutions()" id="btnMertin" class="btn imagebutton"
-        [ngClass]="getMertinButtonClass()" onclick="document.getElementById('btnMertin').blur()" (click)="cycleSpeed()">
-        <img alt="Mertin avatar" title="Set Mertin-mode speed" [src]="getMertinButtonImage()" width="40px">
+      <button #btnMertin [disabled]="this.noRemainingSolutions()" class="btn imagebutton row-button highlighted"
+        [ngClass]="getMertinButtonClass()" (click)="toggleMertin()">
+        <img alt="Mertin avatar" title="Set Mertin-mode speed" [src]="getMertinButtonImage()" width="40" width="40">
       </button>
 
-      <button title="Select puzzle types" id="btnShowTypes" class="btn imagebutton no-border"
-        onclick="document.getElementById('btnShowTypes').blur()" (click)="typeDialog.showModal()">
+      <button #btnShowPuzzleTypes title="Select puzzle types" class="btn imagebutton row-button highlighted"
+        (click)="showPuzzleTypes()">
 
-        <svg height="30" width="30" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+        <svg height="40" width="40" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
           <path fill="#00ff00"
             d="M755.75 575.15c-13.95-9.96-28.52-16.59-43.47-19.92-8.84-1.69-18.06-2.33-27.57-1.81-8.99 0.5-17.56 1.68-25.69 3.52-6.1 1.69-12.22 3.89-18.35 6.59-18.18 8.02-33.89 18.12-46.79 30.33-12.22 12.9-22.32 28.62-30.34 46.79-2.7 6.12-4.9 12.24-6.59 18.34-1.84 8.14-3.03 16.7-3.52 25.69-0.52 9.51 0.12 18.73 1.81 27.57 3.33 14.95 9.96 29.52 19.92 43.47 3.89 5.44 8.08 10.4 12.56 14.88 20.06 20.03 45.83 30.7 75.42 34.11 8.92 1.02 18.12 1.68 26.53 4.48 5.12 1.7 9.16 4.08 12.08 7.02 6.65 6.6 7.63 16.1 2.5 27.24-3.15 6.84-7.7 13.45-12.96 18.84l-2.79 2.86c-3.93 3.92-6.41 6.4-7.05 7.04-3.13 3.16-6.1 6.15-9.06 9.15l-2.96 2.92c-10.52 10.58-21.09 21.12-31.66 31.65-22.76 22.82-45.57 45.58-68.38 68.36-7.5 7.5-15 15-22.5 22.49-3.46 3.45-7.07 6.38-10.78 8.79-1.8 1.22-3.49 2.24-5.18 3.16-19.6 9.89-41.43 5.92-59.24-11.88-5.4-5.4-10.62-10.62-15.85-15.84-30.25-30.25-60.48-60.52-90.77-90.73-8.59-8.57-17.13-17.08-25.68-25.59-6.12-6.09-12.67-11.85-19.56-17.06-5.72-4.33-11.59-7.56-17.46-9.73-21.16-7.32-41.41-2.01-54.67 13.26-3.81 4.8-7 10.47-9.39 16.94-3.43 9.26-4.6 19.47-5.9 29.36-4.9 37.53-25.8 68.43-55.98 82.65-7.48 3.65-15.49 6.29-23.9 7.78-7.95 1.41-15.95 1.71-23.85 1.04-26.61-1.35-49.48-13.09-68.51-32.57-1.68-1.67-2.1-2.09-2.51-2.51-19.48-19.02-31.22-41.9-32.57-68.5-0.68-7.9-0.37-15.9 1.04-23.85 1.49-8.41 4.13-16.43 7.78-23.9 14.22-30.18 45.13-51.07 82.65-55.97 9.89-1.29 20.1-2.47 29.36-5.9 6.94-2.56 12.96-6.05 17.97-10.23 14.54-13.15 19.59-32.63 12.84-52.34-2.78-7.35-6-13.22-10.33-18.94-5.21-6.88-10.97-13.43-17.06-19.55-8.51-8.55-17.03-17.09-25.55-25.63-26.92-26.98-53.84-53.88-80.75-80.78l-10.03-10.03c-5.22-5.22-10.45-10.45-15.26-15.27-18.39-18.4-22.35-40.22-12.46-59.82 0.92-1.69 1.94-3.37 3.08-5.05 2.49-3.84 5.42-7.45 8.87-10.91 7.49-7.5 14.99-15 22.49-22.5 22.77-22.81 45.54-45.62 68.36-68.38 10.53-10.57 21.06-21.14 31.65-31.66l2.92-2.96c2.99-2.97 5.99-5.93 8.98-8.9 0.8-0.81 3.28-3.29 7.2-7.22l2.86-2.79c5.39-5.26 12-9.8 18.84-12.96 11.14-5.13 20.63-4.15 27.24 2.5 2.94 2.92 5.32 6.96 7.02 12.08 2.79 8.41 3.45 17.61 4.48 26.53 3.41 29.59 14.08 55.35 34.11 75.41 4.49 4.48 9.44 8.67 14.88 12.56 13.95 9.96 28.52 16.59 43.47 19.92 8.84 1.69 18.06 2.33 27.57 1.81 8.99-0.5 17.56-1.68 25.69-3.52 6.1-1.69 12.22-3.89 18.35-6.59 18.18-8.02 33.89-18.12 46.79-30.33 12.22-12.9 22.32-28.62 30.34-46.79 2.7-6.12 4.9-12.24 6.59-18.34 1.84-8.14 3.03-16.7 3.52-25.69 0.52-9.51-0.12-18.73-1.81-27.57-3.33-14.95-9.96-29.52-19.92-43.47-3.89-5.44-8.08-10.4-12.56-14.88-20.06-20.03-45.83-30.7-75.42-34.11-8.92-1.02-18.12-1.68-26.53-4.48-5.12-1.7-9.16-4.08-12.08-7.02-6.65-6.6-7.63-16.1-2.5-27.24 3.15-6.84 7.7-13.45 12.96-18.84l2.79-2.86c3.93-3.92 6.41-6.4 7.05-7.04 3.13-3.16 6.1-6.15 9.06-9.15l2.96-2.92c10.52-10.58 21.09-21.12 31.66-31.65 22.76-22.82 45.57-45.58 68.38-68.35 7.5-7.5 15-15 22.5-22.49 3.46-3.45 7.07-6.38 10.78-8.79 1.8-1.22 3.49-2.24 5.18-3.16 19.6-9.89 41.43-5.92 59.24 11.88 5.4 5.4 10.62 10.62 15.85 15.84 30.25 30.25 60.48 60.52 90.77 90.73 8.59 8.57 17.13 17.08 25.68 25.59 6.12 6.09 12.67 11.85 19.56 17.06 5.72 4.33 11.59 7.56 17.46 9.73 21.16 7.32 41.41 2.01 54.67-13.26 3.81-4.8 7-10.47 9.39-16.94 3.43-9.26 4.6-19.47 5.9-29.36 4.9-37.53 25.8-68.43 55.98-82.65 7.48-3.65 15.49-6.28 23.9-7.78 7.95-1.41 15.95-1.71 23.85-1.04 26.61 1.35 49.48 13.09 68.51 32.57 1.68 1.67 2.1 2.09 2.51 2.51 19.48 19.02 31.22 41.9 32.57 68.5 0.68 7.9 0.37 15.9-1.04 23.85-1.49 8.41-4.13 16.43-7.78 23.9-14.22 30.18-45.13 51.07-82.65 55.97-9.89 1.29-20.1 2.47-29.36 5.9-6.94 2.56-12.96 6.05-17.97 10.23-14.54 13.15-19.59 32.63-12.84 52.34 2.78 7.35 6 13.22 10.33 18.94 5.21 6.88 10.97 13.43 17.06 19.55 8.51 8.55 17.03 17.09 25.55 25.63 30.26 30.33 60.54 60.56 90.78 90.81 5.22 5.22 10.45 10.45 15.26 15.27 18.39 18.4 22.35 40.22 12.46 59.82-0.92 1.69-1.94 3.37-3.08 5.05-2.49 3.84-5.42 7.45-8.87 10.91-7.49 7.5-14.99 15-22.49 22.5-22.77 22.81-45.54 45.62-68.36 68.38-10.53 10.57-21.06 21.14-31.65 31.66l-2.92 2.96c-2.99 2.97-5.99 5.93-8.98 8.9-0.8 0.81-3.28 3.29-7.2 7.22l-2.86 2.79c-5.39 5.26-12 9.8-18.84 12.96-11.14 5.13-20.63 4.15-27.24-2.5-2.94-2.92-5.32-6.96-7.02-12.08-2.79-8.41-3.45-17.61-4.48-26.53-3.41-29.59-14.08-55.35-34.11-75.41C766.15 583.23 761.19 579.03 755.75 575.15z" />
         </svg>
 
       </button>
 
-      <button id="btnHelp" title="Help" class="btn imagebutton no-border"
-        onclick="document.getElementById('btnHelp').blur()" (click)="helpDialog.showModal()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-question-circle"
+      <button #btnHelp title="Help" class="btn imagebutton row-button highlighted" (click)="showHelp()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-question-circle"
           viewBox="0 0 16 16">
           <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
           <path
@@ -73,13 +70,13 @@
 
 
       <div class="container large">
-        <p class="version">||v168||</p>
+        <p class="version">||v173||</p>
       </div>
     </div>
 
   </div>
 
-  <dialog id="puzzleTypeDialog" class="dialog-friendly dialog-narrow" typeDialog #typeDialog closed>
+  <dialog class="dialog-friendly dialog-narrow" typeDialog #puzzleTypeDialog closed>
     <div>
       <h1>Puzzle Types</h1>
       <div class="choice-menu">
@@ -108,24 +105,30 @@
 
     </div>
     <form method="dialog">
-      <button class="button-friendly">OK</button>
+      <button class="centered-button button-friendly">OK</button>
     </form>
   </dialog>
 
-<dialog class="welcome-dialog" #welcomeDialog welcomeDialog closed>
-<form method="dialog">
-  <button class="button-welcome">X</button>
-</form>
-<div class="welcome-text">
-  <p class="centered strong">Welcome!</p> <p> Click or tap a square in the grid to get started with the game.  Try the row of icons above the grid
-  for game settings or more information.</p>
-</div>
-</dialog>
+  <dialog class="welcome-dialog" #welcomeDialog welcomeDialog closed>
+    <form method="dialog">
+      <button class="button-welcome cancel">X</button>
+    </form>
+    <div class="welcome-text">
+      <div class="heading">
+        <p class="centered strong">Welcome!</p>
+      </div>
+      <p> Click or tap a square in the grid to get started with the game. Try the row of icons above the grid
+        for game settings or more information.</p>
+      <form method="dialog">
+        <button class="centered-button button-welcome ok">OK</button>
+      </form>
+    </div>
+  </dialog>
 
-<dialog id="helpDialog" class="dialog-friendly dialog-wide" helpDialog #helpDialog closed>
+  <dialog class="dialog-friendly dialog-wide" helpDialog #helpDialog closed>
 
     <form method="dialog">
-      <button class="button-friendly">X</button>
+      <button class="button-friendly cancel">X</button>
       <h1 class="centered">{{title}}</h1>
       <h2 class="centered">A math game</h2>
 
@@ -162,17 +165,18 @@
       <div class="glossary">
         <details>
           <summary>Munchy</summary>
-          <img style="display: block"  alt="Number Munchers Logo" src="./assets/preview.png" width="70" />
+          <img style="display: block" alt="Number Munchers Logo" src="./assets/preview.png" width="70" />
           Our hero, a curious frog who loves numbers and has very specific tastes (that vary each game) for the kinds of
-          numbers he likes to eat.  Note that you can select specific puzzle types to play by tapping the puzzle piece icon 
+          numbers he likes to eat. Note that you can select specific puzzle types to play by tapping the puzzle piece
+          icon
           above the grid.
         </details>
 
         <details>
           <summary>Mertin</summary>
-          <img style="display: block"  alt="Mertin Logo" src="./assets/mertin.png" width="70" />
+          <img style="display: block" alt="Mertin Logo" src="./assets/mertin.png" width="70" />
           A mischievous gremlin who likes to reset areas of the board according to his own design.
-          Mertin-mode is off by default, with three speed levels for a challenge.  Tap the "No Mertin" icon above
+          Mertin-mode is off by default, with three speed levels for a challenge. Tap the "No Mertin" icon above
           the grid for him to appear.
         </details>
       </div>
@@ -189,7 +193,7 @@
 
       </ul>
 
-      <button class = "button-friendly">OK</button>
+      <button class="centered-button button-friendly ok">OK</button>
     </form>
   </dialog>
 

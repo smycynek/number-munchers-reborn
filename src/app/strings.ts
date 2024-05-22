@@ -1,5 +1,5 @@
 export class StringResources {
-    public static readonly START = 'Start!';
+    public static readonly START = 'Start clicking or tapping numbers!';
     public static readonly YOU_CAN_DO_IT = 'You can do it!'
     public static readonly TAP_SQUARES = 'Tap squares to select correct answers. ';
     public static readonly KEYBOARD = 'Use arrow keys and space bar to select correct answers. ';

@@ -66,3 +66,24 @@ summary {
     margin-top: 30px;
     display: block;
 }
+
+.row-button {
+    border-style: none;
+    padding: 6px;
+}
+
+.highlighted {
+    transition: all .2s ease-in-out;
+}
+
+.highlighted:active {
+    transform: scale(1.15);
+    transition: .1s;
+}
+
+@media (hover: hover) {
+    .highlighted:hover {
+        transform: scale(1.15);
+        transition: .1s;
+    }
+}
