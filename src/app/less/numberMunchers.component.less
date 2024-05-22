@@ -1,0 +1,68 @@
+@import 'mertin';
+@import 'dialog';
+@import 'cell';
+@import 'text';
+@import 'focus';
+@import 'image';
+@import 'layout';
+
+@media screen and (max-width: 650px) {
+    .content {
+        flex-direction: column;
+        width: max-content;
+    }
+}
+
+.disable-dbl-tap-zoom {
+    touch-action: manipulation;
+}
+
+main {
+    width: 100%;
+    min-height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0rem;
+    box-sizing: inherit;
+    position: relative;
+    border-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.content {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    max-width: 700px;
+    margin: 0;
+    padding: 0;
+    border-style: none;
+}
+
+.button-success {
+    font-weight: bold;
+}
+
+.game-over {
+    filter: brightness(80%);
+    color: white;
+}
+
+li {
+    list-style: none;
+}
+
+summary {
+    text-decoration: underline;
+}
+
+.checkbox-wide {
+    margin-right: 10px;
+}
+
+.welcome-text {
+    margin-top: 30px;
+    display: block;
+}

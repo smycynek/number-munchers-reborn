@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common'
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChangeDetectorRef } from '@angular/core';
@@ -28,10 +28,12 @@ const allPuzzles = new Set<PuzzleType>([
   standalone: true,
   imports: [CommonModule, NgbModule, RouterOutlet, FormsModule],
   templateUrl: './numberMunchers.component.html',
-  styleUrl: './numberMunchers.component.less'
+  styleUrl: './less/numberMunchers.component.less'
 })
 
-export class AppComponent implements AfterViewChecked {
+export class AppComponent implements AfterViewChecked, AfterViewInit {
+  @ViewChild('welcomeDialog') welcomeDialog: ElementRef | undefined;
+
   private puzzleTypes = allPuzzles;
   private cellData: DataCell[] = [];
   private statusMessage = StringResources.START;
@@ -61,6 +63,7 @@ export class AppComponent implements AfterViewChecked {
     this.puzzleTypes = allPuzzles;
     this.timerInit();
     this.init();
+
   }
 
   /* Init */
@@ -68,12 +71,17 @@ export class AppComponent implements AfterViewChecked {
     this.cdr.detectChanges();
   }
 
+  ngAfterViewInit() {
+    this.welcomeDialog?.nativeElement.showModal();
+    setInterval(() => this.welcomeDialog?.nativeElement.close(), 20000);
+  }
+
   private timerInit(): void {
     this.positionManager.setMertinIndex(-1);
     this.timer.subscribe((val) => {
       if (this.speed !== 0 && !this.noRemainingSolutions()) {
         if ((val % this.speed) === 0) {
-          debug(`Timer pulse: ${val}, Interval length: ${this.speed*mertinInterval}`);
+          debug(`Timer pulse: ${val}, Interval length: ${this.speed * mertinInterval}`);
           this.positionManager.setMertinIndex(this.getRandomNonOccupiedIndex());
           this.resetSquare(this.positionManager.getMertinIndex())
         }
@@ -122,7 +130,7 @@ export class AppComponent implements AfterViewChecked {
     if (this.speed === 0) {
       this.positionManager.setMertinIndex(-1);
     }
-    debug(`Interval length: ${this.speed*mertinInterval}`);
+    debug(`Interval length: ${this.speed * mertinInterval}`);
   }
 
   /* Game state */
@@ -321,7 +329,7 @@ export class AppComponent implements AfterViewChecked {
     }
     if (cell.valuePair.valueAsString.includes('x')
       || cell.valuePair.valueAsString.includes(divSymbol)) {
-      classes += ' smaller'
+      classes += ' cell-smaller'
     }
     return classes;
   }

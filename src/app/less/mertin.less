@@ -1,0 +1,49 @@
+@keyframes flash {
+    0% {
+        border-style: solid;
+        border-width: 2px;
+        border-color: black;
+        color: lightgray;
+        background-color: lightgray;
+    }
+
+    25% {
+        border-style: solid;
+        border-width: 2px;
+        border-color: black;
+        color: yellow;
+        background-color: yellow;
+    }
+
+    50% {
+        border-style: solid;
+        border-width: 2px;
+        border-color: black;
+        color: orange;
+        background-color: orange;
+    }
+
+    75% {
+        border-style: solid;
+        border-width: 2px;
+        border-color: black;
+        color: black;
+        background-color: lightgray;
+    }
+
+    100% {
+        border-style: solid;
+        border-width: 2px;
+        border-color: black;
+        color: black;
+        background-color: lightgray;
+    }
+}
+
+
+.mertin-flip {
+    border-style: solid;
+    border-width: 2px;
+    animation-name: flash;
+    animation-duration: 2.0s;
+}
