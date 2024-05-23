@@ -1,6 +1,8 @@
 import {
   dataUpperBound,
   dataUpperBoundLow,
+  greaterEqual,
+  lessEqual,
   maxReplacements
 } from './constants';
 import { DataCell, ValuePair } from './dataCell';
@@ -167,8 +169,8 @@ export class Puzzle {
       new Puzzle(
         (cellValue: ValuePair) => (isBetween(cellValue.value, randomBetweenBounds[0], randomBetweenBounds[1], true)),
         dataUpperBound,
-        `Find numbers >= ${randomBetweenBounds[0]} and <= ${randomBetweenBounds[1]}`,
-        `>= ${randomBetweenBounds[0]} and <= ${randomBetweenBounds[1]}`,
+        `Find numbers ${greaterEqual}  ${randomBetweenBounds[0]} and ${lessEqual} ${randomBetweenBounds[1]}`,
+        `${greaterEqual} ${randomBetweenBounds[0]} and ${lessEqual} ${randomBetweenBounds[1]}`,
         (cellValue: ValuePair) => { return `${cellValue.value} is greater than or equal to ${randomBetweenBounds[0]} and less than or equal to ${randomBetweenBounds[1]}`; },
         (cellValue: ValuePair) => { return `${cellValue.value} is not greater than or equal to ${randomBetweenBounds[0]} and less than or equal to ${randomBetweenBounds[1]}`; },
         () => toValuePairSet(getValidBetweenValues(randomBetweenBounds[0], randomBetweenBounds[1], true)),

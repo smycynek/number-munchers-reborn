@@ -1,0 +1,61 @@
+::backdrop {
+    background-image: linear-gradient(45deg,
+            grey, white);
+    opacity: 0.5;
+}
+
+
+.button-base {
+    border-style: solid;
+    border-color: black;
+    border-width: 2px;
+    border-radius: 10px;
+    color: black;
+    background-color: transparent;
+
+}
+
+.button-cancel {
+    border-style: none;
+    float: right;
+}
+
+.button-new-game {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color: #00ff00;
+    width: 115px;
+}
+
+.button-done {
+    filter: brightness(140%);
+    font-weight: bold;
+}
+
+.button-centered {
+    margin-top: 25px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.row-button {
+    border-style: none;
+    padding: 6px;
+}
+
+.highlighted {
+    transition: all .2s ease-in-out;
+}
+
+.highlighted:active {
+    transform: scale(1.15);
+    transition: .1s;
+}
+
+@media (hover: hover) {
+    .highlighted:hover {
+        transform: scale(1.15);
+        transition: .1s;
+    }
+}

@@ -4,30 +4,19 @@
     opacity: 0.5;
 }
 
-.dialog-friendly {
-    background-color: lightyellow;
+.dialog-base {
+    border-radius: 10px;
+    animation-name: appear;
+    animation-duration: 0.5s;
+    border-width: 2px;
+    border-color: gray;
 }
 
-
-
-.cancel {
-    border-style: none;
-    float: right;
-    color: black;
-}
-
-.okay {
-    border-style: solid;
-    border-color: black;
-}
-
-.button-friendly {
-    background-color: lightyellow;
-
-}
-
-.button-welcome {
+.dialog-welcome {
     background-color: lightblue;
+}
+.dialog-general {
+    background-color: lightyellow;
 }
 
 .dialog-wide {
@@ -42,15 +31,10 @@
     margin: 15px;
 }
 
-.welcome-dialog {
+.dialog-welcome {
     width: 400px;
     height: 300px;
     background-color: lightblue;
-    border-radius: 10px;
-    animation-name: appear;
-    animation-duration: 0.5s;
-    border-width: 2px;
-    border-color: gray;
 }
 
 .strong {
@@ -59,23 +43,19 @@
 
 @keyframes appear {
     0% {
-        background-color: lightblue;
         opacity: 0;
     }
 
     25% {
-        background-color: lightblue;
         opacity: 0;
     }
 
     50% {
-        background-color: lightblue;
         opacity: .7;
     }
 
 
     100% {
-        background-color: lightblue;
         opacity: 1.0;
     }
 }
@@ -87,11 +67,3 @@
     margin-bottom: 10px;
 }
 
-.centered-button {
-    margin-top: 25px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    color: black;
-    border-color: black;
-}

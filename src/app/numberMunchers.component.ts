@@ -273,9 +273,6 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     if (this.noRemainingSolutions()) {
       text = StringResources.TRY_AGAIN;
     }
-    if (!hasTouch()) {
-      text = `${text} ${StringResources.N_KEY}`;
-    }
     return text;
   }
 
@@ -297,11 +294,6 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
 
   public getFoundNumbers(): string {
     return `${StringResources.FOUND} ${[...this.foundNumbers].join(', ')}`;
-  }
-
-  public getStartButtonClass(): string {
-    const done = this.noRemainingSolutions() ? 'btn-success button-success' : 'btn-primary';
-    return done;
   }
 
   public getCellClass(cellRow: number, cellColumn: number): string {

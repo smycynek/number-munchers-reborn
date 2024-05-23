@@ -6,8 +6,8 @@
       <h2>{{getQuestionPrompt()}}</h2>
 
 
-      <button id="btnNewGame" #btnNewGame title="Start a new game" class="btn row-button highlighted"
-        style="margin-right:12px;" [ngClass]="getStartButtonClass()"
+      <button id="btnNewGame" #btnNewGame title="Start a new game" class="button-base button-new-game highlighted"
+        style="margin-right:12px;"
         (click)="newGame()">{{getStartButtonText()}}</button>
       <button #btnSound title="Sound Effects" (click)="toggleSound()" type="button"
         class="btn imagebutton row-button highlighted">
@@ -55,8 +55,11 @@
 
 
       <p [ngClass]="getStatusMessageClass()">{{getStatusMessage()}}</p>
-      <p class="message-detail" [ngClass]="getStatusMessageClass()">{{getStatusDetailMessage()}}</p>
+      <div class="details-container">
+        <p class="message-detail" [ngClass]="getStatusMessageClass()">{{getStatusDetailMessage()}}</p>
+      </div>
       <p>{{getFoundNumbers()}}</p>
+    
       <div *ngFor="let r of [].constructor(getPositionManager().getRowCount()); index as idxr" class="row">
         <div [ngClass]="getCellClass(idxr,idxc)" id="{{idxr}}{{idxc}}"
           *ngFor="let r of [].constructor(getPositionManager().getColumnCount()); index as idxc" class="col cell">
@@ -70,34 +73,34 @@
 
 
       <div class="container large">
-        <p class="version">||v173||</p>
+        <p class="version">||v178||</p>
       </div>
     </div>
 
   </div>
 
-  <dialog class="dialog-friendly dialog-narrow" typeDialog #puzzleTypeDialog closed>
+  <dialog class="dialog-base dialog-general dialog-narrow" typeDialog #puzzleTypeDialog closed>
     <div>
       <h1>Puzzle Types</h1>
       <div class="choice-menu">
-        <div class="choice-group">
-          <input class="checkbox-wide" id="cbGlt" [disabled]="isCheckboxDisabled(glt)" [(ngModel)]="glt"
+        <div class="choice-group form-check">
+          <input class="checkbox-wide highlighted" id="cbGlt" [disabled]="isCheckboxDisabled(glt)" [(ngModel)]="glt"
             (change)="toggleType(glt, puzzleType.GREATER_LESS_THAN)" type="checkbox" />
           <label for="cbGlt">Greater or Less Than</label>
         </div>
         <div class="choice-group">
-          <input class="checkbox-wide" id="cbMult" [disabled]="isCheckboxDisabled(multiplication)"
+          <input class="checkbox-wide highlighted" id="cbMult" [disabled]="isCheckboxDisabled(multiplication)"
             [(ngModel)]="multiplication" (change)="toggleType(multiplication, puzzleType.MULTIPLICATION)"
             type="checkbox" />
           <label for="cbMult">Multiplication</label>
         </div>
         <div class="choice-group">
-          <input class="checkbox-wide" id="cbDiv" [disabled]="isCheckboxDisabled(division)" [(ngModel)]="division"
+          <input class="checkbox-wide highlighted" id="cbDiv" [disabled]="isCheckboxDisabled(division)" [(ngModel)]="division"
             (change)="toggleType(division, puzzleType.DIVISION)" type="checkbox" />
           <label for="cbDiv">Division</label>
         </div>
         <div class="choice-group">
-          <input class="checkbox-wide" id="cbMisc" [disabled]="isCheckboxDisabled(misc)" [(ngModel)]="misc"
+          <input class="checkbox-wide highlighted" id="cbMisc" [disabled]="isCheckboxDisabled(misc)" [(ngModel)]="misc"
             (change)="toggleType(misc, puzzleType.MISC)" type="checkbox" />
           <label for="cbMisc">Miscellaneous</label>
         </div>
@@ -105,13 +108,13 @@
 
     </div>
     <form method="dialog">
-      <button class="centered-button button-friendly">OK</button>
+      <button class="button-base button-centered highlighted">OK</button>
     </form>
   </dialog>
 
-  <dialog class="welcome-dialog" #welcomeDialog welcomeDialog closed>
+  <dialog class="dialog-base dialog-welcome" #welcomeDialog welcomeDialog closed>
     <form method="dialog">
-      <button class="button-welcome cancel">X</button>
+      <button class="button-base button-cancel highlighted">X</button>
     </form>
     <div class="welcome-text">
       <div class="heading">
@@ -120,20 +123,20 @@
       <p> Click or tap a square in the grid to get started with the game. Try the row of icons above the grid
         for game settings or more information.</p>
       <form method="dialog">
-        <button class="centered-button button-welcome ok">OK</button>
+        <button class="button-base button-centered highlighted">OK</button>
       </form>
     </div>
   </dialog>
 
-  <dialog class="dialog-friendly dialog-wide" helpDialog #helpDialog closed>
+  <dialog class="dialog-base dialog-general dialog-wide" helpDialog #helpDialog closed>
 
     <form method="dialog">
-      <button class="button-friendly cancel">X</button>
+      <button class="button-base button-cancel highlighted">X</button>
       <h1 class="centered">{{title}}</h1>
       <h2 class="centered">A math game</h2>
-
-      <p>{{getGeneralInstructions()}}</p>
-      <p>
+      <p class="paragraph">Number Munchers Reborn is a re-imagining of the classic 90s game for the Apple II.</p>
+      <p class="paragraph">{{getGeneralInstructions()}}</p>
+      <p class="paragraph">
         I recommend that children try this game out with a parent. I hope that it will be a fun experience for both!
         Some of the math terms are defined as follows:
       </p>
@@ -157,7 +160,7 @@
           3 is a factor of 6, since 3x2 is 6.
         </details>
       </div>
-      <p class="trailing">Not all solutions are shown. For example, for "find factors of 21," you might find
+      <p class="paragraph">Not all solutions are shown. For example, for "find factors of 21," you might find
         3, 7, 1, or 21, but not necessarily all of them.
       </p>
 
@@ -193,7 +196,7 @@
 
       </ul>
 
-      <button class="centered-button button-friendly ok">OK</button>
+      <button class="button-base button-centered highlighted">OK</button>
     </form>
   </dialog>
 
