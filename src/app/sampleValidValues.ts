@@ -1,4 +1,4 @@
-import { dataUpperBound, divSymbol } from './constants';
+import { dataUpperBound, divSymbol, multSymbol } from './constants';
 import { ValuePair } from './dataCell';
 import {
   isBetween,
@@ -60,7 +60,7 @@ export function getNaturalNumberSet(upperBound: number): Set<number> {
 export function getValidMultiplicationPairs(target: number): Set<ValuePair> {
   const pairs: Set<ValuePair> = new Set();
   const factors = getValidFactors(target);
-  factors.forEach(val => pairs.add(new ValuePair(target, `${val}x${target / val}`)));
+  factors.forEach(val => pairs.add(new ValuePair(target, `${val}${multSymbol}${target / val}`)));
   return pairs;
 }
 

@@ -4,6 +4,7 @@ import {
   boundOffsetMax,
   multipleLowerBound,
   multipleUpperBound,
+  multSymbol,
 }
   from './constants';
 import { ValuePair } from './dataCell';
@@ -65,7 +66,7 @@ export function getRandomMultiplicationPairs(count: number): Set<ValuePair> {
   const valueSet: Set<ValuePair> = new Set();
   for (let idx = 2; idx < 16; idx++) {
     for (let idy = 2; idy < 16; idy++) {
-      const pair = new ValuePair(idx * idy, `${idx}x${idy}`);
+      const pair = new ValuePair(idx * idy, `${idx}${multSymbol}${idy}`);
       if (!valuePairSetHas(pair, valueSet)) {
         valueSet.add(pair);
       }

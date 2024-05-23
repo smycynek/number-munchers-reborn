@@ -12,7 +12,7 @@ import JSConfetti from 'js-confetti';
 import { StringResources } from './strings';
 import { Observable, timer } from 'rxjs';
 import { getRandomItemFromSetAndRemove } from './sampleRandomValues';
-import { divSymbol, mertinDelay, mertinInterval } from './constants';
+import { divSymbol, mertinDelay, mertinInterval, multSymbol } from './constants';
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
@@ -319,7 +319,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     if (this.noRemainingSolutions()) {
       classes += ' game-over';
     }
-    if (cell.valuePair.valueAsString.includes('x')
+    if (cell.valuePair.valueAsString.includes(multSymbol)
       || cell.valuePair.valueAsString.includes(divSymbol)) {
       classes += ' cell-smaller'
     }

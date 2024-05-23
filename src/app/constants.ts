@@ -12,3 +12,4 @@ export const mertinInterval = 5;
 export const divSymbol = '\u{00F7}';
 export const greaterEqual = '\u{2265}';
 export const lessEqual = '\u{2264}';
+export const multSymbol = '\u{00D7}';
