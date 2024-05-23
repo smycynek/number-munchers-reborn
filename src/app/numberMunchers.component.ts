@@ -437,7 +437,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
         this.statusMessageDetail = this.activePuzzle.successDetails(data.valuePair);
         if (this.perfectScore()) {
           this.soundManager.playWhooAndPerfectScore();
-          this.statusMessage = `${this.statusMessage} ${StringResources.PERFECT_SCORE}`;
+          this.statusMessage = StringResources.PERFECT_SCORE;
           debug(StringResources.PERFECT_SCORE);
           const jsConfetti = new JSConfetti();
           jsConfetti.addConfetti();
