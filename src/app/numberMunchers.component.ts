@@ -319,8 +319,15 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     if (this.noRemainingSolutions()) {
       classes += ' game-over';
     }
-    if (cell.valuePair.valueAsString.includes(multSymbol)
-      || cell.valuePair.valueAsString.includes(divSymbol)) {
+    if (
+      (
+        cell.valuePair.valueAsString.includes(multSymbol)
+      || cell.valuePair.valueAsString.includes(divSymbol)
+      )
+
+      &&
+    (this.hasMertin(cellRow, cellColumn) || this.isActive(cellRow, cellColumn))
+  ) {
       classes += ' cell-smaller'
     }
     return classes;
