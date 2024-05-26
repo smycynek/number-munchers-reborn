@@ -51,6 +51,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   private soundManager: SoundManager = new SoundManager();
   private positionManager: PositionManager = new PositionManager();
   public title: string = StringResources.TITLE;
+
   private timer: Observable<number> = timer(mertinDelay * 1000, mertinInterval * 1000);
   private speed: number = 0;
 
@@ -59,6 +60,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   public division: boolean = true;
   public misc: boolean = true;
   private welcomeDone: boolean = false;
+  private skipNext: boolean = false;
 
   public get puzzleType(): typeof PuzzleType {
     return PuzzleType;
@@ -89,14 +91,17 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
 
   private timerInit(): void {
     this.positionManager.setMertinIndex(-1);
+
     this.timer.subscribe((val) => {
       if (this.speed !== 0 && !this.noRemainingSolutions()) {
-        if ((val % this.speed) === 0) {
+        if ((val % this.speed) === 0 && !this.skipNext) {
           debug(`Timer pulse: ${val}, Interval length: ${this.speed * mertinInterval}`);
           this.positionManager.setMertinIndex(this.getRandomNonOccupiedIndex());
           this.resetSquare(this.positionManager.getMertinIndex())
         }
+        debug(`Skipped: ${this.skipNext}`);
       }
+      this.skipNext = false;
     });
   }
 
@@ -138,6 +143,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   private reset() {
     this.positionManager.setActiveRow(0);
     this.positionManager.setActiveColumn(0);
+    this.positionManager.setMertinIndex(-1);
     this.statusMessage = StringResources.START;
     this.statusMessageDetail = StringResources.YOU_CAN_DO_IT;
     this.statusMessageClass = 'status-default';
@@ -149,6 +155,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     debug('New game');
     this.reset();
     this.init();
+    this.skipNext = true;
     this.btnNewGame.nativeElement.blur();
   }
 
