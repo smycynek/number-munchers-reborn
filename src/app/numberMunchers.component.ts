@@ -10,7 +10,7 @@ import { SoundManager } from './soundManager';
 import { PositionManager } from './positionManager';
 import JSConfetti from 'js-confetti';
 import { StringResources } from './strings';
-import { Observable, timer } from 'rxjs';
+import { Observable, Subscription, timer } from 'rxjs';
 import { getRandomItemFromSetAndRemove } from './sampleRandomValues';
 import { divSymbol, mertinDelay, mertinInterval, multSymbol } from './constants';
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
@@ -59,9 +59,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   public glt: boolean = true;
   public division: boolean = true;
   public misc: boolean = true;
-  private welcomeDone: boolean = false;
-  private skipNext: boolean = false;
-
+  private timerSubscription: Subscription | undefined;
   public get puzzleType(): typeof PuzzleType {
     return PuzzleType;
   }
@@ -82,27 +80,25 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    if (!this.welcomeDone) {
-      this.welcomeDialog.nativeElement.showModal();
-      this.welcomeDone = true;
-    }
+    this.welcomeDialog.nativeElement.showModal();
     setInterval(() => this.welcomeDialog.nativeElement.close(), 15000);
   }
 
   private timerInit(): void {
+    this.timerSubscription?.unsubscribe();
+    debug('Unsubscribe');
     this.positionManager.setMertinIndex(-1);
-
-    this.timer.subscribe((val) => {
+    this.timerSubscription = this.timer.subscribe((val) => {
+      debug(`Pulse: ${val}`);
       if (this.speed !== 0 && !this.noRemainingSolutions()) {
-        if ((val % this.speed) === 0 && !this.skipNext) {
-          debug(`Timer pulse: ${val}, Interval length: ${this.speed * mertinInterval}`);
+        if ((val % this.speed) === 0) {
+          debug(`Reset square event: ${val}, Interval length: ${this.speed * mertinInterval}`);
           this.positionManager.setMertinIndex(this.getRandomNonOccupiedIndex());
           this.resetSquare(this.positionManager.getMertinIndex())
         }
-        debug(`Skipped: ${this.skipNext}`);
       }
-      this.skipNext = false;
     });
+    debug('Subscribe');
   }
 
   private init() {
@@ -155,7 +151,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     debug('New game');
     this.reset();
     this.init();
-    this.skipNext = true;
+    this.timerInit();
     this.btnNewGame.nativeElement.blur();
   }
 
@@ -493,6 +489,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
 
   public toggleMertin(): void {
     if (this.speed === 0) {
+      this.timerInit();
       this.speed = 3;
     } else {
       this.speed--;
