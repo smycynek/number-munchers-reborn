@@ -3,7 +3,7 @@
     <div class="container">
       <h1>{{title}}<img title="Our hero!" (click)="toggleDebug()" alt="muncher logo" src="assets/muncher-happy.png"
           width="50" /></h1>
-      <h2>{{getQuestionPrompt()}}</h2>
+      <h2>{{activePuzzle().questionText}}</h2>
 
 
       <button id="btnNewGame" #btnNewGame title="Start a new game" class="button-base button-new-game highlighted"
@@ -52,17 +52,13 @@
             d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286m1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94" />
         </svg>
       </button>
-
-
-      <p [ngClass]="getStatusMessageClass()">{{getStatusMessage()}}</p>
+      <p [ngClass]="statusMessageClass()">{{statusMessage()}}</p>
       <div class="details-container">
-        <p class="message-detail" [ngClass]="getStatusMessageClass()">{{getStatusDetailMessage()}}</p>
+        <p class="message-detail" [ngClass]="statusMessageClass()">{{statusMessageDetail()}}</p>
       </div>
-      <p>{{getFoundNumbers()}}</p>
-    
-      <div *ngFor="let r of [].constructor(getPositionManager().getRowCount()); index as idxr" class="row">
+      <div *ngFor="let r of [].constructor(getPositionManager().rowCount()); index as idxr" class="row">
         <div [ngClass]="getCellClass(idxr,idxc)" id="{{idxr}}{{idxc}}"
-          *ngFor="let r of [].constructor(getPositionManager().getColumnCount()); index as idxc" class="col cell">
+          *ngFor="let r of [].constructor(getPositionManager().columnCount()); index as idxc" class="col cell">
           {{getCellData(idxr,idxc).valuePair.valueAsString}}
           <img alt="muncher avatar" id="i{{idxr}}{{idxc}}" *ngIf="isActive(idxr, idxc)"
             [ngClass]="getAvatarSizeClass(idxr, idxc)" [src]="getAvatarImage()" />

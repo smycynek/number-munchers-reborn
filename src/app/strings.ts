@@ -6,11 +6,10 @@ export class StringResources {
     public static readonly NEW_GAME = 'New game';
     public static readonly TRY_AGAIN = 'Try again!';
     public static readonly N_KEY = '(or hit \'N\' key)';
-    public static readonly FOUND = 'Found:';
     public static readonly FOUND_ALL = 'You found all the correct answers!';
     public static readonly PERFECT_SCORE = 'Perfect score!';
     public static readonly CORRECT = 'Correct!';
-    public static readonly SORRY = 'Sorry,';
+    public static readonly INCORRECT = 'Incorrect.';
     public static readonly IS = 'is';
     public static readonly NOT = 'not';
     public static readonly TITLE = 'Number Munchers Reborn';
