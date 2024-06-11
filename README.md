@@ -14,3 +14,5 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`.
 run `prep.sh` to build for production.
 
 https://stevenvictor.net/number-munchers
+
+1.0
