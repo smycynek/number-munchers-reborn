@@ -1,7 +1,8 @@
 import { ValuePair } from './dataCell';
+import { mb } from './mixed-value-sentence/mathBuilder';
 
 export function simpleToValuePair(value: number): ValuePair {
-  return new ValuePair(value, value.toString());
+  return new ValuePair(value, mb().number(value).build());
 }
 
 export function toValuePairSet(values: Set<number>): Set<ValuePair> {
@@ -70,3 +71,4 @@ export function valuePairSetHas(valuePair: ValuePair, set: Set<ValuePair>): bool
 export function round3(value: number) {
   return Math.round(value*1000)/1000;
 }
+

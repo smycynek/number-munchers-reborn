@@ -1,14 +1,13 @@
 <main id="keytarget" class="main disable-dbl-tap-zoom">
   <div class="content">
     <div class="container">
-      <h1>{{title}}<img title="Our hero!" (click)="toggleDebug()" alt="muncher logo" src="assets/muncher-happy.png"
-          width="50" /></h1>
-      <h2>{{activePuzzle().questionText}}</h2>
-
+      <h1 class="header" (click)="toggleDebug()">{{title}}</h1>
+      <div class="question-container">
+        <app-mixed-value-sentence [mathML]="activePuzzle().questionText"></app-mixed-value-sentence>
+      </div>
 
       <button id="btnNewGame" #btnNewGame title="Start a new game" class="button-base button-new-game highlighted"
-        style="margin-right:12px;"
-        (click)="newGame()">{{getStartButtonText()}}</button>
+        style="margin-right:12px;" (click)="newGame()">{{getStartButtonText()}}</button>
       <button #btnSound title="Sound Effects" (click)="toggleSound()" type="button"
         class="btn imagebutton row-button highlighted">
         <svg *ngIf="getSoundManager().getSoundOn()" role="img" aria-labelledby="Sound off"
@@ -52,14 +51,18 @@
             d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286m1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94" />
         </svg>
       </button>
-      <p [ngClass]="statusMessageClass()">{{statusMessage()}}</p>
+      <p class="bold" [ngClass]="statusMessageClass()">{{statusMessage()}}</p>
       <div class="details-container">
-        <p class="message-detail" [ngClass]="statusMessageClass()">{{statusMessageDetail()}}</p>
+        <p class="message-detail" [ngClass]="statusMessageClass()">
+          <app-mixed-value-sentence [mathML]="statusMessageDetail()"></app-mixed-value-sentence>
+        </p>
       </div>
       <div *ngFor="let r of [].constructor(getPositionManager().rowCount()); index as idxr" class="row">
         <div [ngClass]="getCellClass(idxr,idxc)" id="{{idxr}}{{idxc}}"
-          *ngFor="let r of [].constructor(getPositionManager().columnCount()); index as idxc" class="col cell">
-          {{getCellData(idxr,idxc).valuePair.valueAsString}}
+          *ngFor="let r of [].constructor(getPositionManager().columnCount()); index as idxc"
+          class="col cell click-target">
+          <app-mixed-value-sentence
+            [mathML]="getCellData(idxr,idxc).valuePair.valueAsString"></app-mixed-value-sentence>
           <img alt="muncher avatar" id="i{{idxr}}{{idxc}}" *ngIf="isActive(idxr, idxc)"
             [ngClass]="getAvatarSizeClass(idxr, idxc)" [src]="getAvatarImage()" />
           <img alt="mertin avatar" id="i{{idxr}}{{idxc}}m" *ngIf="hasMertin(idxr, idxc)"
@@ -69,7 +72,7 @@
 
 
       <div class="container large">
-        <p class="version">||v185||</p>
+        <p class="version">||v191||</p>
       </div>
     </div>
 
@@ -91,8 +94,8 @@
           <label for="cbMult">Multiplication</label>
         </div>
         <div class="choice-group">
-          <input class="checkbox-wide highlighted" id="cbDiv" [disabled]="isCheckboxDisabled(division)" [(ngModel)]="division"
-            (change)="toggleType(division, puzzleType.DIVISION)" type="checkbox" />
+          <input class="checkbox-wide highlighted" id="cbDiv" [disabled]="isCheckboxDisabled(division)"
+            [(ngModel)]="division" (change)="toggleType(division, puzzleType.DIVISION)" type="checkbox" />
           <label for="cbDiv">Division</label>
         </div>
         <div class="choice-group">
@@ -100,11 +103,16 @@
             (change)="toggleType(misc, puzzleType.MISC)" type="checkbox" />
           <label for="cbMisc">Miscellaneous</label>
         </div>
+        <div class="choice-group">
+          <input class="checkbox-wide highlighted" id="cbFractions" [disabled]="isCheckboxDisabled(fractions)"
+            [(ngModel)]="fractions" (change)="toggleType(fractions, puzzleType.FRACTIONS)" type="checkbox" />
+          <label for="cbFractions">Fractions</label>
+        </div>
       </div>
 
     </div>
     <form method="dialog">
-      <button class="button-base button-centered highlighted">OK</button>
+      <button (click)="newGame()" class="button-base button-centered highlighted">OK</button>
     </form>
   </dialog>
 

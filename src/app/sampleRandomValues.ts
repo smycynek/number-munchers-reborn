@@ -8,7 +8,8 @@ import {
 }
   from './constants';
 import { ValuePair } from './dataCell';
-import { getFactorTargets, getNaturalNumberSet, getValidDivisionPairs } from './sampleValidValues';
+import { mb, parseFraction } from './mixed-value-sentence/mathBuilder';
+import { getBaseFractions, getFactorTargets, getNaturalNumberSet, getValidDivisionPairs } from './sampleValidValues';
 import { valuePairSetHas } from './utility';
 
 // A narrower range used for > and <
@@ -66,7 +67,7 @@ export function getRandomMultiplicationPairs(count: number): Set<ValuePair> {
   const valueSet: Set<ValuePair> = new Set();
   for (let idx = 2; idx < 16; idx++) {
     for (let idy = 2; idy < 16; idy++) {
-      const pair = new ValuePair(idx * idy, `${idx}${multSymbol}${idy}`);
+      const pair = new ValuePair(idx * idy, mb().expression(idx, idy, multSymbol).build());
       if (!valuePairSetHas(pair, valueSet)) {
         valueSet.add(pair);
       }
@@ -93,4 +94,30 @@ export function getRandomDivisionPairs(count: number): Set<ValuePair> {
     returnSet.add(getRandomItemFromSetAndRemove(valueSet));
   }
   return returnSet;
+}
+
+export function getRandomFractionBase(): ValuePair {
+  return getRandomItemFromSetAndRemove(getBaseFractions());
+}
+
+export function getRandomFractions(count: number, base: ValuePair ) {
+  const valueSet: Set<ValuePair> = new Set();
+  const returnSet: Set<ValuePair> = new Set();
+  const fractionParts = parseFraction(base.valueAsString);
+  for (let idx=1; idx !=21; idx++) {
+    for (let idy = 2; idy != 21; idy++) {
+      if (idx === fractionParts[0] && idy === fractionParts[1]) {  
+        // Don't add fractions with the same components as the base fraction to the random mix
+        continue;
+      }
+      if (idy <= idx) {
+        continue;
+      }
+      valueSet.add(new ValuePair((idx/idy), mb().fraction(idx, idy).build()));
+  }
+}
+for (let idc = 0; idc != count; idc++) {
+  returnSet.add(getRandomItemFromSetAndRemove(valueSet));
+}
+return returnSet;
 }

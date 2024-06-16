@@ -38,12 +38,10 @@ p {
 
 .status-success {
     color: green;
-    font-weight: bold;
 }
 
 .status-error {
-    font-weight: bold;
-    color: red;
+    color: red;  
 }
 
 .status-default {
@@ -57,4 +55,12 @@ p {
 .paragraph {
     margin-top: 1em;
     margin-bottom: 1em;
+}
+
+:host ::ng-deep .math-medium {
+    font-size: medium !important;
+}
+
+.bold {
+    font-weight: bold;
 }

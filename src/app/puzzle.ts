@@ -32,7 +32,8 @@ import {
   getValidOutsideExclusiveValues,
   getPerfectSquares,
   getValidMultiplicationPairs,
-  getValidDivisionPairs
+  getValidDivisionPairs,
+  getValidFractions
 }
   from './sampleValidValues';
 
@@ -46,14 +47,18 @@ import {
   getRandomItemFromSetAndRemove,
   getRandomMultiplicationPairs,
   getRandomDivisionPairs,
+  getRandomFractionBase,
+  getRandomFractions,
 }
   from './sampleRandomValues';
+import { mb } from './mixed-value-sentence/mathBuilder';
 
 export enum PuzzleType {
   MULTIPLICATION,
   DIVISION,
   GREATER_LESS_THAN,
-  MISC
+  MISC,
+  FRACTIONS
 }
 
 export class Puzzle {
@@ -128,13 +133,15 @@ export class Puzzle {
     const randomBetweenBounds = getRandomBetweenBounds();
     const randomBetweenBoundsWide = getRandomBetweenBoundsWide();
     const randomMultipleBase = getRandomMultipleBase();
+    const randomFractionBase = getRandomFractionBase();
+    
     return [
       new Puzzle(
         (cellValue: ValuePair) => isPerfectSquare(cellValue.value),
         dataUpperBound,
-        'Find perfect squares',
-        (cellValue: ValuePair) => { return `${Math.sqrt(cellValue.value)} times itself (${Math.sqrt(cellValue.value)}) equals ${cellValue.value}` },
-        (cellValue: ValuePair) => { return `There are no whole numbers when multiplied by themselves that are equal to ${cellValue.value}` },
+        mb().text('Find perfect squares').build(),
+        (cellValue: ValuePair) => { return mb().number(Math.sqrt(cellValue.value), false, true).text('times itself (').number(Math.sqrt(cellValue.value), false, false).text(') equals').number(cellValue.value).build() },
+        (cellValue: ValuePair) => { return mb().text('There are no whole numbers when multiplied by themselves that are equal to').number(cellValue.value).build() },
         () => toValuePairSet(getPerfectSquares()),
         (count: number) => toValuePairSet(getRandomNaturalNumberSet(dataUpperBound, count)),
         PuzzleType.MISC,
@@ -143,9 +150,12 @@ export class Puzzle {
       new Puzzle(
         (cellValue: ValuePair) => isPrime(cellValue.value),
         dataUpperBound,
-        'Find prime numbers',
-        (cellValue: ValuePair) => { return `${cellValue.value} is not divisible by anything except 1 and itself (${cellValue.value})`; },
-        (cellValue: ValuePair) => { return `${cellValue.value} has factors such as ${format_and([...getValidFactors(cellValue.value)])}`; },
+        mb().text('Find prime numbers').build(),
+
+        (cellValue: ValuePair) => { return mb().number(cellValue.value, false, true).text('is not divisible by anything except 1 and itself (').number(cellValue.value, false, false).text(')').build(); },
+
+        (cellValue: ValuePair) => { return mb().number(cellValue.value, false, true).text(`has factors such as ${format_and([...getValidFactors(cellValue.value)])}`).build(); },
+
         () => toValuePairSet(getPrimes()),
         (count: number) => toValuePairSet(getRandomNaturalNumberSet(dataUpperBound, count)),
         PuzzleType.MISC,
@@ -154,9 +164,11 @@ export class Puzzle {
       new Puzzle(
         (cellValue: ValuePair) => (isBetween(cellValue.value, randomBetweenBounds[0], randomBetweenBounds[1], false)),
         dataUpperBound,
-        `Find numbers between ${randomBetweenBounds[0]} and ${randomBetweenBounds[1]}`,
-        (cellValue: ValuePair) => { return `${cellValue.value} is greater than ${randomBetweenBounds[0]} and less than ${randomBetweenBounds[1]}`; },
-        (cellValue: ValuePair) => { return `${cellValue.value} is not greater than ${randomBetweenBounds[0]} and less than ${randomBetweenBounds[1]}`; },
+        mb().text('Find numbers between').number(randomBetweenBounds[0]).text('and').number(randomBetweenBounds[1]).build(),
+        (cellValue: ValuePair) => { return mb().number(cellValue.value, false, true).text('is greater than').number(randomBetweenBounds[0]).text('and less than').number(randomBetweenBounds[1]).build(); },
+
+        (cellValue: ValuePair) => { return mb().number(cellValue.value, false, true).text('is not greater than').number(randomBetweenBounds[0]).text('and less than').number(randomBetweenBounds[1]).build(); },
+
         () => toValuePairSet(getValidBetweenValues(randomBetweenBounds[0], randomBetweenBounds[1], false)),
         (count: number) => toValuePairSet(getRandomNaturalNumberSet(dataUpperBound, count)),
         PuzzleType.GREATER_LESS_THAN,
@@ -165,9 +177,10 @@ export class Puzzle {
       new Puzzle(
         (cellValue: ValuePair) => (isBetween(cellValue.value, randomBetweenBounds[0], randomBetweenBounds[1], true)),
         dataUpperBound,
-        `Find numbers ${greaterEqual}  ${randomBetweenBounds[0]} and ${lessEqual} ${randomBetweenBounds[1]}`,
-        (cellValue: ValuePair) => { return `${cellValue.value} is greater than or equal to ${randomBetweenBounds[0]} and less than or equal to ${randomBetweenBounds[1]}`; },
-        (cellValue: ValuePair) => { return `${cellValue.value} is not greater than or equal to ${randomBetweenBounds[0]} and less than or equal to ${randomBetweenBounds[1]}`; },
+        mb().text(`Find numbers ${greaterEqual}`).number(randomBetweenBounds[0]).text(`and ${lessEqual}`).number(randomBetweenBounds[1]).build(),
+        (cellValue: ValuePair) => { return mb().number(cellValue.value, false, true).text('is greater than or equal to').number(randomBetweenBounds[0]).text('and less than or equal to').number(randomBetweenBounds[1]).build(); },
+
+        (cellValue: ValuePair) => { return mb().number(cellValue.value, false, true).text('is not greater than or equal to').number(randomBetweenBounds[0]).text('and less than or equal to').number(randomBetweenBounds[1]).build(); },
         () => toValuePairSet(getValidBetweenValues(randomBetweenBounds[0], randomBetweenBounds[1], true)),
         (count: number) => toValuePairSet(getRandomNaturalNumberSet(dataUpperBound, count)),
         PuzzleType.GREATER_LESS_THAN,
@@ -176,9 +189,10 @@ export class Puzzle {
       new Puzzle(
         (cellValue: ValuePair) => isOutsideExclusive(cellValue.value, randomBetweenBoundsWide[0], randomBetweenBoundsWide[1]),
         dataUpperBound,
-        `Find numbers > ${randomBetweenBoundsWide[1]} or < ${randomBetweenBoundsWide[0]}`,
-        (cellValue: ValuePair) => { return `${cellValue.value} is either greater than ${randomBetweenBoundsWide[1]} or less than ${randomBetweenBoundsWide[0]}`; },
-        (cellValue: ValuePair) => { return `${cellValue.value} is not greater than ${randomBetweenBoundsWide[1]} or less than ${randomBetweenBoundsWide[0]}`; },
+        mb().text('Find numbers >').number(randomBetweenBoundsWide[1], true, true).text('or <').number(randomBetweenBoundsWide[0]).build(),
+        (cellValue: ValuePair) => { return mb().number(cellValue.value, false, true).text('is either greater than').number(randomBetweenBoundsWide[1]).text('or less than').number(randomBetweenBoundsWide[0]).build(); },
+
+        (cellValue: ValuePair) => { return mb().number(cellValue.value, false, true).text('is not greater than').number(randomBetweenBoundsWide[1]).text('or less than').number(randomBetweenBoundsWide[0]).build(); },
         () => toValuePairSet(getValidOutsideExclusiveValues(randomBetweenBoundsWide[0], randomBetweenBoundsWide[1])),
         (count: number) => toValuePairSet(getRandomNaturalNumberSet(dataUpperBound, count)),
         PuzzleType.GREATER_LESS_THAN,
@@ -187,9 +201,9 @@ export class Puzzle {
       new Puzzle(
         (cellValue: ValuePair) => isMultiple(cellValue.value, randomMultipleBase),
         dataUpperBound,
-        `Find multiples of ${randomMultipleBase}`,
-        (cellValue: ValuePair) => { return `${randomMultipleBase} times ${cellValue.value / randomMultipleBase} equals ${cellValue.value}` },
-        (cellValue: ValuePair) => { return `No whole numbers times ${randomMultipleBase} equal ${cellValue.value}` },
+        mb().text('Find multiples of').number(randomMultipleBase).build(),
+        (cellValue: ValuePair) => { return mb().number(randomMultipleBase, false, true).text('times').number(cellValue.value / randomMultipleBase).text('equals').number(cellValue.value).build() },
+        (cellValue: ValuePair) => { return mb().text('No whole numbers times').number(randomMultipleBase).text('equals').number(cellValue.value).build() },
         () => toValuePairSet(getValidMultiples(randomMultipleBase)),
         (count: number) => toValuePairSet(getRandomNaturalNumberSet(dataUpperBound, count)),
         PuzzleType.MULTIPLICATION,
@@ -198,9 +212,9 @@ export class Puzzle {
       new Puzzle(
         (cellValue: ValuePair) => isMultiple(cellValue.value, randomMultipleBase),
         dataUpperBound,
-        `Find numbers divisible by ${randomMultipleBase}`,
-        (cellValue: ValuePair) => { return `${cellValue.value} divided by ${randomMultipleBase} equals ${cellValue.value / randomMultipleBase}` },
-        (cellValue: ValuePair) => { return `${cellValue.value} divided by ${randomMultipleBase} is ${round3(cellValue.value / randomMultipleBase) }, not a whole number` },
+        mb().text('Find numbers divisible by').number(randomMultipleBase).build(),
+        (cellValue: ValuePair) => { return mb().number(cellValue.value, false, true).text('divided by').number(randomMultipleBase).text('equals').number(cellValue.value / randomMultipleBase).build() },
+        (cellValue: ValuePair) => { return mb().number(cellValue.value, false, true).text('divided by').number(randomMultipleBase).text('is').number(round3(cellValue.value / randomMultipleBase), true, false).text(', not a whole number').build() },
         () => toValuePairSet(getValidMultiples(randomMultipleBase)),
         (count: number) => toValuePairSet(getRandomNaturalNumberSet(dataUpperBound, count)),
         PuzzleType.DIVISION,
@@ -209,9 +223,9 @@ export class Puzzle {
       new Puzzle(
         (cellValue: ValuePair) => isFactor(cellValue.value, randomFactorTarget),
         dataUpperBoundLow,
-        `Find factors of ${randomFactorTarget}`,
-        (cellValue: ValuePair) => { return `${cellValue.value} times ${randomFactorTarget / cellValue.value} equals ${randomFactorTarget}`; },
-        (cellValue: ValuePair) => { return `No whole numbers multiplied by ${cellValue.value} equal ${randomFactorTarget}`; },
+        mb().text('Find factors of').number(randomFactorTarget).build(),
+        (cellValue: ValuePair) => { return mb().number(cellValue.value, false, true).text('times').number(randomFactorTarget / cellValue.value).text('equals').number(randomFactorTarget).build() },
+        (cellValue: ValuePair) => { return mb().text('No whole numbers multiplied by').number(cellValue.value).text('equal').number(randomFactorTarget).build() },
         () => toValuePairSet(getValidFactors(randomFactorTarget)),
         (count: number) => toValuePairSet(getRandomNaturalNumberSet(dataUpperBoundLow, count)),
         PuzzleType.MULTIPLICATION,
@@ -220,9 +234,9 @@ export class Puzzle {
       new Puzzle(
         (cellValue: ValuePair) => cellValue.value === randomMultiplicationTarget,
         dataUpperBoundLow,
-        `Find expressions equal to ${randomMultiplicationTarget}`,
-        (cellValue: ValuePair) => { return `${cellValue.valueAsString} = ${randomMultiplicationTarget}`; },
-        (cellValue: ValuePair) => { return `${cellValue.valueAsString} = ${cellValue.value}, not ${randomMultiplicationTarget}`; },
+        mb().text('Find expressions equal to').number(randomMultiplicationTarget).build(),
+        (cellValue: ValuePair) => { return `${cellValue.valueAsString} ${mb().text('=').number(randomMultiplicationTarget).build()}`; },
+        (cellValue: ValuePair) => { return `${cellValue.valueAsString} ${mb().text('=').number(cellValue.value, true, false).text(', not').number(randomMultiplicationTarget).build()}`; },
         () => getValidMultiplicationPairs(randomMultiplicationTarget),
         (count: number) => getRandomMultiplicationPairs(count),
         PuzzleType.MULTIPLICATION,
@@ -232,15 +246,27 @@ export class Puzzle {
       new Puzzle(
         (cellValue: ValuePair) => cellValue.value === randomQuotientTarget,
         dataUpperBoundLow,
-        `Find expressions equal to ${randomQuotientTarget}`,
-        (cellValue: ValuePair) => { return `${cellValue.valueAsString} = ${randomQuotientTarget}`; },
-        (cellValue: ValuePair) => { return `${cellValue.valueAsString} = ${round3(cellValue.value)}, not ${randomQuotientTarget}`; },
+        mb().text('Find expressions equal to').number(randomQuotientTarget).build(),
+        (cellValue: ValuePair) => { return `${cellValue.valueAsString} ${mb().text('=').number(randomQuotientTarget).build()}`; },
+        (cellValue: ValuePair) => { return `${cellValue.valueAsString} ${mb().text('=').number(cellValue.value, true, false).text(', not').number(randomQuotientTarget).build()}`; },
         () => getValidDivisionPairs(randomQuotientTarget),
         (count: number) => getRandomDivisionPairs(count),
         PuzzleType.DIVISION,
         true,
         'Division Expressions'
       ),
+      new Puzzle(
+        (cellValue: ValuePair) => cellValue.value === randomFractionBase.value,
+        dataUpperBound,
+        `${mb().text('Find fractions equivalent to').build()} ${randomFractionBase.valueAsString}`,
+        (cellValue: ValuePair) => {return `${cellValue.valueAsString} is equivalent to ${randomFractionBase.valueAsString}`;},
+        (cellValue: ValuePair) => {return  `${cellValue.valueAsString} is not equivalent to ${randomFractionBase.valueAsString}`;},
+        () => getValidFractions(randomFractionBase),
+        (count: number) => getRandomFractions(count, randomFractionBase),
+        PuzzleType.FRACTIONS,
+        true,
+        'Fraction Basics'
+      )
     ];
   }
 }

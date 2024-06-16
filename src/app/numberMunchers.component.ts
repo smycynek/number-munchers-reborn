@@ -15,18 +15,21 @@ import { getRandomItemFromSetAndRemove } from './sampleRandomValues';
 import { divSymbol, mertinDelay, mertinInterval, multSymbol } from './constants';
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { MixedValueSentenceComponent } from './mixed-value-sentence/mixed-value-sentence.component';
+import { mb } from './mixed-value-sentence/mathBuilder';
 
 const allPuzzles = new Set<PuzzleType>([
   PuzzleType.MISC,
   PuzzleType.DIVISION,
   PuzzleType.GREATER_LESS_THAN,
   PuzzleType.MULTIPLICATION,
+  PuzzleType.FRACTIONS,
 ]);
 
 @Component({
   selector: 'app-number-munchers',
   standalone: true,
-  imports: [CommonModule, NgbModule, RouterOutlet, FormsModule],
+  imports: [CommonModule, NgbModule, RouterOutlet, FormsModule, MixedValueSentenceComponent],
   templateUrl: './numberMunchers.component.html',
   styleUrl: './less/numberMunchers.component.less'
 })
@@ -41,11 +44,15 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   @ViewChild('btnShowPuzzleTypes') btnShowPuzzleTypes!: ElementRef;
   @ViewChild('btnHelp') btnHelp!: ElementRef;
 
+  public sampleExpression(): string {
+    return mb().expression(2, 3, multSymbol).build();
+  }
+
   private puzzleTypes = allPuzzles;
   public readonly cellData: WritableSignal<DataCell[]> = signal([]);
   public readonly statusMessage: WritableSignal<string> = signal(StringResources.START);
   public readonly statusMessageDetail: WritableSignal<string> = signal(StringResources.YOU_CAN_DO_IT);
-  public readonly statusMessageClass: WritableSignal<string>  = signal('status-default');
+  public readonly statusMessageClass: WritableSignal<string> = signal('status-default');
   public readonly activePuzzle: WritableSignal<Puzzle> = signal(Puzzle.getRandomPuzzle(this.puzzleTypes));
   private soundManager: SoundManager = new SoundManager();
   private positionManager: PositionManager = new PositionManager();
@@ -58,6 +65,8 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   public glt: boolean = true;
   public division: boolean = true;
   public misc: boolean = true;
+  public fractions: boolean = true;
+
   private timerSubscription: Subscription | undefined;
   public get puzzleType(): typeof PuzzleType {
     return PuzzleType;
@@ -166,7 +175,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
 
   public getCellData(r: number, c: number): DataCell {
     if (!this.cellData().length) {
-      return new DataCell(new ValuePair(0, '0'), false, false);
+      return new DataCell(new ValuePair(0, mb().number(0).build()), false, false);
     }
     return this.cellData()[(r * this.positionManager.columnCount()) + c];
   }
@@ -237,7 +246,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
       newValue = this.activePuzzle().getRandomSamples(1, this.activePuzzle().maxValue);
       debug('Adding random answer');
     }
-    this.cellData.update( (data: DataCell[]) => {
+    this.cellData.update((data: DataCell[]) => {
       data[squareIndex] = this.activePuzzle().generateCell(newValue);
       return data;
     });
@@ -306,12 +315,12 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     if (
       (
         cell.valuePair.valueAsString.includes(multSymbol)
-      || cell.valuePair.valueAsString.includes(divSymbol)
+        || cell.valuePair.valueAsString.includes(divSymbol)
       )
 
       &&
-    (this.hasMertin(cellRow, cellColumn) || this.isActive(cellRow, cellColumn))
-  ) {
+      (this.hasMertin(cellRow, cellColumn) || this.isActive(cellRow, cellColumn))
+    ) {
       classes += ' cell-smaller'
     }
     return classes;
@@ -333,6 +342,20 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     } else if (event.key.toUpperCase() === 'N') {
       this.newGame();
     }
+  }
+
+  private getClickTarget(event: UIEvent | null): HTMLElement | null {
+    if (event && event.target) {
+      let current: HTMLElement | null = <HTMLElement>event.target;
+      while (current != null) {
+        if (current.classList.contains('click-target')) {
+          return current;
+        } else {
+          current = current.parentElement;
+        }
+      }
+    }
+    return null;
   }
 
   @HostListener('document:click', ['$event'])
@@ -376,8 +399,12 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
       return;
     }
     let rowColumn: number[] = [];
+    const parentTarget = this.getClickTarget(event);
+    if (!parentTarget) {
+      return;
+    }
     try {
-      rowColumn = parseId((<HTMLElement>(event.target)).id);
+      rowColumn = parseId(parentTarget.id);
     } catch (err) {
       return;
     }
