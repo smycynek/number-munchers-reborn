@@ -76,6 +76,11 @@ export class MathBuilder {
         return this;
     }
 
+    public oneHalf(leadingSpace: boolean = true, trailingSpace: boolean = true): MathBuilder {
+        return this.fraction(1,2, leadingSpace, trailingSpace);
+    }
+
+
     public mixedNumber(whole: number, numerator: number, denominator: number, leadingSpace: boolean = true, trailingSpace: boolean = true): MathBuilder {
         const mathNode= document.createElement('math');
         const fractionNode = document.createElement('mfrac');

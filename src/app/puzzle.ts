@@ -145,7 +145,8 @@ export class Puzzle {
         () => toValuePairSet(getPerfectSquares()),
         (count: number) => toValuePairSet(getRandomNaturalNumberSet(dataUpperBound, count)),
         PuzzleType.MISC,
-        true
+        true,
+        'Perfect Squares'
       ),
       new Puzzle(
         (cellValue: ValuePair) => isPrime(cellValue.value),
@@ -159,7 +160,8 @@ export class Puzzle {
         () => toValuePairSet(getPrimes()),
         (count: number) => toValuePairSet(getRandomNaturalNumberSet(dataUpperBound, count)),
         PuzzleType.MISC,
-        true
+        true,
+        'Primes'
       ),
       new Puzzle(
         (cellValue: ValuePair) => (isBetween(cellValue.value, randomBetweenBounds[0], randomBetweenBounds[1], false)),
@@ -172,7 +174,8 @@ export class Puzzle {
         () => toValuePairSet(getValidBetweenValues(randomBetweenBounds[0], randomBetweenBounds[1], false)),
         (count: number) => toValuePairSet(getRandomNaturalNumberSet(dataUpperBound, count)),
         PuzzleType.GREATER_LESS_THAN,
-        true
+        true,
+        'Between'
       ),
       new Puzzle(
         (cellValue: ValuePair) => (isBetween(cellValue.value, randomBetweenBounds[0], randomBetweenBounds[1], true)),
@@ -184,7 +187,8 @@ export class Puzzle {
         () => toValuePairSet(getValidBetweenValues(randomBetweenBounds[0], randomBetweenBounds[1], true)),
         (count: number) => toValuePairSet(getRandomNaturalNumberSet(dataUpperBound, count)),
         PuzzleType.GREATER_LESS_THAN,
-        true
+        true,
+        'Between inclusive'
       ),
       new Puzzle(
         (cellValue: ValuePair) => isOutsideExclusive(cellValue.value, randomBetweenBoundsWide[0], randomBetweenBoundsWide[1]),
@@ -196,7 +200,8 @@ export class Puzzle {
         () => toValuePairSet(getValidOutsideExclusiveValues(randomBetweenBoundsWide[0], randomBetweenBoundsWide[1])),
         (count: number) => toValuePairSet(getRandomNaturalNumberSet(dataUpperBound, count)),
         PuzzleType.GREATER_LESS_THAN,
-        true
+        true,
+        'Outside exclusive'
       ),
       new Puzzle(
         (cellValue: ValuePair) => isMultiple(cellValue.value, randomMultipleBase),
@@ -207,7 +212,8 @@ export class Puzzle {
         () => toValuePairSet(getValidMultiples(randomMultipleBase)),
         (count: number) => toValuePairSet(getRandomNaturalNumberSet(dataUpperBound, count)),
         PuzzleType.MULTIPLICATION,
-        true
+        true,
+        'Multiples'
       ),
       new Puzzle(
         (cellValue: ValuePair) => isMultiple(cellValue.value, randomMultipleBase),
@@ -218,7 +224,8 @@ export class Puzzle {
         () => toValuePairSet(getValidMultiples(randomMultipleBase)),
         (count: number) => toValuePairSet(getRandomNaturalNumberSet(dataUpperBound, count)),
         PuzzleType.DIVISION,
-        true
+        true,
+        'Divisible by'
       ),
       new Puzzle(
         (cellValue: ValuePair) => isFactor(cellValue.value, randomFactorTarget),
@@ -229,7 +236,8 @@ export class Puzzle {
         () => toValuePairSet(getValidFactors(randomFactorTarget)),
         (count: number) => toValuePairSet(getRandomNaturalNumberSet(dataUpperBoundLow, count)),
         PuzzleType.MULTIPLICATION,
-        true
+        true,
+        'Factors'
       ),
       new Puzzle(
         (cellValue: ValuePair) => cellValue.value === randomMultiplicationTarget,
@@ -265,7 +273,31 @@ export class Puzzle {
         (count: number) => getRandomFractions(count, randomFractionBase),
         PuzzleType.FRACTIONS,
         true,
-        'Fraction Basics'
+        'Fraction Equivalents'
+      ),
+      new Puzzle(
+        (cellValue: ValuePair) => cellValue.value >= 0.5,
+        dataUpperBound,
+        `${mb().text(`Find fractions ${greaterEqual}`).oneHalf().build()}`,
+        (cellValue: ValuePair) => {return `${cellValue.valueAsString} is ${greaterEqual} ${mb().oneHalf().build()}`;},
+        (cellValue: ValuePair) => {return  `${cellValue.valueAsString} is not ${greaterEqual} to to ${mb().oneHalf().build()}`;},
+        () => getValidFractions(randomFractionBase),
+        (count: number) => getRandomFractions(count, randomFractionBase),
+        PuzzleType.FRACTIONS,
+        true,
+        `Fraction ${greaterEqual} 1/2`
+      ),
+      new Puzzle(
+        (cellValue: ValuePair) => cellValue.value < 0.5,
+        dataUpperBound,
+        `${mb().text('Find fractions < than').oneHalf().build()}`,
+        (cellValue: ValuePair) => {return `${cellValue.valueAsString} is < ${mb().oneHalf().build()}`;},
+        (cellValue: ValuePair) => {return  `${cellValue.valueAsString} is not < ${mb().oneHalf().build()}`;},
+        () => getValidFractions(randomFractionBase),
+        (count: number) => getRandomFractions(count, randomFractionBase),
+        PuzzleType.FRACTIONS,
+        true,
+        'Fraction < 1/2'
       )
     ];
   }
