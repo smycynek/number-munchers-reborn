@@ -14,5 +14,5 @@ sed -i -e "s/\|\|v[0-9][0-9][0-9]\|\|/$version_inc_full/g" $PAGE_PATH
 
 rm "$PAGE_PATH-e"
 
-ng build  --configuration=production --base-href /number-munchers/
+npx ng build  --configuration=production --base-href /number-munchers/
 
