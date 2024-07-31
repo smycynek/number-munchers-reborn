@@ -17,6 +17,8 @@ import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MixedValueSentenceComponent } from './mixed-value-sentence/mixed-value-sentence.component';
 import { mb } from './mixed-value-sentence/mathBuilder';
+import { MathExpressionComponent } from '../math-components/math-expression/math-expression.component';
+import { MathSentenceComponent } from '../math-components/math-sentence/math-sentence.component';
 
 const allPuzzles = new Set<PuzzleType>([
   PuzzleType.MISC,
@@ -29,7 +31,7 @@ const allPuzzles = new Set<PuzzleType>([
 @Component({
   selector: 'app-number-munchers',
   standalone: true,
-  imports: [CommonModule, NgbModule, RouterOutlet, FormsModule, MixedValueSentenceComponent],
+  imports: [CommonModule, NgbModule, RouterOutlet, FormsModule, MixedValueSentenceComponent, MathExpressionComponent, MathSentenceComponent],
   templateUrl: './numberMunchers.component.html',
   styleUrl: './less/numberMunchers.component.less'
 })
