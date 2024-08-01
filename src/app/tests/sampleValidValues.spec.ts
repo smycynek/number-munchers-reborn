@@ -5,7 +5,7 @@ import {
     getValidFactors,
     getValidMultiples,
     getValidOutsideExclusiveValues
-} from '../sampleValidValues';
+} from '../export function getValidMultiplicationPairs(target: number): Set<ValuePair> {   const pairs: Set<ValuePair> = new Set();   const factors = getValidFactors(target);   factors.forEach(val => pairs.add(new ValuePair(target, mb().expression(val, target / val, multSymbol).build())));   return pairs; }';
 /*
 This is a little bit of overkill, but if I'm making a game
 for kids, I want to make sure output is correct.

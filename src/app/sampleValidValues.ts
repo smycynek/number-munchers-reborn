@@ -1,10 +1,11 @@
-import { ExpressionData, MixedNumberExpressionData } from '../math-components/expression-data/expressionData';
+import { ExpressionData, MixedNumberExpressionData, MultiplicationExpressionData } from '../math-components/expression-data/expressionData';
 import { dataUpperBound } from './constants';
 
 import {
 
   isPerfectSquare
 } from './predicates';
+import { getValidFactors } from './sampleRandomValues';
 
 const perfectSquares = new Set<number>([...getNaturalNumberSet(dataUpperBound)].filter(n => isPerfectSquare(n)));
 
@@ -30,4 +31,123 @@ export function toExpressionDataSet(values: Set<number>): Set<ExpressionData> {
 export function expressionDataSetHas(expression: ExpressionData, set: Set<ExpressionData>): boolean {
   const setVals = [...set].map(vp => vp.value);
   return setVals.includes(expression.value);
+}
+
+export function getValidMultiplicationPairs(target: number): Set<MultiplicationExpressionData> {
+  const pairs: Set<MultiplicationExpressionData> = new Set();
+  const factors = getValidFactors(target);
+  factors.forEach(val => pairs.add(new MultiplicationExpressionData(val, target / val)));
+  return pairs;
+}
+
+
+export function getBaseFractions(): Set<MixedNumberExpressionData> {
+  const newFractionPair = (idn: number, idd: number) => new MixedNumberExpressionData(0, idn, idd);
+
+  const pairs: Set<MixedNumberExpressionData> = new Set();
+  
+  /* I could create a loop, but I felt like naming the
+   target fractions explicitly.  Depending on how the gameplay goes,
+   I might want fractions that have only one other equivalency, like
+   1/10 and 2/20, or I might prefer to eliminate or just reduce those answers
+   */
+
+  pairs.add(newFractionPair(1, 2));
+  pairs.add(newFractionPair(1, 3));
+  pairs.add(newFractionPair(1, 4));
+  pairs.add(newFractionPair(1, 5));
+  pairs.add(newFractionPair(1, 6));
+
+  pairs.add(newFractionPair(2, 3));
+  pairs.add(newFractionPair(2, 4));
+  pairs.add(newFractionPair(3, 4));
+  pairs.add(newFractionPair(2, 5));
+  pairs.add(newFractionPair(3, 5));
+  pairs.add(newFractionPair(4, 5));
+
+  pairs.add(newFractionPair(2, 6));
+  pairs.add(newFractionPair(3, 6));
+  pairs.add(newFractionPair(4, 6));
+  pairs.add(newFractionPair(5, 6));
+
+
+  pairs.add(newFractionPair(1, 7));
+  pairs.add(newFractionPair(2, 7));
+  pairs.add(newFractionPair(3, 7));
+  pairs.add(newFractionPair(4, 7));
+  pairs.add(newFractionPair(5, 7));
+  pairs.add(newFractionPair(6, 7));
+
+  pairs.add(newFractionPair(1, 8));
+  pairs.add(newFractionPair(2, 8));
+  pairs.add(newFractionPair(3, 8));
+  pairs.add(newFractionPair(4, 8));
+  pairs.add(newFractionPair(5, 8));
+  pairs.add(newFractionPair(6, 8));
+  pairs.add(newFractionPair(7, 8));
+
+
+  pairs.add(newFractionPair(1, 9));
+  pairs.add(newFractionPair(2, 9));
+  pairs.add(newFractionPair(3, 9));
+  pairs.add(newFractionPair(6, 9));
+
+  pairs.add(newFractionPair(1, 10));
+  pairs.add(newFractionPair(2, 10));
+  pairs.add(newFractionPair(4, 10));
+  pairs.add(newFractionPair(5, 10));
+  pairs.add(newFractionPair(6, 10));
+  pairs.add(newFractionPair(8, 10));
+  pairs.add(newFractionPair(9, 10));
+
+  pairs.add(newFractionPair(2, 12));
+  pairs.add(newFractionPair(3, 12));
+  pairs.add(newFractionPair(4, 12));
+  pairs.add(newFractionPair(6, 12));
+  pairs.add(newFractionPair(8, 12));
+  pairs.add(newFractionPair(9, 12));
+
+
+  pairs.add(newFractionPair(3, 15));
+  pairs.add(newFractionPair(5, 15));
+  pairs.add(newFractionPair(10, 15));
+
+
+  pairs.add(newFractionPair(2, 16));
+  pairs.add(newFractionPair(4, 16));
+  pairs.add(newFractionPair(6, 16));
+  pairs.add(newFractionPair(8, 16));
+  pairs.add(newFractionPair(10, 16));
+  pairs.add(newFractionPair(12, 16));
+  pairs.add(newFractionPair(14, 16));
+
+
+  pairs.add(newFractionPair(2, 18));
+  pairs.add(newFractionPair(3, 18));
+  pairs.add(newFractionPair(6, 18));
+  pairs.add(newFractionPair(9, 18));
+  pairs.add(newFractionPair(12, 18));
+
+  pairs.add(newFractionPair(2, 20));
+  pairs.add(newFractionPair(4, 20));
+  pairs.add(newFractionPair(6, 20));
+  pairs.add(newFractionPair(8, 20));
+  pairs.add(newFractionPair(10, 20));
+  pairs.add(newFractionPair(12, 20));
+  pairs.add(newFractionPair(16, 20));
+  pairs.add(newFractionPair(18, 20));
+  return pairs;
+}
+
+export function getValidFractions(target: MixedNumberExpressionData) {
+  const valueSet: Set<MixedNumberExpressionData> = new Set();
+  for (let idx = 1; idx != 21; idx++) {
+    for (let idy = 2; idy != 21; idy++) {
+      if ((idx / idy === target.value) && !(target.numerator == idx && target.denominator == idy)) {
+        // Add equivalent fractions but not the exact same fraction to the valid fraction list
+        valueSet.add(new MixedNumberExpressionData(0,idx, idy))
+      }
+    }
+  }
+  return valueSet;
 }

@@ -17,11 +17,12 @@ import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MathExpressionComponent } from '../math-components/math-expression/math-expression.component';
 import { MathSentenceComponent } from '../math-components/math-sentence/math-sentence.component';
-import { AdditionExpressionName, ExpressionData, MixedNumberExpressionData, MixedNumberExpressionName, MultiplicationExpressionName, StringExpressionData } from '../math-components/expression-data/expressionData';
+import { AdditionExpressionName, ExpressionData, ExpressionTypes, MixedNumberExpressionName, MultiplicationExpressionName, s } from '../math-components/expression-data/expressionData';
 
 const allPuzzles = new Set<PuzzleType>([
   PuzzleType.MISC,
   PuzzleType.MULTIPLICATION,
+  PuzzleType.FRACTIONS
 ]);
 
 @Component({
@@ -45,7 +46,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   private puzzleTypes = allPuzzles;
   public readonly cellData: WritableSignal<DataCell[]> = signal([]);
   public readonly statusMessage: WritableSignal<string> = signal(StringResources.START);
-  public statusMessageDetail: (StringExpressionData | MixedNumberExpressionData)[] = [];
+  public statusMessageDetail: (ExpressionTypes)[] = [];
   public readonly statusMessageClass: WritableSignal<string> = signal('status-default');
   public readonly activePuzzle: WritableSignal<Puzzle> = signal(Puzzle.getRandomPuzzle(this.puzzleTypes));
   private soundManager: SoundManager = new SoundManager();
@@ -112,7 +113,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
       debug('--');
       if (this.noRemainingSolutions()) { // should not happen
         this.statusMessage.set('No solutions, try a new game');
-        this.statusMessageDetail = [new StringExpressionData('-')]
+        this.statusMessageDetail = [s('-')]
       }
     }
   }
@@ -143,7 +144,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     this.positionManager.activeColumn.set(0);
     this.positionManager.mertinIndex.set(-1);
     this.statusMessage.set(StringResources.START);
-    this.statusMessageDetail = [new StringExpressionData(StringResources.YOU_CAN_DO_IT)];
+    this.statusMessageDetail = [s(StringResources.YOU_CAN_DO_IT)];
     this.statusMessageClass.set('status-default');
     this.cellData.set([])
   }

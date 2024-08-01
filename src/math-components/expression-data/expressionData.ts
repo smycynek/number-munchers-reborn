@@ -11,6 +11,10 @@ export const LogarithmExpressionName = 'LogarithmExpressionName';
 // It would be nice if we could use the type name
 // property directly, but it gets mangled by the optimizer.
 // There may be another, better way.
+export type ExpressionTypes = ExpressionData |  MixedNumberExpressionData |
+ StringExpressionData | AdditionExpressionData | 
+ SubtractionExpressionData | MultiplicationExpressionData | DivisionExpressionData | 
+ RootExpressionData | ExponentExpressionData | LogarithmExpressionData;
 
 export class ExpressionData {
     constructor(public value: number, public opType: string) {
@@ -18,6 +22,9 @@ export class ExpressionData {
     [key: string]: unknown; // Needed to index subclass properties
     public toString() : string {
         return `opType: ${this.opType}, value: ${this.value}`;
+    }
+    public clone(): ExpressionTypes {
+        return { ...this }
     }
 }
 
