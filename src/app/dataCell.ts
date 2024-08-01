@@ -1,19 +1,13 @@
-export class ValuePair {
-  constructor(
-    public value: number,
-    public valueAsString: string) { }
-  public toString(): string {
-    return `{Value: ${this.value}, ValueAsString: ${this.valueAsString}}`;
-  }
-}
+import { ExpressionData } from '../math-components/expression-data/expressionData';
+
 
 export class DataCell {
   constructor(
-    public valuePair: ValuePair,
+    public expressionValue: ExpressionData,
     public valid: boolean,
     public discovered: boolean) { }
 
   public toString(): string {
-    return `${this.valuePair.toString()} Valid: ${this.valid} Discovered: ${this.discovered}`;
+    return `${this.expressionValue.toString()} Valid: ${this.valid} Discovered: ${this.discovered}`;
   }
 }

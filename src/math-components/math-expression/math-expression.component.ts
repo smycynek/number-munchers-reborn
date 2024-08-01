@@ -45,7 +45,7 @@ export class MathExpressionComponent {
       case LogarithmExpressionName:
             return LogarithmExpressionComponent;
       default:
-        throw Error(`Unknown math opType {this.mathData.opType}`);
+        throw Error(`Unknown math opType ${this.mathData.opType}`);
     }
   }
 }

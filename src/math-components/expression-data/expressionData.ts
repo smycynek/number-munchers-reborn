@@ -1,12 +1,12 @@
-export const MixedNumberExpressionName = "MixedNumberExpressionName";
-export const AdditionExpressionName = "AdditionExpressionName";
-export const SubtractionExpressionName  = "SubtractionExpressionName";
-export const DivisionExpressionName = "DivisionExpressionName";
-export const MultiplicationExpressionName = "MultiplicationExpressionName";
-export const ExponenentExpressionName = "ExponenentExpressionName";
-export const RootExpressionName = "RootExpressionName";
-export const StringExpressionName = "StringExpressionName";
-export const LogarithmExpressionName = "LogarithmExpressionName";
+export const MixedNumberExpressionName = 'MixedNumberExpressionName';
+export const AdditionExpressionName = 'AdditionExpressionName';
+export const SubtractionExpressionName  = 'SubtractionExpressionName';
+export const DivisionExpressionName = 'DivisionExpressionName';
+export const MultiplicationExpressionName = 'MultiplicationExpressionName';
+export const ExponenentExpressionName = 'ExponenentExpressionName';
+export const RootExpressionName = 'RootExpressionName';
+export const StringExpressionName = 'StringExpressionName';
+export const LogarithmExpressionName = 'LogarithmExpressionName';
 
 // It would be nice if we could use the type name
 // property directly, but it gets mangled by the optimizer.
@@ -16,6 +16,9 @@ export class ExpressionData {
     constructor(public value: number, public opType: string) {
     }
     [key: string]: unknown; // Needed to index subclass properties
+    public toString() : string {
+        return `opType: ${this.opType}, value: ${this.value}`;
+    }
 }
 
 export class StringExpressionData extends ExpressionData {
@@ -36,7 +39,7 @@ export class MixedNumberExpressionData extends ExpressionData {
         public numerator: number,
         public denominator: number,
         public showRval = false,
-        public displayOp = "",
+        public displayOp = '',
         public displayRval  = NaN,) {
         let fraction = 0;
             if (!isNaN(numerator/denominator)) {
@@ -53,7 +56,7 @@ export class AdditionExpressionData extends ExpressionData {
         public left: number,
         public right: number,
         public showRval =false,
-        public displayOp  = "",
+        public displayOp  = '',
         public displayRval = NaN,) {
         super(left + right, AdditionExpressionName);
     }
@@ -65,7 +68,7 @@ export class SubtractionExpressionData extends ExpressionData {
         public left: number,
         public right: number,
         public showRval = false,
-        public displayOp = "",
+        public displayOp = '',
         public displayRval  = NaN,
     ) {
             super(left - right, SubtractionExpressionName);
@@ -78,7 +81,7 @@ export class MultiplicationExpressionData extends ExpressionData {
         public left: number,
         public right: number,
         public showRval = false,
-        public displayOp = "",
+        public displayOp = '',
         public displayRval = NaN,) {
             super(left * right, MultiplicationExpressionName);
     }
@@ -90,7 +93,7 @@ export class DivisionExpressionData extends ExpressionData {
         public left: number,
         public right: number,
         public showRval = false,
-        public displayOp = "",
+        public displayOp = '',
         public displayRval = NaN,) {
             super(left / right, DivisionExpressionName);
     }
@@ -103,7 +106,7 @@ export class ExponentExpressionData extends ExpressionData {
         public base: number,
         public power: number,
         public showRval = false,
-        public displayOp = "",
+        public displayOp = '',
         public displayRval = NaN,) {
             super(Math.pow(base, power) , ExponenentExpressionName);
     }
@@ -116,7 +119,7 @@ export class RootExpressionData extends ExpressionData {
         public index: number,
         public radicand: number,
         public showRval = false,
-        public displayOp = "",
+        public displayOp = '',
         public displayRval = NaN,
       ) {
         super( coefficient * (Math.pow(radicand, 1/index)), RootExpressionName);
@@ -131,7 +134,7 @@ export class LogarithmExpressionData extends ExpressionData {
         public base: number,
         public argument: number,
         public showRval = false,
-        public displayOp = "",
+        public displayOp = '',
         public displayRval = NaN,
       ) {
         super( coefficient * logWithBase(argument, base), LogarithmExpressionName);

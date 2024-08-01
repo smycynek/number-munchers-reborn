@@ -20,10 +20,10 @@ export class BaseExpressionComponent {
 
 export function toNumber(value: string ): number {
   return Number(value);
-};
+}
 
 
 export function toExpression(value: string ): number {
   return Number(value);
-};
+}
 

@@ -2,7 +2,7 @@ import { AfterViewChecked, AfterViewInit, Component, ElementRef, ViewChild, Writ
 import { CommonModule } from '@angular/common'
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChangeDetectorRef } from '@angular/core';
-import { DataCell, ValuePair } from './dataCell';
+import { DataCell } from './dataCell';
 import { Puzzle, PuzzleType } from './puzzle';
 import { debug, hasTouch, parseId, toggleLog, wrapDown, wrapUp } from './utility';
 import { HostListener } from '@angular/core';
@@ -12,26 +12,22 @@ import JSConfetti from 'js-confetti';
 import { StringResources } from './strings';
 import { Observable, Subscription, timer } from 'rxjs';
 import { getRandomItemFromSetAndRemove } from './sampleRandomValues';
-import { divSymbol, mertinDelay, mertinInterval, multSymbol } from './constants';
+import { mertinDelay, mertinInterval } from './constants';
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { MixedValueSentenceComponent } from './mixed-value-sentence/mixed-value-sentence.component';
-import { mb } from './mixed-value-sentence/mathBuilder';
 import { MathExpressionComponent } from '../math-components/math-expression/math-expression.component';
 import { MathSentenceComponent } from '../math-components/math-sentence/math-sentence.component';
+import { AdditionExpressionName, ExpressionData, MixedNumberExpressionData, MixedNumberExpressionName, MultiplicationExpressionName, StringExpressionData } from '../math-components/expression-data/expressionData';
 
 const allPuzzles = new Set<PuzzleType>([
   PuzzleType.MISC,
-  PuzzleType.DIVISION,
-  PuzzleType.GREATER_LESS_THAN,
   PuzzleType.MULTIPLICATION,
-  PuzzleType.FRACTIONS,
 ]);
 
 @Component({
   selector: 'app-number-munchers',
   standalone: true,
-  imports: [CommonModule, NgbModule, RouterOutlet, FormsModule, MixedValueSentenceComponent, MathExpressionComponent, MathSentenceComponent],
+  imports: [CommonModule, NgbModule, RouterOutlet, FormsModule, MathExpressionComponent, MathSentenceComponent],
   templateUrl: './numberMunchers.component.html',
   styleUrl: './less/numberMunchers.component.less'
 })
@@ -46,14 +42,10 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   @ViewChild('btnShowPuzzleTypes') btnShowPuzzleTypes!: ElementRef;
   @ViewChild('btnHelp') btnHelp!: ElementRef;
 
-  public sampleExpression(): string {
-    return mb().expression(2, 3, multSymbol).build();
-  }
-
   private puzzleTypes = allPuzzles;
   public readonly cellData: WritableSignal<DataCell[]> = signal([]);
   public readonly statusMessage: WritableSignal<string> = signal(StringResources.START);
-  public readonly statusMessageDetail: WritableSignal<string> = signal(StringResources.YOU_CAN_DO_IT);
+  public statusMessageDetail: (StringExpressionData | MixedNumberExpressionData)[] = [];
   public readonly statusMessageClass: WritableSignal<string> = signal('status-default');
   public readonly activePuzzle: WritableSignal<Puzzle> = signal(Puzzle.getRandomPuzzle(this.puzzleTypes));
   private soundManager: SoundManager = new SoundManager();
@@ -120,7 +112,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
       debug('--');
       if (this.noRemainingSolutions()) { // should not happen
         this.statusMessage.set('No solutions, try a new game');
-        this.statusMessageDetail.set('-');
+        this.statusMessageDetail = [new StringExpressionData('-')]
       }
     }
   }
@@ -151,7 +143,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     this.positionManager.activeColumn.set(0);
     this.positionManager.mertinIndex.set(-1);
     this.statusMessage.set(StringResources.START);
-    this.statusMessageDetail.set(StringResources.YOU_CAN_DO_IT);
+    this.statusMessageDetail = [new StringExpressionData(StringResources.YOU_CAN_DO_IT)];
     this.statusMessageClass.set('status-default');
     this.cellData.set([])
   }
@@ -177,7 +169,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
 
   public getCellData(r: number, c: number): DataCell {
     if (!this.cellData().length) {
-      return new DataCell(new ValuePair(0, mb().number(0).build()), false, false);
+      return new DataCell(new ExpressionData(0, MixedNumberExpressionName), false, false);
     }
     return this.cellData()[(r * this.positionManager.columnCount()) + c];
   }
@@ -238,7 +230,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     debug('--Reset Square--')
     debug(`Index to replace: ${squareIndex}`);
     debug(`Remaining solutions: ${solutionsCount}`);
-    debug(`Removing: ${this.cellData()[squareIndex].valuePair.toString()}`)
+    debug(`Removing: ${this.cellData()[squareIndex].expressionValue.toString()}`)
     let newValue;
     if (solutionsCount <= 1) {
 
@@ -314,10 +306,12 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     if (this.noRemainingSolutions()) {
       classes += ' game-over';
     }
+
+    // SVM TOOD
     if (
       (
-        cell.valuePair.valueAsString.includes(multSymbol)
-        || cell.valuePair.valueAsString.includes(divSymbol)
+        (cell.expressionValue.opType === MultiplicationExpressionName) || 
+        (cell.expressionValue.opType === AdditionExpressionName)
       )
 
       &&
@@ -453,7 +447,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
         debug('Game Over');
         this.statusMessageClass.set('status-success');
         this.statusMessage.set(StringResources.FOUND_ALL);
-        this.statusMessageDetail.set(this.activePuzzle().successDetails(data.valuePair));
+        this.statusMessageDetail = this.activePuzzle().successDetails(data.expressionValue);
         if (this.perfectScore()) {
           this.soundManager.playWhooAndPerfectScore();
           this.statusMessage.set(StringResources.PERFECT_SCORE);
@@ -467,17 +461,17 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
       }
       this.soundManager.playYum();
       this.statusMessage.set(StringResources.CORRECT);
-      this.statusMessageDetail.set(this.activePuzzle().successDetails(data.valuePair));
+      this.statusMessageDetail = this.activePuzzle().successDetails(data.expressionValue);
       this.statusMessageClass.set('status-success');
 
     } else {
       this.soundManager.playYuck();
       this.statusMessage.set(StringResources.INCORRECT);
-      this.statusMessageDetail.set(this.activePuzzle().errorDetails(data.valuePair));
+      this.statusMessageDetail = this.activePuzzle().errorDetails(data.expressionValue);
       this.statusMessageClass.set('status-error');
     }
 
-    debug(`Correct? ${data.valid}, ${data.valuePair.toString()}`);
+    debug(`Correct? ${data.valid}, ${data.expressionValue.toString()}`);
   }
 
   /* Position */
