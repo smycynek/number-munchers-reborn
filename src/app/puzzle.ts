@@ -1,6 +1,7 @@
 import {
   dataUpperBound,
   dataUpperBoundLow,
+  greaterEqual,
   maxReplacements
 } from './constants';
 import { DataCell } from './dataCell';
@@ -30,6 +31,7 @@ import {
 
 import { ExpressionData, ExpressionTypes, MixedNumberExpressionData, MultiplicationExpressionData, s } from '../math-components/expression-data/expressionData';
 import { expressionDataSetHas, getPerfectSquares, getValidFractions, getValidMultiplicationPairs, toExpressionDataSet } from './sampleValidValues';
+import { OP_GTE } from '../math-components/expression-data/operators';
 
 export enum PuzzleType {
   MISC,
@@ -131,6 +133,18 @@ export class Puzzle {
       return [s('Sorry,'), cellValue, s('is not <'), new MixedNumberExpressionData(0,1,2)];
     };
 
+    const fractionEquivalentSuccess = (cellValue: ExpressionTypes) => { return [cellValue, s('is equivalent to'), randomFractionBase]; };
+    const fractionEquivalentFailure = (cellValue: ExpressionTypes) => { return [cellValue, s('is not equivalent to'), randomFractionBase]; };
+
+    const gteHalfSuccess = (cellValue: ExpressionTypes) => { 
+      return [cellValue, s(OP_GTE), new MixedNumberExpressionData(0,1,2)];
+    };
+
+    const gteHalfFailure = (cellValue: ExpressionTypes) => { 
+      return [s('Sorry,'), cellValue, s(`is not ${OP_GTE}`), new MixedNumberExpressionData(0,1,2)];
+    };
+
+
     const randomFractionBase = getRandomFractionBase();
     
     return [
@@ -146,6 +160,9 @@ export class Puzzle {
         true,
         'Perfect Squares'
       ),
+      
+
+
 
       new Puzzle(
         (cellValue: ExpressionData) => cellValue.value === randomMultiplicationTarget,
@@ -160,6 +177,32 @@ export class Puzzle {
         'Multiplication Expressions'
       ),
 
+      new Puzzle(
+        (cellValue: ExpressionData) => cellValue.value === randomFractionBase.value,
+        dataUpperBound,
+        [s('Find fractions equivalent to'), randomFractionBase],
+        fractionEquivalentSuccess,
+        fractionEquivalentFailure,
+        () => getValidFractions(randomFractionBase),
+        (count: number) => getRandomFractions(count, randomFractionBase),
+        PuzzleType.FRACTIONS,
+        true,
+        'Fraction Equivalents'
+      ),
+      new Puzzle(
+        (cellValue: ExpressionData) => cellValue.value >= 0.5,
+        dataUpperBound,
+        [s(`Find fractions ${OP_GTE}`), new MixedNumberExpressionData(0,1,2)],
+        gteHalfSuccess,
+        gteHalfFailure,
+        () => getValidFractions(randomFractionBase),
+        (count: number) => getRandomFractions(count, randomFractionBase),
+        PuzzleType.FRACTIONS,
+        true,
+        `Fraction ${greaterEqual} 1/2`
+      ),
+
+      
       new Puzzle(
         (cellValue: ExpressionData) => cellValue.value < 0.5,
         dataUpperBound,
