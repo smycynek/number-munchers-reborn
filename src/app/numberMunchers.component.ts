@@ -22,7 +22,8 @@ import { AdditionExpressionName, ExpressionData, ExpressionTypes, MixedNumberExp
 const allPuzzles = new Set<PuzzleType>([
   PuzzleType.MISC,
   PuzzleType.MULTIPLICATION,
-  PuzzleType.FRACTIONS
+  PuzzleType.FRACTIONS,
+ // PuzzleType.DIVISION,
 ]);
 
 @Component({

@@ -3,6 +3,8 @@ import { dataUpperBound } from './constants';
 
 import {
 
+  isBetween,
+  isOutsideExclusive,
   isPerfectSquare
 } from './predicates';
 import { getValidFactors } from './sampleRandomValues';
@@ -150,4 +152,27 @@ export function getValidFractions(target: MixedNumberExpressionData) {
     }
   }
   return valueSet;
+}
+
+export function getValidMultiples(num: number): Set<number> {
+  const multiples: Set<number> = new Set();
+  for (let idx = 2; idx != 10; idx++) {
+    multiples.add(num * idx);
+  }
+  return multiples;
+}
+
+
+const primes = new Set<number>([1, 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]);
+
+export function getPrimes(): Set<number> {
+  return new Set<number>([...primes]);
+}
+
+export function getValidBetweenValues(lower: number, upper: number, inclusive: boolean): Set<number> {
+  return new Set([...getNaturalNumberSet(dataUpperBound)].filter(value => isBetween(value, lower, upper, inclusive)));
+}
+
+export function getValidOutsideExclusiveValues(lower: number, upper: number): Set<number> {
+  return new Set([...getNaturalNumberSet(dataUpperBound)].filter(value => isOutsideExclusive(value, lower, upper)));
 }

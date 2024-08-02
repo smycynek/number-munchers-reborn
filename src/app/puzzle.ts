@@ -11,7 +11,9 @@ import {
 } from './utility';
 
 import {
+  isMultiple,
   isPerfectSquare,
+  isPrime,
 
 } from './predicates';
 
@@ -25,18 +27,20 @@ import {
   getRandomMultiplicationPairs,
   getRandomFractions,
   getRandomFractionBase,
+  getRandomMultipleBase,
 
 }
   from './sampleRandomValues';
 
 import { ExpressionData, ExpressionTypes, MixedNumberExpressionData, MultiplicationExpressionData, s } from '../math-components/expression-data/expressionData';
-import { expressionDataSetHas, getPerfectSquares, getValidFractions, getValidMultiplicationPairs, toExpressionDataSet } from './sampleValidValues';
+import { expressionDataSetHas, getPerfectSquares, getPrimes, getValidFractions, getValidMultiples, getValidMultiplicationPairs, toExpressionDataSet } from './sampleValidValues';
 import { OP_GTE } from '../math-components/expression-data/operators';
 
 export enum PuzzleType {
   MISC,
   MULTIPLICATION,
-  FRACTIONS
+  FRACTIONS,
+ //  DIVISION
 }
 
 export class Puzzle {
@@ -108,6 +112,7 @@ export class Puzzle {
   private static createPuzzles(): Puzzle[] {   
 
     const randomMultiplicationTarget = getRandomFactorTarget(3);
+    const randomMultipleBase = getRandomMultipleBase();
     
     const perfectSquareSuccess = (cellValue: ExpressionData) => {  return [new MixedNumberExpressionData(Math.sqrt(cellValue.value),0,0), s('time itself is'), new MixedNumberExpressionData(cellValue.value,0,0)]};
     const perfectSquareFailure = (cellValue: ExpressionData) => {  return [s('Sorry, no number times itself equals'), new MixedNumberExpressionData(cellValue.value,0,0)]};
@@ -145,6 +150,18 @@ export class Puzzle {
     };
 
 
+    const multiplesSuccess = (cellValue: ExpressionTypes) => { return [s(`${randomMultipleBase} times ${cellValue.value / randomMultipleBase} equals ${cellValue.value}`)]; };
+    const multiplesFailure = (cellValue: ExpressionTypes) => { return [s(`No whole numbers times ${randomMultipleBase} equals ${cellValue.value}`)]; };
+
+    const primeSuccess = (cellValue: ExpressionTypes) => { return [s(`${cellValue.value} is not divisible by anything except 1 and itself (${cellValue.value})`)]; };
+    const primeFailure = (cellValue: ExpressionTypes) => { return [s(`${cellValue.value} has factors such as TODO`)]; }; // SVM TODO ${format_and([...getValidFactors(cellValue.value)])}`).build(); };
+
+
+    // SVM TODO
+    // const divisionSuccess = (cellValue: ExpressionTypes) => { return `${cellValue.valueAsString} ${mb().text('=').number(randomQuotientTarget).build()}`; };
+    // const divisionFailure = (cellValue: ExpressionTypes) => { return `${cellValue.valueAsString} ${mb().text('=').number(cellValue.value, true, false).text(', not').number(randomQuotientTarget).build()}`; };
+
+
     const randomFractionBase = getRandomFractionBase();
     
     return [
@@ -161,6 +178,18 @@ export class Puzzle {
         'Perfect Squares'
       ),
       
+      new Puzzle(
+        (cellValue: ExpressionData) => isPrime(cellValue.value),
+        dataUpperBound,
+        [s('Find prime numbers')],
+        primeSuccess,
+        primeFailure,
+        () => toExpressionDataSet(getPrimes()),
+        (count: number) => toExpressionDataSet(getRandomNaturalNumberSet(dataUpperBound, count)),
+        PuzzleType.MISC,
+        true,
+        'Primes'
+      ),
 
 
 
@@ -175,6 +204,19 @@ export class Puzzle {
         PuzzleType.MULTIPLICATION,
         true,
         'Multiplication Expressions'
+      ),
+
+      new Puzzle(
+        (cellValue: ExpressionData) => isMultiple(cellValue.value, randomMultipleBase),
+        dataUpperBound,
+        [s(`Find multiples of ${randomMultipleBase}`)],
+        multiplesSuccess,
+        multiplesFailure,
+        () => toExpressionDataSet(getValidMultiples(randomMultipleBase)),
+        (count: number) => toExpressionDataSet(getRandomNaturalNumberSet(dataUpperBound, count)),
+        PuzzleType.MULTIPLICATION,
+        true,
+        'Multiples'
       ),
 
       new Puzzle(

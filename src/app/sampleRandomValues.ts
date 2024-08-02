@@ -2,7 +2,7 @@
 
 import { isFactor } from './predicates';
 
-import { dataUpperBound } from './constants';
+import { dataUpperBound, multipleLowerBound, multipleUpperBound } from './constants';
 import { expressionDataSetHas, getBaseFractions, getNaturalNumberSet } from './sampleValidValues';
 import { MixedNumberExpressionData, MultiplicationExpressionData } from '../math-components/expression-data/expressionData';
 
@@ -99,4 +99,8 @@ for (let idc = 0; idc != count; idc++) {
   returnSet.add(getRandomItemFromSetAndRemove(valueSet));
 }
 return returnSet;
+}
+
+export function getRandomMultipleBase(): number {
+  return getRandomNumberWithinRange(multipleLowerBound, multipleUpperBound);
 }
