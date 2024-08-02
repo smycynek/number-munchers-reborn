@@ -2,16 +2,20 @@ import {
   dataUpperBound,
   dataUpperBoundLow,
   greaterEqual,
+  lessEqual,
   maxReplacements
 } from './constants';
 import { DataCell } from './dataCell';
 
 import {
   debug,
+  round3,
 } from './utility';
 
 import {
+  isBetween,
   isMultiple,
+  isOutsideExclusive,
   isPerfectSquare,
   isPrime,
 
@@ -28,19 +32,23 @@ import {
   getRandomFractions,
   getRandomFractionBase,
   getRandomMultipleBase,
+  getRandomBetweenBounds,
+  getRandomBetweenBoundsWide,
+  getRandomDivisionPairs,
 
 }
   from './sampleRandomValues';
 
-import { ExpressionData, ExpressionTypes, MixedNumberExpressionData, MultiplicationExpressionData, s } from '../math-components/expression-data/expressionData';
-import { expressionDataSetHas, getPerfectSquares, getPrimes, getValidFractions, getValidMultiples, getValidMultiplicationPairs, toExpressionDataSet } from './sampleValidValues';
+import { DivisionExpressionData, ExpressionData, ExpressionTypes, MixedNumberExpressionData, MultiplicationExpressionData, s } from '../math-components/expression-data/expressionData';
+import { expressionDataSetHas, getPerfectSquares, getPrimes, getValidBetweenValues, getValidDivisionPairs, getValidFractions, getValidMultiples, getValidMultiplicationPairs, getValidOutsideExclusiveValues, toExpressionDataSet } from './sampleValidValues';
 import { OP_GTE } from '../math-components/expression-data/operators';
 
 export enum PuzzleType {
   MISC,
   MULTIPLICATION,
   FRACTIONS,
- //  DIVISION
+  DIVISION,
+  GREATER_LESS_THAN
 }
 
 export class Puzzle {
@@ -113,6 +121,11 @@ export class Puzzle {
 
     const randomMultiplicationTarget = getRandomFactorTarget(3);
     const randomMultipleBase = getRandomMultipleBase();
+
+    const randomQuotientTarget = getRandomNumberWithinRange(2, 11);
+    const randomBetweenBounds = getRandomBetweenBounds();
+    const randomBetweenBoundsWide = getRandomBetweenBoundsWide();
+    
     
     const perfectSquareSuccess = (cellValue: ExpressionData) => {  return [new MixedNumberExpressionData(Math.sqrt(cellValue.value),0,0), s('time itself is'), new MixedNumberExpressionData(cellValue.value,0,0)]};
     const perfectSquareFailure = (cellValue: ExpressionData) => {  return [s('Sorry, no number times itself equals'), new MixedNumberExpressionData(cellValue.value,0,0)]};
@@ -156,11 +169,38 @@ export class Puzzle {
     const primeSuccess = (cellValue: ExpressionTypes) => { return [s(`${cellValue.value} is not divisible by anything except 1 and itself (${cellValue.value})`)]; };
     const primeFailure = (cellValue: ExpressionTypes) => { return [s(`${cellValue.value} has factors such as TODO`)]; }; // SVM TODO ${format_and([...getValidFactors(cellValue.value)])}`).build(); };
 
+    const betweenSuccess = (cellValue: ExpressionTypes) => { return [s(`${cellValue.value} is greater than ${randomBetweenBounds[0]} and less than ${randomBetweenBounds[1]}`)];};
 
-    // SVM TODO
-    // const divisionSuccess = (cellValue: ExpressionTypes) => { return `${cellValue.valueAsString} ${mb().text('=').number(randomQuotientTarget).build()}`; };
-    // const divisionFailure = (cellValue: ExpressionTypes) => { return `${cellValue.valueAsString} ${mb().text('=').number(cellValue.value, true, false).text(', not').number(randomQuotientTarget).build()}`; };
+    const betweenFailure = (cellValue: ExpressionTypes) => {return [s(`${cellValue.value} is not greater than ${randomBetweenBounds[0]} and less than ${randomBetweenBounds[1]}`)]};
 
+
+    const betweenInclusiveSuccess = (cellValue: ExpressionTypes) => { return [s(`${cellValue.value} is greater than or equal to ${randomBetweenBounds[0]} and less than or equal to ${randomBetweenBounds[1]}`)]};
+    const betweenInclusiveFailure = (cellValue: ExpressionTypes) => { return [s(`${cellValue.value} is not greater than or equal to ${randomBetweenBounds[0]} and less than or equal to ${randomBetweenBounds[1]}`)]};
+
+
+    const outsideExclusiveSuccess = (cellValue: ExpressionTypes) => { return [s(`${cellValue.value} is either greater than ${randomBetweenBoundsWide[1]} or less than ${randomBetweenBoundsWide[0]}`)];};
+    const outsideExclusiveFailure = (cellValue: ExpressionTypes) => { return [s(`${cellValue.value} is not either greater than ${randomBetweenBoundsWide[1]} or less than ${randomBetweenBoundsWide[0]}`)];};
+
+     const divisionSuccess = (cellValue: ExpressionTypes) => { 
+      const mCellValue = cellValue.clone() as DivisionExpressionData;
+      mCellValue.showRval = true;
+      return [mCellValue]
+    };
+
+     const divisionFailure = (cellValue: ExpressionTypes) => { 
+      const mCellValue = cellValue.clone() as DivisionExpressionData;
+      mCellValue.showRval = true;
+      return [mCellValue, s(`, not ${randomQuotientTarget}`)]
+     };
+
+     const divisibleBySuccess = (cellValue: ExpressionTypes) => { 
+      return [s(`${cellValue.value} divided by ${randomMultipleBase} equals ${cellValue.value / randomMultipleBase}` )];
+     };
+
+      const divisibleByFailure = (cellValue: ExpressionTypes) => { 
+       return [s(`${cellValue.value} divided by ${randomMultipleBase} is ${round3(cellValue.value / randomMultipleBase)}, not a whole number.` )];
+      }
+     
 
     const randomFractionBase = getRandomFractionBase();
     
@@ -256,8 +296,75 @@ export class Puzzle {
         PuzzleType.FRACTIONS,
         true,
         'Fraction < 1/2'
-      )
+      ),
 
+      new Puzzle(
+        (cellValue: ExpressionData) => cellValue.value === randomQuotientTarget,
+        dataUpperBoundLow,
+        [s(`Find expressions equal to ${randomQuotientTarget}`)],
+        divisionSuccess,
+        divisionFailure,
+        () => getValidDivisionPairs(randomQuotientTarget),
+        (count: number) => getRandomDivisionPairs(count),
+        PuzzleType.DIVISION,
+        true,
+        'Division Expressions'
+      ),
+
+      new Puzzle(
+        (cellValue: ExpressionData) => isMultiple(cellValue.value, randomMultipleBase),
+        dataUpperBound,
+        [s(`Find numbers divisible by ${randomMultipleBase}`)],
+        divisibleBySuccess,
+        divisibleByFailure,
+        () => toExpressionDataSet(getValidMultiples(randomMultipleBase)),
+        (count: number) => toExpressionDataSet(getRandomNaturalNumberSet(dataUpperBound, count)),
+        PuzzleType.DIVISION,
+        true,
+        'Divisible by'
+      ),
+
+
+      new Puzzle(
+        (cellValue: ExpressionData) => (isBetween(cellValue.value, randomBetweenBounds[0], randomBetweenBounds[1], false)),
+        dataUpperBound,
+        [s(`Find numbers between ${randomBetweenBounds[0]} and ${randomBetweenBounds[1]}`)],
+        betweenSuccess,
+        betweenFailure,
+        () => toExpressionDataSet(getValidBetweenValues(randomBetweenBounds[0], randomBetweenBounds[1], false)),
+        (count: number) => toExpressionDataSet(getRandomNaturalNumberSet(dataUpperBound, count)),
+        PuzzleType.GREATER_LESS_THAN,
+        true,
+        'Between'
+      ),
+      new Puzzle(
+        (cellValue: ExpressionData) => (isBetween(cellValue.value, randomBetweenBounds[0], randomBetweenBounds[1], true)),
+        dataUpperBound,
+        [s(`Find numbers ${greaterEqual} ${randomBetweenBounds[0]} and ${lessEqual}  ${randomBetweenBounds[1]}  `)],
+        betweenInclusiveSuccess,
+        betweenInclusiveFailure,
+        () => toExpressionDataSet(getValidBetweenValues(randomBetweenBounds[0], randomBetweenBounds[1], true)),
+        (count: number) => toExpressionDataSet(getRandomNaturalNumberSet(dataUpperBound, count)),
+        PuzzleType.GREATER_LESS_THAN,
+        true,
+        'Between inclusive'
+      ),
+
+      new Puzzle(
+        (cellValue: ExpressionData) => isOutsideExclusive(cellValue.value, randomBetweenBoundsWide[0], randomBetweenBoundsWide[1]),
+        dataUpperBound,
+        [s(`Find numbers > ${randomBetweenBoundsWide[1]} or < ${randomBetweenBoundsWide[0]}`)],
+        outsideExclusiveSuccess,
+        outsideExclusiveFailure,
+        () => toExpressionDataSet(getValidOutsideExclusiveValues(randomBetweenBoundsWide[0], randomBetweenBoundsWide[1])),
+        (count: number) => toExpressionDataSet(getRandomNaturalNumberSet(dataUpperBound, count)),
+        PuzzleType.GREATER_LESS_THAN,
+        true,
+        'Outside exclusive'
+      ),
+
+
+// TODO, some problem adding in correct # of valid answers, maybe problem with does exist set logic?
     ];
   }
 

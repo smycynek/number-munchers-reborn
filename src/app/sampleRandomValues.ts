@@ -2,9 +2,9 @@
 
 import { isFactor } from './predicates';
 
-import { dataUpperBound, multipleLowerBound, multipleUpperBound } from './constants';
-import { expressionDataSetHas, getBaseFractions, getNaturalNumberSet } from './sampleValidValues';
-import { MixedNumberExpressionData, MultiplicationExpressionData } from '../math-components/expression-data/expressionData';
+import { boundOffsetMax, boundoffsetMin, dataUpperBound, multipleLowerBound, multipleUpperBound } from './constants';
+import { expressionDataSetHas, getBaseFractions, getNaturalNumberSet, getValidDivisionPairs } from './sampleValidValues';
+import { DivisionExpressionData, MixedNumberExpressionData, MultiplicationExpressionData } from '../math-components/expression-data/expressionData';
 
 
 export function getRandomItemFromSetAndRemove<T>(numberSet: Set<T>): T {
@@ -103,4 +103,34 @@ return returnSet;
 
 export function getRandomMultipleBase(): number {
   return getRandomNumberWithinRange(multipleLowerBound, multipleUpperBound);
+}
+
+// A narrower range used for > and <
+export function getRandomBetweenBounds() {
+  const bound1 = getRandomNumberWithinRange(0, dataUpperBound);
+  const bound2 = bound1 + getRandomNumberWithinRange(boundoffsetMin, boundOffsetMax);
+  return [bound1, bound2];
+}
+
+// A wider range used for < or >
+export function getRandomBetweenBoundsWide() {
+  const bound1 = getRandomNumberWithinRange(0, dataUpperBound - 20);
+  const bound2 = bound1 + getRandomNumberWithinRange(boundoffsetMin + 15, boundOffsetMax + 15);
+  return [bound1, bound2];
+}
+
+export function getRandomDivisionPairs(count: number): Set<DivisionExpressionData> {
+  const valueSet: Set<DivisionExpressionData> = new Set();
+  const returnSet: Set<DivisionExpressionData> = new Set();
+  for (let idq = 2; idq < 12; idq++) {
+    getValidDivisionPairs(idq).forEach(v => {
+      if (!expressionDataSetHas(v, valueSet)) {
+        valueSet.add(v);
+      }
+    });
+  }
+  for (let idc = 0; idc != count; idc++) {
+    returnSet.add(getRandomItemFromSetAndRemove(valueSet));
+  }
+  return returnSet;
 }

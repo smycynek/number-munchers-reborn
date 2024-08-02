@@ -1,4 +1,4 @@
-import { ExpressionData, MixedNumberExpressionData, MultiplicationExpressionData } from '../math-components/expression-data/expressionData';
+import { DivisionExpressionData, ExpressionData, ExpressionTypes, MixedNumberExpressionData, MultiplicationExpressionData } from '../math-components/expression-data/expressionData';
 import { dataUpperBound } from './constants';
 
 import {
@@ -25,7 +25,7 @@ export function getNaturalNumberSet(upperBound: number): Set<number> {
 }
 
 
-export function toExpressionDataSet(values: Set<number>): Set<ExpressionData> {
+export function toExpressionDataSet(values: Set<number>): Set<ExpressionTypes> {
   
   return new Set<ExpressionData>([...values].map(v => new MixedNumberExpressionData(v,0,0)));
 }
@@ -175,4 +175,15 @@ export function getValidBetweenValues(lower: number, upper: number, inclusive: b
 
 export function getValidOutsideExclusiveValues(lower: number, upper: number): Set<number> {
   return new Set([...getNaturalNumberSet(dataUpperBound)].filter(value => isOutsideExclusive(value, lower, upper)));
+}
+
+export function getValidDivisionPairs(target: number): Set<DivisionExpressionData> {
+  const pairs: Set<DivisionExpressionData> = new Set();
+  const multiples = getValidMultiples(target);
+
+  multiples.forEach(mul => {
+    const otherParam = mul / target;
+    pairs.add(new DivisionExpressionData(target, otherParam));
+  });
+  return pairs;
 }

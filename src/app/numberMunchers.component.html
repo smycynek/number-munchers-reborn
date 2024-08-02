@@ -79,11 +79,33 @@
   <dialog class="dialog-base dialog-general dialog-narrow" typeDialog #puzzleTypeDialog closed>
     <div>
       <h1>Puzzle Types</h1>
-      <div class="choice-menu">
+
+    <div class="choice-menu">
         <div class="choice-group form-check">
+          <input class="checkbox-wide highlighted" id="cbGlt" [disabled]="isCheckboxDisabled(glt)" [(ngModel)]="glt"
+            (change)="toggleType(glt, puzzleType.GREATER_LESS_THAN)" type="checkbox" />
+          <label for="cbGlt">Greater or Less Than</label>
+        </div>
+        <div class="choice-group">
+          <input class="checkbox-wide highlighted" id="cbMult" [disabled]="isCheckboxDisabled(multiplication)"
+            [(ngModel)]="multiplication" (change)="toggleType(multiplication, puzzleType.MULTIPLICATION)"
+            type="checkbox" />
+          <label for="cbMult">Multiplication</label>
+        </div>
+        <div class="choice-group">
+          <input class="checkbox-wide highlighted" id="cbDiv" [disabled]="isCheckboxDisabled(division)"
+            [(ngModel)]="division" (change)="toggleType(division, puzzleType.DIVISION)" type="checkbox" />
+          <label for="cbDiv">Division</label>
+        </div>
+        <div class="choice-group">
           <input class="checkbox-wide highlighted" id="cbMisc" [disabled]="isCheckboxDisabled(misc)" [(ngModel)]="misc"
             (change)="toggleType(misc, puzzleType.MISC)" type="checkbox" />
           <label for="cbMisc">Miscellaneous</label>
+        </div>
+        <div class="choice-group">
+          <input class="checkbox-wide highlighted" id="cbFractions" [disabled]="isCheckboxDisabled(fractions)"
+            [(ngModel)]="fractions" (change)="toggleType(fractions, puzzleType.FRACTIONS)" type="checkbox" />
+          <label for="cbFractions">Fractions</label>
         </div>
   
       </div>

@@ -23,7 +23,8 @@ const allPuzzles = new Set<PuzzleType>([
   PuzzleType.MISC,
   PuzzleType.MULTIPLICATION,
   PuzzleType.FRACTIONS,
- // PuzzleType.DIVISION,
+  PuzzleType.DIVISION,
+  PuzzleType.GREATER_LESS_THAN,
 ]);
 
 @Component({
