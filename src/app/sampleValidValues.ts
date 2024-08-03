@@ -31,6 +31,16 @@ export function toExpressionDataSet(values: Set<number>): Set<ExpressionTypes> {
 }
 
 export function expressionDataSetHas(expression: ExpressionData, set: Set<ExpressionData>): boolean {
+  const sv = [...set];
+  if (!sv.length) {
+   return false;  // TODO DEBUG
+  }
+
+  let idx =sv.findIndex(v => !v);
+  if (idx === -1) {
+    return false;  // TODO DEBUG
+  }
+
   const setVals = [...set].map(vp => vp.value);
   return setVals.includes(expression.value);
 }
@@ -183,7 +193,9 @@ export function getValidDivisionPairs(target: number): Set<DivisionExpressionDat
 
   multiples.forEach(mul => {
     const otherParam = mul / target;
-    pairs.add(new DivisionExpressionData(target, otherParam));
+    pairs.add(new DivisionExpressionData(mul, otherParam));
   });
   return pairs;
 }
+
+

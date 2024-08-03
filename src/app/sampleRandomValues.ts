@@ -123,7 +123,8 @@ export function getRandomDivisionPairs(count: number): Set<DivisionExpressionDat
   const valueSet: Set<DivisionExpressionData> = new Set();
   const returnSet: Set<DivisionExpressionData> = new Set();
   for (let idq = 2; idq < 12; idq++) {
-    getValidDivisionPairs(idq).forEach(v => {
+    const validPairs = getValidDivisionPairs(idq);
+    validPairs.forEach(v => {
       if (!expressionDataSetHas(v, valueSet)) {
         valueSet.add(v);
       }
