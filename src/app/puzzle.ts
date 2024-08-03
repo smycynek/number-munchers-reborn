@@ -14,6 +14,7 @@ import {
 
 import {
   isBetween,
+  isFactor,
   isMultiple,
   isOutsideExclusive,
   isPerfectSquare,
@@ -35,6 +36,7 @@ import {
   getRandomBetweenBounds,
   getRandomBetweenBoundsWide,
   getRandomDivisionPairs,
+  getValidFactors,
 
 }
   from './sampleRandomValues';
@@ -125,7 +127,7 @@ export class Puzzle {
     const randomQuotientTarget = getRandomNumberWithinRange(2, 11);
     const randomBetweenBounds = getRandomBetweenBounds();
     const randomBetweenBoundsWide = getRandomBetweenBoundsWide();
-    
+    const randomFactorTarget = getRandomFactorTarget(2);
     
     const perfectSquareSuccess = (cellValue: ExpressionData) => {  return [new MixedNumberExpressionData(Math.sqrt(cellValue.value),0,0), s('time itself is'), new MixedNumberExpressionData(cellValue.value,0,0)]};
     const perfectSquareFailure = (cellValue: ExpressionData) => {  return [s('Sorry, no number times itself equals'), new MixedNumberExpressionData(cellValue.value,0,0)]};
@@ -180,6 +182,11 @@ export class Puzzle {
 
     const outsideExclusiveSuccess = (cellValue: ExpressionTypes) => { return [s(`${cellValue.value} is either greater than ${randomBetweenBoundsWide[1]} or less than ${randomBetweenBoundsWide[0]}`)];};
     const outsideExclusiveFailure = (cellValue: ExpressionTypes) => { return [s(`${cellValue.value} is not either greater than ${randomBetweenBoundsWide[1]} or less than ${randomBetweenBoundsWide[0]}`)];};
+
+
+    const factorsSuccess = (cellValue: ExpressionTypes) => { return [s(`${cellValue.value} times ${randomFactorTarget / cellValue.value}  equals ${randomFactorTarget}`)];};
+    const factorsFailure = (cellValue: ExpressionTypes) => { return [s(`No whole numbers multiplied by ${cellValue.value} equal ${randomFactorTarget}`)]; };
+
 
      const divisionSuccess = (cellValue: ExpressionTypes) => { 
       const mCellValue = cellValue.clone() as DivisionExpressionData;
@@ -361,6 +368,19 @@ export class Puzzle {
         PuzzleType.GREATER_LESS_THAN,
         true,
         'Outside exclusive'
+      ),
+
+      new Puzzle(
+        (cellValue: ExpressionData) => isFactor(cellValue.value, randomFactorTarget),
+        dataUpperBoundLow,
+        [s(`Find factors of ${randomFactorTarget}`)],
+        factorsSuccess,
+        factorsFailure,
+        () => toExpressionDataSet(getValidFactors(randomFactorTarget)),
+        (count: number) => toExpressionDataSet(getRandomNaturalNumberSet(dataUpperBoundLow, count)),
+        PuzzleType.MULTIPLICATION,
+        true,
+        'Factors'
       ),
 
 

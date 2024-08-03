@@ -36,7 +36,7 @@ export function expressionDataSetHas(expression: ExpressionData, set: Set<Expres
    return false;  // TODO DEBUG
   }
 
-  let idx =sv.findIndex(v => !v);
+  const idx = sv.findIndex(v => !v);
   if (idx === -1) {
     return false;  // TODO DEBUG
   }
