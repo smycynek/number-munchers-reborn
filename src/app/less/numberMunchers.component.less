@@ -47,3 +47,16 @@ main {
     filter: brightness(80%);
     color: white;
 }
+
+:host ::ng-deep *  {
+    &:not(code) { 
+    font-family: sans-serif;
+    }
+
+}
+:host ::ng-deep mfrac {
+    mn {
+        padding-top: 3px;
+        padding-bottom: 3px;
+    }
+}

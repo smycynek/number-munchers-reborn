@@ -1,3 +1,7 @@
+
+
+
+
 export function hasTouch(): boolean {
   return ('ontouchstart' in window);
 }
