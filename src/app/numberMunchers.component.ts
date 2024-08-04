@@ -44,10 +44,10 @@ import {
 
 const allPuzzles = new Set<PuzzleType>([
   PuzzleType.MISC,
-  PuzzleType.MULTIPLICATION,
-  PuzzleType.FRACTIONS,
+ // PuzzleType.MULTIPLICATION,
+ // PuzzleType.FRACTIONS,
   PuzzleType.DIVISION,
-  PuzzleType.GREATER_LESS_THAN,
+ // PuzzleType.GREATER_LESS_THAN,
 ]);
 
 @Component({

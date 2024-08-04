@@ -8,6 +8,7 @@ import {
 import { dataUpperBound } from './constants';
 import { isBetween, isOutsideExclusive, isPerfectSquare } from './predicates';
 import { getValidFactors } from './sampleRandomValues';
+import { debug } from './utility';
 
 const perfectSquares = new Set<number>(
   [...getNaturalNumberSet(dataUpperBound)].filter((n) => isPerfectSquare(n)),
@@ -196,6 +197,7 @@ export function getValidDivisionPairs(
 ): Set<DivisionExpressionData> {
   const pairs: Set<DivisionExpressionData> = new Set();
   const multiples = getValidMultiples(target);
+  debug;
 
   multiples.forEach((mul) => {
     const otherParam = mul / target;
@@ -214,16 +216,7 @@ export function expressionDataSetHas(
   expression: ExpressionData,
   set: Set<ExpressionData>,
 ): boolean {
-  const sv = [...set];
-  if (!sv.length) {
-    return false; // TODO DEBUG
-  }
-
-  const idx = sv.findIndex((v) => !v);
-  if (idx === -1) {
-    return false; // TODO DEBUG
-  }
-
-  const setVals = [...set].map((vp) => vp.value);
-  return setVals.includes(expression.value);
+  const setVals = [...set].map((vp) => vp.getHashCode());
+  const inc = setVals.includes(expression.getHashCode());
+  return inc;
 }

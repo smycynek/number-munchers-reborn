@@ -1,3 +1,5 @@
+
+
 export const MixedNumberExpressionName = 'MixedNumberExpressionName';
 export const AdditionExpressionName = 'AdditionExpressionName';
 export const SubtractionExpressionName = 'SubtractionExpressionName';
@@ -31,6 +33,9 @@ export class ExpressionData {
   [key: string]: unknown; // Needed to index subclass properties
   public toString(): string {
     return `opType: ${this.opType}, value: ${this.value}`;
+  }
+  public getHashCode(): string {
+    return JSON.stringify(this);  // obviously not ideal
   }
   public clone(): ExpressionTypes {
     return { ...this };

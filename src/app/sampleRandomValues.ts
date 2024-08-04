@@ -134,7 +134,11 @@ export function getRandomDivisionPairs(
       }
     });
   }
-  for (let idc = 0; idc != count; idc++) {
+  let itemCount = count;
+  if (valueSet.size < itemCount){
+    itemCount = valueSet.size;
+  }
+  for (let idc = 0; idc !== itemCount; idc++) {
     returnSet.add(getRandomItemFromSetAndRemove(valueSet));
   }
   return returnSet;

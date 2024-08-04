@@ -513,7 +513,7 @@ export class Puzzle {
         (count: number) =>
           toExpressionDataSet(getRandomNaturalNumberSet(dataUpperBound, count)),
         PuzzleType.DIVISION,
-        true,
+        false,
         'Divisible by',
       ),
 
