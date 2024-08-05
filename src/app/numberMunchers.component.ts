@@ -33,7 +33,6 @@ import { FormsModule } from '@angular/forms';
 import { MathExpressionComponent } from '../math-components/math-expression/math-expression.component';
 import { MathSentenceComponent } from '../math-components/math-sentence/math-sentence.component';
 import {
-  AdditionExpressionName,
   DivisionExpressionName,
   ExpressionData,
   ExpressionTypes,
@@ -44,10 +43,10 @@ import {
 
 const allPuzzles = new Set<PuzzleType>([
   PuzzleType.MISC,
- // PuzzleType.MULTIPLICATION,
- // PuzzleType.FRACTIONS,
+  PuzzleType.MULTIPLICATION,
+  PuzzleType.FRACTIONS,
   PuzzleType.DIVISION,
- // PuzzleType.GREATER_LESS_THAN,
+  PuzzleType.GREATER_LESS_THAN,
 ]);
 
 @Component({
@@ -159,6 +158,9 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
           this.positionManager.columnCount() * this.positionManager.rowCount(),
         ),
       ]);
+
+      debug(`Total valid solutions ${this.getTotalValidSolutions()}`);
+
       debug('--');
       if (this.noRemainingSolutions()) {
         // should not happen
@@ -234,6 +236,13 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     }
     return this.cellData().filter((cell) => cell.valid && !cell.discovered)
       .length;
+  }
+
+  public getTotalValidSolutions(): number {
+    if (!this.cellData().length) {
+      return 0;
+    }
+    return this.cellData().filter((cell) => cell.valid).length;
   }
 
   public noRemainingSolutions(): boolean {

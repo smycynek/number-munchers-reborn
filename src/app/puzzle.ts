@@ -513,7 +513,7 @@ export class Puzzle {
         (count: number) =>
           toExpressionDataSet(getRandomNaturalNumberSet(dataUpperBound, count)),
         PuzzleType.DIVISION,
-        false,
+        true,
         'Divisible by',
       ),
 
@@ -555,8 +555,6 @@ export class Puzzle {
         true,
         'Fraction < 1/2',
       ),
-
-      // TODO, some problem adding in correct # of valid answers, maybe problem with does exist set logic?
     ];
   }
 }

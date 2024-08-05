@@ -8,13 +8,14 @@ import { ExpressionData } from '../expression-data/expressionData';
   standalone: true,
   imports: [CommonModule, MathExpressionComponent],
   templateUrl: './math-sentence.component.html',
-  styleUrl: './math-sentence.component.less'
+  styleUrl: './math-sentence.component.less',
 })
 export class MathSentenceComponent {
-
   public isPunctuationPhrase(value: string) {
-    return (value.startsWith('.') || value.startsWith(',') || value.startsWith('?'));
+    return (
+      value.startsWith('.') || value.startsWith(',') || value.startsWith('?')
+    );
   }
 
   @Input() dataArray!: ExpressionData[];
-  }
+}

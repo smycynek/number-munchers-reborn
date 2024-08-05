@@ -7,8 +7,8 @@ Eventualy, I'll add standalone unit tests that doesn't
 require ng test
 */
 
-import { getValidFactors, getFactorTargets } from "../sampleRandomValues";
-import { getNaturalNumberSet, getValidBetweenValues, getValidOutsideExclusiveValues, getValidMultiples } from "../sampleValidValues";
+import { getValidFactors, getFactorTargets } from '../sampleRandomValues';
+import { getNaturalNumberSet, getValidBetweenValues, getValidOutsideExclusiveValues, getValidMultiples } from '../sampleValidValues';
 
 describe('PseudoUnitTests-SampleValidValues', () => {
     it('getNaturalNumberSet gives valid natural numbers', () => {

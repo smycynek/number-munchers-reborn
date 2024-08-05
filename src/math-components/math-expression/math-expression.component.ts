@@ -9,22 +9,32 @@ import { DivisionExpressionComponent } from '../expression-components/division-e
 import { ExponentExpressionComponent } from '../expression-components/exponent-expression/exponent-expression.component';
 import { AdditionExpressionComponent } from '../expression-components/addition-expression/addition-expression.component';
 import { RootExpressionComponent } from '../expression-components/root-expression/root-expression.component';
-import { AdditionExpressionName, DivisionExpressionName, ExponenentExpressionName, ExpressionData, LogarithmExpressionName, MixedNumberExpressionName, MultiplicationExpressionName, RootExpressionName, StringExpressionName, SubtractionExpressionName } from '../expression-data/expressionData';
-
+import {
+  AdditionExpressionName,
+  DivisionExpressionName,
+  ExponenentExpressionName,
+  ExpressionData,
+  LogarithmExpressionName,
+  MixedNumberExpressionName,
+  MultiplicationExpressionName,
+  RootExpressionName,
+  StringExpressionName,
+  SubtractionExpressionName,
+} from '../expression-data/expressionData';
 
 @Component({
   selector: 'app-math-expression',
   standalone: true,
   imports: [CommonModule, NgComponentOutlet],
   templateUrl: './math-expression.component.html',
-  styleUrl: './math-expression.component.less'
+  styleUrl: './math-expression.component.less',
 })
 export class MathExpressionComponent {
+  @Input() mathData!: ExpressionData; // Could also be the base class ExpressionData;
 
-  @Input() mathData!: ExpressionData;  // Could also be the base class ExpressionData;
+  getMathComponent() {
+    // Could be a factory call or a type map, but this is probably fine.
 
-  getMathComponent() {  // Could be a factory call or a type map, but this is probably fine.
-    
     switch (this.mathData.opType) {
       case StringExpressionName:
         return StringExpressionComponent;
@@ -41,9 +51,9 @@ export class MathExpressionComponent {
       case RootExpressionName:
         return RootExpressionComponent;
       case MixedNumberExpressionName:
-          return MixedNumberExpressionComponent;
+        return MixedNumberExpressionComponent;
       case LogarithmExpressionName:
-            return LogarithmExpressionComponent;
+        return LogarithmExpressionComponent;
       default:
         throw Error(`Unknown math opType ${this.mathData.opType}`);
     }
