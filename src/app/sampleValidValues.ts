@@ -1,86 +1,72 @@
-import { dataUpperBound, divSymbol, multSymbol } from './constants';
-import { ValuePair } from './dataCell';
-import { mb, parseFraction } from './mixed-value-sentence/mathBuilder';
 import {
-  isBetween,
-  isOutsideExclusive,
-  isFactor,
-  isPerfectSquare
-} from './predicates';
+  DivisionExpressionData,
+  ExpressionData,
+  ExpressionTypes,
+  MixedNumberExpressionData,
+  MultiplicationExpressionData,
+} from '../math-components/expression-data/expressionData';
+import { dataUpperBound } from './constants';
+import { isBetween, isOutsideExclusive, isPerfectSquare } from './predicates';
+import { getValidFactors } from './sampleRandomValues';
+import { debug } from './utility';
 
-const perfectSquares = new Set<number>([...getNaturalNumberSet(dataUpperBound)].filter(n => isPerfectSquare(n)));
-const primes = new Set<number>([1, 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]);
+const perfectSquares = new Set<number>(
+  [...getNaturalNumberSet(dataUpperBound)].filter((n) => isPerfectSquare(n)),
+);
 
-export function getValidMultiples(num: number): Set<number> {
-  const multiples: Set<number> = new Set();
-  for (let idx = 2; idx != 10; idx++) {
-    multiples.add(num * idx);
-  }
-  return multiples;
+const primes = new Set<number>([
+  1, 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71,
+  73, 79, 83, 89, 97,
+]);
+
+export function getPerfectSquares(): Set<number> {
+  return new Set<number>([...perfectSquares]);
 }
 
 export function getPrimes(): Set<number> {
   return new Set<number>([...primes]);
 }
 
-export function getPerfectSquares(): Set<number> {
-  return new Set<number>([...perfectSquares]);
-}
-
-export function getFactorTargets(minimumFactors: number = 2): Set<number> {
-  const baseSet = getNaturalNumberSet(dataUpperBound);
-  const factorTargets = [...baseSet].filter(f => getValidFactors(f).size >= minimumFactors)
-  return new Set<number>([...factorTargets]);
-}
-
-export function getValidBetweenValues(lower: number, upper: number, inclusive: boolean): Set<number> {
-  return new Set([...getNaturalNumberSet(dataUpperBound)].filter(value => isBetween(value, lower, upper, inclusive)));
-}
-
-export function getValidOutsideExclusiveValues(lower: number, upper: number): Set<number> {
-  return new Set([...getNaturalNumberSet(dataUpperBound)].filter(value => isOutsideExclusive(value, lower, upper)));
-}
-
-export function getValidFactors(num: number): Set<number> {
-  const factors = new Set<number>();
-  for (let idx = 2; idx < num; idx++) {
-    if (isFactor(idx, num)) {
-      factors.add(idx);
-    }
-  }
-  return factors;
-}
 
 export function getNaturalNumberSet(upperBound: number): Set<number> {
-  const base = [...[].constructor(upperBound + 1).keys()]
+  const base = [...[].constructor(upperBound + 1).keys()];
   const baseSet = new Set(base);
   baseSet.delete(0);
-  return baseSet
+  return baseSet;
 }
 
-export function getValidMultiplicationPairs(target: number): Set<ValuePair> {
-  const pairs: Set<ValuePair> = new Set();
-  const factors = getValidFactors(target);
-  factors.forEach(val => pairs.add(new ValuePair(target, mb().expression(val, target / val, multSymbol).build())));
-  return pairs;
+
+export function getValidBetweenValues(
+  lower: number,
+  upper: number,
+  inclusive: boolean,
+): Set<number> {
+  return new Set(
+    [...getNaturalNumberSet(dataUpperBound)].filter((value) =>
+      isBetween(value, lower, upper, inclusive),
+    ),
+  );
 }
 
-export function getValidDivisionPairs(target: number): Set<ValuePair> {
-  const pairs: Set<ValuePair> = new Set();
-  const multiples = getValidMultiples(target);
-
-  multiples.forEach(mul => {
-    const otherParam = mul / target;
-    pairs.add(new ValuePair(target, mb().expression(mul, otherParam, divSymbol).build()));
-  });
-  return pairs;
+export function getValidOutsideExclusiveValues(
+  lower: number,
+  upper: number,
+): Set<number> {
+  return new Set(
+    [...getNaturalNumberSet(dataUpperBound)].filter((value) =>
+      isOutsideExclusive(value, lower, upper),
+    ),
+  );
 }
 
-export function getBaseFractions(): Set<ValuePair> {
-  const newFractionPair = (idn: number, idd: number) => new ValuePair(idn / idd, mb().fraction(idn, idd).build());
 
-  const pairs: Set<ValuePair> = new Set();
-  
+
+export function getBaseFractions(): Set<MixedNumberExpressionData> {
+  const newFractionPair = (idn: number, idd: number) =>
+    new MixedNumberExpressionData(0, idn, idd);
+
+  const pairs: Set<MixedNumberExpressionData> = new Set();
+
   /* I could create a loop, but I felt like naming the
    target fractions explicitly.  Depending on how the gameplay goes,
    I might want fractions that have only one other equivalency, like
@@ -105,7 +91,6 @@ export function getBaseFractions(): Set<ValuePair> {
   pairs.add(newFractionPair(4, 6));
   pairs.add(newFractionPair(5, 6));
 
-
   pairs.add(newFractionPair(1, 7));
   pairs.add(newFractionPair(2, 7));
   pairs.add(newFractionPair(3, 7));
@@ -120,7 +105,6 @@ export function getBaseFractions(): Set<ValuePair> {
   pairs.add(newFractionPair(5, 8));
   pairs.add(newFractionPair(6, 8));
   pairs.add(newFractionPair(7, 8));
-
 
   pairs.add(newFractionPair(1, 9));
   pairs.add(newFractionPair(2, 9));
@@ -142,11 +126,9 @@ export function getBaseFractions(): Set<ValuePair> {
   pairs.add(newFractionPair(8, 12));
   pairs.add(newFractionPair(9, 12));
 
-
   pairs.add(newFractionPair(3, 15));
   pairs.add(newFractionPair(5, 15));
   pairs.add(newFractionPair(10, 15));
-
 
   pairs.add(newFractionPair(2, 16));
   pairs.add(newFractionPair(4, 16));
@@ -155,7 +137,6 @@ export function getBaseFractions(): Set<ValuePair> {
   pairs.add(newFractionPair(10, 16));
   pairs.add(newFractionPair(12, 16));
   pairs.add(newFractionPair(14, 16));
-
 
   pairs.add(newFractionPair(2, 18));
   pairs.add(newFractionPair(3, 18));
@@ -174,16 +155,68 @@ export function getBaseFractions(): Set<ValuePair> {
   return pairs;
 }
 
-export function getValidFractions(target: ValuePair) {
-  const fractionParts = parseFraction(target.valueAsString);
-  const valueSet: Set<ValuePair> = new Set();
+export function getValidFractions(target: MixedNumberExpressionData) {
+  const valueSet: Set<MixedNumberExpressionData> = new Set();
   for (let idx = 1; idx != 21; idx++) {
     for (let idy = 2; idy != 21; idy++) {
-      if ((idx / idy === target.value) && !(fractionParts[0] == idx && fractionParts[1] == idy)) {
+      if (
+        idx / idy === target.value &&
+        !(target.numerator == idx && target.denominator == idy)
+      ) {
         // Add equivalent fractions but not the exact same fraction to the valid fraction list
-        valueSet.add(new ValuePair((idx / idy), mb().fraction(idx, idy).build()));
+        valueSet.add(new MixedNumberExpressionData(0, idx, idy));
       }
     }
   }
   return valueSet;
+}
+
+export function getValidMultiples(num: number): Set<number> {
+  const multiples: Set<number> = new Set();
+  for (let idx = 2; idx != 10; idx++) {
+    multiples.add(num * idx);
+  }
+  return multiples;
+}
+
+
+
+export function getValidMultiplicationPairs(
+  target: number,
+): Set<MultiplicationExpressionData> {
+  const pairs: Set<MultiplicationExpressionData> = new Set();
+  const factors = getValidFactors(target);
+  factors.forEach((val) =>
+    pairs.add(new MultiplicationExpressionData(val, target / val)),
+  );
+  return pairs;
+}
+
+export function getValidDivisionPairs(
+  target: number,
+): Set<DivisionExpressionData> {
+  const pairs: Set<DivisionExpressionData> = new Set();
+  const multiples = getValidMultiples(target);
+  debug;
+
+  multiples.forEach((mul) => {
+    const otherParam = mul / target;
+    pairs.add(new DivisionExpressionData(mul, otherParam));
+  });
+  return pairs;
+}
+
+export function toExpressionDataSet(values: Set<number>): Set<ExpressionTypes> {
+  return new Set<ExpressionData>(
+    [...values].map((v) => new MixedNumberExpressionData(v, 0, 0)),
+  );
+}
+
+export function expressionDataSetHas(
+  expression: ExpressionData,
+  set: Set<ExpressionData>,
+): boolean {
+  const setVals = [...set].map((vp) => vp.getHashCode());
+  const inc = setVals.includes(expression.getHashCode());
+  return inc;
 }

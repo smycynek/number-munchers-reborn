@@ -1,13 +1,7 @@
-import { ValuePair } from './dataCell';
-import { mb } from './mixed-value-sentence/mathBuilder';
 
-export function simpleToValuePair(value: number): ValuePair {
-  return new ValuePair(value, mb().number(value).build());
-}
 
-export function toValuePairSet(values: Set<number>): Set<ValuePair> {
-  return new Set<ValuePair>([...values].map(v => simpleToValuePair(v)));
-}
+
+
 export function hasTouch(): boolean {
   return ('ontouchstart' in window);
 }
@@ -60,12 +54,6 @@ export function format_and(items: number[]): string {
   let formatted = items.slice(0, items.length - 1).join(', ');
   formatted = `${formatted}, and ${items[items.length - 1]}`;
   return formatted;
-}
-
-// Necessary because TypeScript's Set equality doesn't work on complex objects.
-export function valuePairSetHas(valuePair: ValuePair, set: Set<ValuePair>): boolean {
-  const setVals = [...set].map(vp => vp.valueAsString);
-  return setVals.includes(valuePair.valueAsString);
 }
 
 export function round3(value: number) {

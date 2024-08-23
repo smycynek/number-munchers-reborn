@@ -3,7 +3,7 @@
     <div class="container">
       <h1 class="header" (click)="toggleDebug()">{{title}}</h1>
       <div class="question-container">
-        <app-mixed-value-sentence [mathML]="activePuzzle().questionText"></app-mixed-value-sentence>
+        <app-math-sentence [dataArray]="activePuzzle().questionText"></app-math-sentence>
       </div>
 
       <button id="btnNewGame" #btnNewGame title="Start a new game" class="button-base button-new-game highlighted"
@@ -54,25 +54,23 @@
       <p class="bold" [ngClass]="statusMessageClass()">{{statusMessage()}}</p>
       <div class="details-container">
         <p class="message-detail" [ngClass]="statusMessageClass()">
-          <app-mixed-value-sentence [mathML]="statusMessageDetail()"></app-mixed-value-sentence>
+          <app-math-sentence [dataArray]="statusMessageDetail"></app-math-sentence>
         </p>
       </div>
       <div *ngFor="let r of [].constructor(getPositionManager().rowCount()); index as idxr" class="row">
         <div [ngClass]="getCellClass(idxr,idxc)" id="{{idxr}}{{idxc}}"
           *ngFor="let r of [].constructor(getPositionManager().columnCount()); index as idxc"
           class="col cell click-target">
-          <app-mixed-value-sentence
-            [mathML]="getCellData(idxr,idxc).valuePair.valueAsString"></app-mixed-value-sentence>
+
+          <app-math-expression [mathData]="getCellData(idxr,idxc).expressionValue"></app-math-expression>
           <img alt="muncher avatar" id="i{{idxr}}{{idxc}}" *ngIf="isActive(idxr, idxc)"
             [ngClass]="getAvatarSizeClass(idxr, idxc)" [src]="getAvatarImage()" />
           <img alt="mertin avatar" id="i{{idxr}}{{idxc}}m" *ngIf="hasMertin(idxr, idxc)"
             [ngClass]="getAvatarSizeClass(idxr, idxc)" [src]="getMertinImage()" />
         </div>
       </div>
-
-
       <div class="container large">
-        <p class="version">||v203||</p>
+        <p class="version">||v206||</p>
       </div>
     </div>
 
@@ -81,6 +79,7 @@
   <dialog class="dialog-base dialog-general dialog-narrow" typeDialog #puzzleTypeDialog closed>
     <div>
       <h1>Puzzle Types</h1>
+
       <div class="choice-menu">
         <div class="choice-group form-check">
           <input class="checkbox-wide highlighted" id="cbGlt" [disabled]="isCheckboxDisabled(glt)" [(ngModel)]="glt"
@@ -108,6 +107,7 @@
             [(ngModel)]="fractions" (change)="toggleType(fractions, puzzleType.FRACTIONS)" type="checkbox" />
           <label for="cbFractions">Fractions</label>
         </div>
+
       </div>
 
     </div>
@@ -196,15 +196,15 @@
         </details>
         <details>
           <summary>What's next for Number Munchers Reborn?</summary>
-         I'd like to add more fraction puzzles and possibly exponents, roots, and other
-         pre-algebra topics. Please send me your feedback on what math content you'd like to see.
+          I'd like to add more fraction puzzles and possibly exponents, roots, and other
+          pre-algebra topics. Please send me your feedback on what math content you'd like to see.
         </details>
         <details>
           <summary>What do Munchy and Mertin do when they are not hopping around on the number munchers board?</summary>
-         Munchy is looking forward to appearing on the next season of "Is it Cake?" and also plays the drums.  Mertin
-         enjoys going to DEF CON meetups and honing his lock picking skills and is also active in community theater.
-         His family does try to keep him away from chess tournaments, nuclear launch silos, and randomized drug trial
-         laboratories.
+          Munchy is looking forward to appearing on the next season of "Is it Cake?" and also plays the drums. Mertin
+          enjoys going to DEF CON meetups and honing his lock picking skills and is also active in community theater.
+          His family does try to keep him away from chess tournaments, nuclear launch silos, and randomized drug trial
+          laboratories.
         </details>
       </div>
 

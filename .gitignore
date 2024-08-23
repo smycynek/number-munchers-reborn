@@ -130,3 +130,5 @@ dist
 .pnp.*
 .angular/
 .nx/
+.DS_Store
+./src/DS_Store

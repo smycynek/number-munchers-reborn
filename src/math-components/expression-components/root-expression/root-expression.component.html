@@ -1,0 +1,50 @@
+<!--
+<p>Root</p>
+-->
+<math>
+    <mrow>
+        @if (coefficient !== 1) {
+        <mn>
+            {{coefficient}}
+        </mn>
+        }
+        @if(index === 2) {
+        <msqrt>
+            <mn>
+                {{radicand}}
+            </mn>
+        </msqrt>
+        } @else {
+        <mroot>
+            <mn>
+                {{radicand}}
+            </mn>
+            <mn>
+                {{index}}
+            </mn>
+        </mroot>
+        }
+        @if (showRval) {
+        @if (displayOp) {
+        <mo>
+            {{displayOp}}
+        </mo>
+        }
+        @else {
+        <mo>
+            =
+        </mo>
+        }
+        @if (displayRval) {
+        <mn>
+            {{displayRval}}
+        </mn>
+        }
+        @else {
+        <mn>
+            {{value | number:'1.0-2'}}
+        </mn>
+        }
+        }
+    </mrow>
+</math>

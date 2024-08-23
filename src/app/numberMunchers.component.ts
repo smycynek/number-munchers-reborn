@@ -1,10 +1,25 @@
-import { AfterViewChecked, AfterViewInit, Component, ElementRef, ViewChild, WritableSignal, signal } from '@angular/core';
-import { CommonModule } from '@angular/common'
+import {
+  AfterViewChecked,
+  AfterViewInit,
+  Component,
+  ElementRef,
+  ViewChild,
+  WritableSignal,
+  signal,
+} from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChangeDetectorRef } from '@angular/core';
-import { DataCell, ValuePair } from './dataCell';
+import { DataCell } from './dataCell';
 import { Puzzle, PuzzleType } from './puzzle';
-import { debug, hasTouch, parseId, toggleLog, wrapDown, wrapUp } from './utility';
+import {
+  debug,
+  hasTouch,
+  parseId,
+  toggleLog,
+  wrapDown,
+  wrapUp,
+} from './utility';
 import { HostListener } from '@angular/core';
 import { SoundManager } from './soundManager';
 import { PositionManager } from './positionManager';
@@ -12,28 +27,42 @@ import JSConfetti from 'js-confetti';
 import { StringResources } from './strings';
 import { Observable, Subscription, timer } from 'rxjs';
 import { getRandomItemFromSetAndRemove } from './sampleRandomValues';
-import { divSymbol, mertinDelay, mertinInterval, multSymbol } from './constants';
+import { mertinDelay, mertinInterval } from './constants';
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { MixedValueSentenceComponent } from './mixed-value-sentence/mixed-value-sentence.component';
-import { mb } from './mixed-value-sentence/mathBuilder';
+import { MathExpressionComponent } from '../math-components/math-expression/math-expression.component';
+import { MathSentenceComponent } from '../math-components/math-sentence/math-sentence.component';
+import {
+  DivisionExpressionName,
+  ExpressionData,
+  ExpressionTypes,
+  MixedNumberExpressionName,
+  MultiplicationExpressionName,
+  s,
+} from '../math-components/expression-data/expressionData';
 
 const allPuzzles = new Set<PuzzleType>([
   PuzzleType.MISC,
-  PuzzleType.DIVISION,
-  PuzzleType.GREATER_LESS_THAN,
   PuzzleType.MULTIPLICATION,
   PuzzleType.FRACTIONS,
+  PuzzleType.DIVISION,
+  PuzzleType.GREATER_LESS_THAN,
 ]);
 
 @Component({
   selector: 'app-number-munchers',
   standalone: true,
-  imports: [CommonModule, NgbModule, RouterOutlet, FormsModule, MixedValueSentenceComponent],
+  imports: [
+    CommonModule,
+    NgbModule,
+    RouterOutlet,
+    FormsModule,
+    MathExpressionComponent,
+    MathSentenceComponent,
+  ],
   templateUrl: './numberMunchers.component.html',
-  styleUrl: './less/numberMunchers.component.less'
+  styleUrl: './less/numberMunchers.component.less',
 })
-
 export class AppComponent implements AfterViewChecked, AfterViewInit {
   @ViewChild('welcomeDialog') welcomeDialog!: ElementRef;
   @ViewChild('helpDialog') helpDialog!: ElementRef;
@@ -44,21 +73,25 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   @ViewChild('btnShowPuzzleTypes') btnShowPuzzleTypes!: ElementRef;
   @ViewChild('btnHelp') btnHelp!: ElementRef;
 
-  public sampleExpression(): string {
-    return mb().expression(2, 3, multSymbol).build();
-  }
-
   private puzzleTypes = allPuzzles;
   public readonly cellData: WritableSignal<DataCell[]> = signal([]);
-  public readonly statusMessage: WritableSignal<string> = signal(StringResources.START);
-  public readonly statusMessageDetail: WritableSignal<string> = signal(StringResources.YOU_CAN_DO_IT);
-  public readonly statusMessageClass: WritableSignal<string> = signal('status-default');
-  public readonly activePuzzle: WritableSignal<Puzzle> = signal(Puzzle.getRandomPuzzle(this.puzzleTypes));
+  public readonly statusMessage: WritableSignal<string> = signal(
+    StringResources.START,
+  );
+  public statusMessageDetail: ExpressionTypes[] = [];
+  public readonly statusMessageClass: WritableSignal<string> =
+    signal('status-default');
+  public readonly activePuzzle: WritableSignal<Puzzle> = signal(
+    Puzzle.getRandomPuzzle(this.puzzleTypes),
+  );
   private soundManager: SoundManager = new SoundManager();
   private positionManager: PositionManager = new PositionManager();
   public title: string = StringResources.TITLE;
 
-  private timer: Observable<number> = timer(mertinDelay * 1000, mertinInterval * 1000);
+  private timer: Observable<number> = timer(
+    mertinDelay * 1000,
+    mertinInterval * 1000,
+  );
   private speed: number = 0;
 
   public multiplication: boolean = true;
@@ -72,14 +105,16 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     return PuzzleType;
   }
 
-  constructor(private cdr: ChangeDetectorRef, private route: ActivatedRoute) {
-    this.route.queryParams.subscribe(params => {
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private route: ActivatedRoute,
+  ) {
+    this.route.queryParams.subscribe((params) => {
       debug(params.toString());
     });
     this.puzzleTypes = allPuzzles;
     this.timerInit();
     this.init();
-
   }
 
   /* Init */
@@ -99,10 +134,14 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     this.timerSubscription = this.timer.subscribe((val) => {
       debug(`Pulse: ${val}`);
       if (this.speed !== 0 && !this.noRemainingSolutions()) {
-        if ((val % this.speed) === 0) {
-          debug(`Reset square event: ${val}, Interval length: ${this.speed * mertinInterval}`);
-          this.positionManager.mertinIndex.set(this.getRandomNonOccupiedIndex());
-          this.resetSquare(this.positionManager.mertinIndex())
+        if (val % this.speed === 0) {
+          debug(
+            `Reset square event: ${val}, Interval length: ${this.speed * mertinInterval}`,
+          );
+          this.positionManager.mertinIndex.set(
+            this.getRandomNonOccupiedIndex(),
+          );
+          this.resetSquare(this.positionManager.mertinIndex());
         }
       }
     });
@@ -113,22 +152,28 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     if (!this.cellData().length) {
       this.activePuzzle.set(Puzzle.getRandomPuzzle(this.puzzleTypes));
       debug(`Puzzle: ${this.activePuzzle().questionText}`);
-      debug('Set up puzzle data:')
-      this.cellData.set([...this.activePuzzle().generateCells(this.positionManager.columnCount() * this.positionManager.rowCount())]);
+      debug('Set up puzzle data:');
+      this.cellData.set([
+        ...this.activePuzzle().generateCells(
+          this.positionManager.columnCount() * this.positionManager.rowCount(),
+        ),
+      ]);
+
+      debug(`Total valid solutions ${this.getTotalValidSolutions()}`);
+
       debug('--');
-      if (this.noRemainingSolutions()) { // should not happen
+      if (this.noRemainingSolutions()) {
+        // should not happen
         this.statusMessage.set('No solutions, try a new game');
-        this.statusMessageDetail.set('-');
+        this.statusMessageDetail = [s('-')];
       }
     }
   }
 
   /* Options */
   public isCheckboxDisabled(val: boolean) {
-    if (val && this.puzzleTypes.size <= 1)
-      return true;
-    else
-      return false;
+    if (val && this.puzzleTypes.size <= 1) return true;
+    else return false;
   }
 
   public toggleType(value: boolean, type: PuzzleType) {
@@ -141,7 +186,6 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     }
   }
 
-
   /* Game state */
 
   private reset() {
@@ -149,9 +193,9 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     this.positionManager.activeColumn.set(0);
     this.positionManager.mertinIndex.set(-1);
     this.statusMessage.set(StringResources.START);
-    this.statusMessageDetail.set(StringResources.YOU_CAN_DO_IT);
+    this.statusMessageDetail = [s(StringResources.YOU_CAN_DO_IT)];
     this.statusMessageClass.set('status-default');
-    this.cellData.set([])
+    this.cellData.set([]);
   }
 
   public newGame() {
@@ -163,10 +207,12 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   }
 
   private getRandomNonOccupiedIndex(): number {
-    const activeIndex = (this.positionManager.activeRow() * this.positionManager.columnCount())
-      + this.positionManager.activeColumn();
-    const upperBound = this.positionManager.columnCount() * this.positionManager.rowCount();
-    const base = [...[].constructor(upperBound).keys()]
+    const activeIndex =
+      this.positionManager.activeRow() * this.positionManager.columnCount() +
+      this.positionManager.activeColumn();
+    const upperBound =
+      this.positionManager.columnCount() * this.positionManager.rowCount();
+    const base = [...[].constructor(upperBound).keys()];
     const baseSet = new Set(base);
     baseSet.delete(activeIndex);
     baseSet.delete(this.positionManager.mertinIndex());
@@ -175,23 +221,37 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
 
   public getCellData(r: number, c: number): DataCell {
     if (!this.cellData().length) {
-      return new DataCell(new ValuePair(0, mb().number(0).build()), false, false);
+      return new DataCell(
+        new ExpressionData(0, MixedNumberExpressionName),
+        false,
+        false,
+      );
     }
-    return this.cellData()[(r * this.positionManager.columnCount()) + c];
+    return this.cellData()[r * this.positionManager.columnCount() + c];
   }
 
   public getRemainingSolutionsCount(): number {
     if (!this.cellData().length) {
       return 0;
     }
-    return this.cellData().filter(cell => cell.valid && !cell.discovered).length
+    return this.cellData().filter((cell) => cell.valid && !cell.discovered)
+      .length;
+  }
+
+  public getTotalValidSolutions(): number {
+    if (!this.cellData().length) {
+      return 0;
+    }
+    return this.cellData().filter((cell) => cell.valid).length;
   }
 
   public noRemainingSolutions(): boolean {
     if (!this.cellData().length) {
       return false;
     }
-    const done = this.cellData().every((cell: DataCell) => cell.discovered || !cell.valid);
+    const done = this.cellData().every(
+      (cell: DataCell) => cell.discovered || !cell.valid,
+    );
     return done;
   }
 
@@ -199,7 +259,9 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     if (!this.cellData().length) {
       return false;
     }
-    return this.cellData().filter((cell: DataCell) => cell.discovered).every((cell: DataCell) => (cell.valid));
+    return this.cellData()
+      .filter((cell: DataCell) => cell.discovered)
+      .every((cell: DataCell) => cell.valid);
   }
 
   /* UI State */
@@ -208,9 +270,11 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   }
 
   public isActive(cellRow: number, cellColumn: number): boolean {
-    return (cellRow == this.positionManager.activeRow() && cellColumn == this.positionManager.activeColumn());
+    return (
+      cellRow == this.positionManager.activeRow() &&
+      cellColumn == this.positionManager.activeColumn()
+    );
   }
-
 
   public getAvatarSizeClass(idxr: number, idxc: number): string {
     if (this.isActive(idxr, idxc) && this.hasMertin(idxr, idxc)) {
@@ -220,7 +284,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   }
 
   public hasMertin(cellRow: number, cellColumn: number): boolean {
-    const idx = (cellRow * this.positionManager.columnCount()) + cellColumn;
+    const idx = cellRow * this.positionManager.columnCount() + cellColumn;
     return idx == this.positionManager.mertinIndex();
   }
 
@@ -233,17 +297,21 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
 
     this.soundManager.playCackle();
     const solutionsCount = this.getRemainingSolutionsCount();
-    debug('--Reset Square--')
+    debug('--Reset Square--');
     debug(`Index to replace: ${squareIndex}`);
     debug(`Remaining solutions: ${solutionsCount}`);
-    debug(`Removing: ${this.cellData()[squareIndex].valuePair.toString()}`)
+    debug(
+      `Removing: ${this.cellData()[squareIndex].expressionValue.toString()}`,
+    );
     let newValue;
     if (solutionsCount <= 1) {
-
       newValue = this.activePuzzle().getValidSamples(); // insert valid choice
       debug('Adding correct answer:');
     } else {
-      newValue = this.activePuzzle().getRandomSamples(1, this.activePuzzle().maxValue);
+      newValue = this.activePuzzle().getRandomSamples(
+        1,
+        this.activePuzzle().maxValue,
+      );
       debug('Adding random answer');
     }
     this.cellData.update((data: DataCell[]) => {
@@ -261,13 +329,14 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     return `assets/mertin-${this.speed}.png`;
   }
   public getAvatarImage(): string {
-    const data = this.getCellData(this.positionManager.activeRow(), this.positionManager.activeColumn());
-    if (data.valid && data.discovered)
-      return 'assets/muncher-happy.png';
+    const data = this.getCellData(
+      this.positionManager.activeRow(),
+      this.positionManager.activeColumn(),
+    );
+    if (data.valid && data.discovered) return 'assets/muncher-happy.png';
     else if (!data.valid && data.discovered) {
       return 'assets/muncher-sad.png';
-    }
-    else {
+    } else {
       return 'assets/muncher-neutral.png';
     }
   }
@@ -275,8 +344,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   public getGeneralInstructions(): string {
     if (hasTouch()) {
       return StringResources.TAP_SQUARES;
-    }
-    else {
+    } else {
       return StringResources.KEYBOARD;
     }
   }
@@ -295,7 +363,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     const cell: DataCell = this.getCellData(cellRow, cellColumn);
 
     if (this.hasMertin(cellRow, cellColumn)) {
-      classes = 'mertin-flip'
+      classes = 'mertin-flip';
     }
     if (!cell) {
       classes = 'status-default';
@@ -306,22 +374,24 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     if (cell.discovered && !cell.valid) {
       classes = 'discovered-invalid';
     }
-    if (cellRow == this.positionManager.activeRow() && cellColumn == this.positionManager.activeColumn()) {
+    if (
+      cellRow == this.positionManager.activeRow() &&
+      cellColumn == this.positionManager.activeColumn()
+    ) {
       classes += ' cell-active';
     }
     if (this.noRemainingSolutions()) {
       classes += ' game-over';
     }
-    if (
-      (
-        cell.valuePair.valueAsString.includes(multSymbol)
-        || cell.valuePair.valueAsString.includes(divSymbol)
-      )
 
-      &&
-      (this.hasMertin(cellRow, cellColumn) || this.isActive(cellRow, cellColumn))
+    // SVM TOOD
+    if (
+      (cell.expressionValue.opType === MultiplicationExpressionName ||
+        cell.expressionValue.opType === DivisionExpressionName) &&
+      (this.hasMertin(cellRow, cellColumn) ||
+        this.isActive(cellRow, cellColumn))
     ) {
-      classes += ' cell-smaller'
+      classes += ' cell-smaller';
     }
     return classes;
   }
@@ -365,8 +435,8 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     // debug("mouse event? " + (event instanceof PointerEvent));
     // debug("device has touch? " + hasTouch());
     // debug("---");
-    if (hasTouch() || ('touches' in event)) {
-      debug('Skipping mouse event if touch event.')
+    if (hasTouch() || 'touches' in event) {
+      debug('Skipping mouse event if touch event.');
       return;
     }
     // debug(`TouchOrClick: ${event}`);
@@ -384,7 +454,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     // debug("device has touch? " + hasTouch());
     // debug("---");
     if (!hasTouch() || event instanceof PointerEvent) {
-      debug('Skipping touch event if pointer event.')
+      debug('Skipping touch event if pointer event.');
       return;
     }
     // debug(`TouchOrClick: ${event}`);
@@ -418,22 +488,39 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   }
 
   private up() {
-    this.positionManager.activeRow.set(wrapUp(this.positionManager.activeRow(), this.positionManager.rowCount()));
+    this.positionManager.activeRow.set(
+      wrapUp(this.positionManager.activeRow(), this.positionManager.rowCount()),
+    );
     debug(`Up: ${this.getPosition()}`);
   }
 
   private down() {
-    this.positionManager.activeRow.set(wrapDown(this.positionManager.activeRow(), this.positionManager.rowCount()));
+    this.positionManager.activeRow.set(
+      wrapDown(
+        this.positionManager.activeRow(),
+        this.positionManager.rowCount(),
+      ),
+    );
     debug(`Down: ${this.getPosition()}`);
   }
 
   private left() {
-    this.positionManager.activeColumn.set(wrapDown(this.positionManager.activeColumn(), this.positionManager.columnCount()));
+    this.positionManager.activeColumn.set(
+      wrapDown(
+        this.positionManager.activeColumn(),
+        this.positionManager.columnCount(),
+      ),
+    );
     debug(`Left: ${this.getPosition()}`);
   }
 
   private right() {
-    this.positionManager.activeColumn.set(wrapUp(this.positionManager.activeColumn(), this.positionManager.columnCount()));
+    this.positionManager.activeColumn.set(
+      wrapUp(
+        this.positionManager.activeColumn(),
+        this.positionManager.columnCount(),
+      ),
+    );
     debug(`Right: ${this.getPosition()}`);
   }
 
@@ -443,7 +530,10 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
       return;
     }
     debug(`Choice: ${this.getPosition()}`);
-    const data = this.getCellData(this.positionManager.activeRow(), this.positionManager.activeColumn());
+    const data = this.getCellData(
+      this.positionManager.activeRow(),
+      this.positionManager.activeColumn(),
+    );
     data.discovered = true;
 
     if (data.valid) {
@@ -451,7 +541,9 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
         debug('Game Over');
         this.statusMessageClass.set('status-success');
         this.statusMessage.set(StringResources.FOUND_ALL);
-        this.statusMessageDetail.set(this.activePuzzle().successDetails(data.valuePair));
+        this.statusMessageDetail = this.activePuzzle().successDetails(
+          data.expressionValue.clone(),
+        );
         if (this.perfectScore()) {
           this.soundManager.playWhooAndPerfectScore();
           this.statusMessage.set(StringResources.PERFECT_SCORE);
@@ -465,17 +557,20 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
       }
       this.soundManager.playYum();
       this.statusMessage.set(StringResources.CORRECT);
-      this.statusMessageDetail.set(this.activePuzzle().successDetails(data.valuePair));
+      this.statusMessageDetail = this.activePuzzle().successDetails(
+        data.expressionValue.clone(),
+      );
       this.statusMessageClass.set('status-success');
-
     } else {
       this.soundManager.playYuck();
       this.statusMessage.set(StringResources.INCORRECT);
-      this.statusMessageDetail.set(this.activePuzzle().errorDetails(data.valuePair));
+      this.statusMessageDetail = this.activePuzzle().errorDetails(
+        data.expressionValue.clone(),
+      );
       this.statusMessageClass.set('status-error');
     }
 
-    debug(`Correct? ${data.valid}, ${data.valuePair.toString()}`);
+    debug(`Correct? ${data.valid}, ${data.expressionValue.toString()}`);
   }
 
   /* Position */
@@ -524,5 +619,4 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     const logStatus = toggleLog();
     console.log(`Logging: ${logStatus}`);
   }
-
 }
