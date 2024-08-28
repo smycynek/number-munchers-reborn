@@ -47,6 +47,7 @@ const allPuzzles = new Set<PuzzleType>([
   PuzzleType.FRACTIONS,
   PuzzleType.DIVISION,
   PuzzleType.GREATER_LESS_THAN,
+  PuzzleType.ADDITION
 ]);
 
 @Component({
@@ -99,7 +100,8 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   public division: boolean = true;
   public misc: boolean = true;
   public fractions: boolean = true;
-
+  public addition: boolean = true;
+  
   private timerSubscription: Subscription | undefined;
   public get puzzleType(): typeof PuzzleType {
     return PuzzleType;
@@ -277,7 +279,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   }
 
   public getAvatarSizeClass(idxr: number, idxc: number): string {
-    if (this.isActive(idxr, idxc) && this.hasMertin(idxr, idxc)) {
+    if (this.isActive(idxr, idxc) && this.hasMertin(idxr, idxc) || this.activePuzzle().type === PuzzleType.ADDITION) {
       return 'double';
     }
     return 'single';

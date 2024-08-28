@@ -1,4 +1,5 @@
 import {
+  AdditionExpressionData,
   DivisionExpressionData,
   ExpressionData,
   ExpressionTypes,
@@ -189,6 +190,17 @@ export function getValidMultiplicationPairs(
   factors.forEach((val) =>
     pairs.add(new MultiplicationExpressionData(val, target / val)),
   );
+  return pairs;
+}
+
+export function getValidSumPairs(
+  target: number,
+): Set<AdditionExpressionData> {
+  const pairs: Set<AdditionExpressionData> = new Set();
+  const halfTarget = Math.round(target/2);
+  for (let left = halfTarget -9; left != halfTarget +9; left++) {
+    pairs.add(new AdditionExpressionData(left, target-left));
+  }
   return pairs;
 }
 

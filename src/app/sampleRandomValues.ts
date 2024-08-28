@@ -14,6 +14,7 @@ import {
   getValidDivisionPairs,
 } from './sampleValidValues';
 import {
+  AdditionExpressionData,
   DivisionExpressionData,
   MixedNumberExpressionData,
   MultiplicationExpressionData,
@@ -116,6 +117,27 @@ export function getRandomMultiplicationPairs(
   }
   return returnSet;
 }
+
+export function getRandomSumPairs(
+  count: number,
+): Set<AdditionExpressionData> {
+  const valueSet: Set<AdditionExpressionData> = new Set();
+  for (let idx = 10; idx < 50; idx+=2) {
+    for (let idy = 10; idy < 50; idy+=3) {
+      const pair = new AdditionExpressionData(idx, idy);
+      if (!expressionDataSetHas(pair, valueSet)) {
+        valueSet.add(pair);
+      }
+    }
+  }
+
+  const returnSet: Set<AdditionExpressionData> = new Set();
+  for (let ic = 0; ic !== count; ic++) {
+    returnSet.add(getRandomItemFromSetAndRemove(valueSet));
+  }
+  return returnSet;
+}
+
 
 export function getRandomMultipleBase(): number {
   return getRandomNumberWithinRange(multipleLowerBound, multipleUpperBound);

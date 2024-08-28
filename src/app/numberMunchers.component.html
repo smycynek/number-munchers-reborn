@@ -70,7 +70,7 @@
         </div>
       </div>
       <div class="container large">
-        <p class="version">||v207||</p>
+        <p class="version">||v213||</p>
       </div>
     </div>
 
@@ -107,6 +107,13 @@
             [(ngModel)]="fractions" (change)="toggleType(fractions, puzzleType.FRACTIONS)" type="checkbox" />
           <label for="cbFractions">Fractions</label>
         </div>
+
+        <div class="choice-group">
+          <input class="checkbox-wide highlighted" id="cbAddition" [disabled]="isCheckboxDisabled(addition)"
+            [(ngModel)]="addition" (change)="toggleType(addition, puzzleType.ADDITION)" type="checkbox" />
+          <label for="cbAddition">Addition</label>
+        </div>
+
 
       </div>
 

@@ -31,6 +31,7 @@ import {
   getRandomBetweenBoundsWide,
   getRandomDivisionPairs,
   getValidFactors,
+  getRandomSumPairs,
 } from './sampleRandomValues';
 
 import {
@@ -49,6 +50,7 @@ import {
   getValidMultiples,
   getValidMultiplicationPairs,
   getValidOutsideExclusiveValues,
+  getValidSumPairs,
   toExpressionDataSet,
 } from './sampleValidValues';
 import { OP_GTE } from '../math-components/expression-data/operators';
@@ -64,6 +66,7 @@ export enum PuzzleType {
   FRACTIONS,
   DIVISION,
   GREATER_LESS_THAN,
+  ADDITION,
 }
 
 export class Puzzle {
@@ -150,6 +153,7 @@ export class Puzzle {
     const randomBetweenBoundsWide = getRandomBetweenBoundsWide();
     const randomFactorTarget = getRandomFactorTarget(2);
     const randomFractionBase = getRandomFractionBase();
+    const randomAdditionTarget = getRandomNumberWithinRange(20, 99);
 
     const perfectSquareSuccess = (cellValue: ExpressionData) => {
       return [
@@ -323,6 +327,15 @@ export class Puzzle {
         new MixedNumberExpressionData(0, 1, 2),
       ];
     };
+
+    const sumSuccess = (cellValue: ExpressionTypes) => {
+      return [toggleRValue(cellValue)];
+    };
+    
+    const sumFailure = (cellValue: ExpressionTypes) => {
+    return [s('Sorry, '), toggleRValue(cellValue), s(`, not ${randomAdditionTarget}`)];
+    };
+
 
     return [
       new Puzzle(
@@ -554,6 +567,18 @@ export class Puzzle {
         PuzzleType.FRACTIONS,
         true,
         'Fraction < 1/2',
+      ),
+      new Puzzle(
+        (cellValue: ExpressionData) => cellValue.value === randomAdditionTarget,
+        dataUpperBound,
+        [s(`Find sums equal to ${randomAdditionTarget}`)],
+        sumSuccess,
+        sumFailure,
+        () => getValidSumPairs(randomAdditionTarget),
+        (count: number) => getRandomSumPairs(count),
+        PuzzleType.ADDITION,
+        true,
+        'Addition',
       ),
     ];
   }
