@@ -11,6 +11,7 @@ import {
   expressionDataSetHas,
   getBaseFractions,
   getNaturalNumberSet,
+  getValidDifferencePairs,
   getValidDivisionPairs,
 } from './sampleValidValues';
 import {
@@ -18,6 +19,7 @@ import {
   DivisionExpressionData,
   MixedNumberExpressionData,
   MultiplicationExpressionData,
+  SubtractionExpressionData,
 } from '../math-components/expression-data/expressionData';
 
 export function getRandomItemFromSetAndRemove<T>(numberSet: Set<T>): T {
@@ -130,6 +132,31 @@ export function getRandomSumPairs(
       }
     }
   }
+
+  const returnSet: Set<AdditionExpressionData> = new Set();
+  for (let ic = 0; ic !== count; ic++) {
+    returnSet.add(getRandomItemFromSetAndRemove(valueSet));
+  }
+  return returnSet;
+}
+
+export function getRandomDifferencePairs(
+  count: number, target: number): Set<SubtractionExpressionData> {
+  const valueSet: Set<SubtractionExpressionData> = new Set();
+  for (let idx = 99; idx > target; idx-=5) {
+    for (let idy = 98; idy > 10; idy-=6) {
+      const pair = (idx > idy) ? (new SubtractionExpressionData(idx, idy)) : (new SubtractionExpressionData(idy, idx));
+      if (!expressionDataSetHas(pair, valueSet)) {
+        valueSet.add(pair);
+      }
+    }
+  }
+
+  const validPairs = getValidDifferencePairs(target);
+  validPairs.forEach(pair => {
+    valueSet.add(new SubtractionExpressionData(pair.left, pair.right -1));
+    valueSet.add(new SubtractionExpressionData(pair.left + 1, pair.right));
+  });
 
   const returnSet: Set<AdditionExpressionData> = new Set();
   for (let ic = 0; ic !== count; ic++) {

@@ -5,6 +5,7 @@ import {
   ExpressionTypes,
   MixedNumberExpressionData,
   MultiplicationExpressionData,
+  SubtractionExpressionData,
 } from '../math-components/expression-data/expressionData';
 import { dataUpperBound } from './constants';
 import { isBetween, isOutsideExclusive, isPerfectSquare } from './predicates';
@@ -200,6 +201,16 @@ export function getValidSumPairs(
   const halfTarget = Math.round(target/2);
   for (let left = halfTarget -9; left != halfTarget +9; left++) {
     pairs.add(new AdditionExpressionData(left, target-left));
+  }
+  return pairs;
+}
+
+export function getValidDifferencePairs(
+  target: number,
+): Set<SubtractionExpressionData> {
+  const pairs: Set<SubtractionExpressionData> = new Set();
+  for (let upper = 99; upper != target; upper--) {
+    pairs.add(new SubtractionExpressionData(upper, upper-target));
   }
   return pairs;
 }

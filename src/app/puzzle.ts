@@ -32,6 +32,7 @@ import {
   getRandomDivisionPairs,
   getValidFactors,
   getRandomSumPairs,
+  getRandomDifferencePairs,
 } from './sampleRandomValues';
 
 import {
@@ -51,6 +52,7 @@ import {
   getValidMultiplicationPairs,
   getValidOutsideExclusiveValues,
   getValidSumPairs,
+  getValidDifferencePairs,
   toExpressionDataSet,
 } from './sampleValidValues';
 import { OP_GTE } from '../math-components/expression-data/operators';
@@ -67,6 +69,7 @@ export enum PuzzleType {
   DIVISION,
   GREATER_LESS_THAN,
   ADDITION,
+  SUBTRACTION
 }
 
 export class Puzzle {
@@ -118,8 +121,9 @@ export class Puzzle {
     if (addValidValues) {
       const validSamples = this.getValidSamples();
       let replacements = maxReplacements;
-      if (this.type === PuzzleType.MULTIPLICATION) {
+      if ([PuzzleType.MULTIPLICATION, PuzzleType.ADDITION, PuzzleType.SUBTRACTION].includes(this.type)) {
         replacements *= 2;
+        debug('Extra replacements')
       }
       const replacementCount =
         validSamples.size < replacements ? validSamples.size : replacements;
@@ -154,6 +158,7 @@ export class Puzzle {
     const randomFactorTarget = getRandomFactorTarget(2);
     const randomFractionBase = getRandomFractionBase();
     const randomAdditionTarget = getRandomNumberWithinRange(20, 99);
+    const randomSubtractionTarget = getRandomNumberWithinRange(1, 80);
 
     const perfectSquareSuccess = (cellValue: ExpressionData) => {
       return [
@@ -328,14 +333,30 @@ export class Puzzle {
       ];
     };
 
-    const sumSuccess = (cellValue: ExpressionTypes) => {
-      return [toggleRValue(cellValue)];
+
+ 
+    const sumDiffFailure = (cellValue: ExpressionTypes, target: number) => {
+      return [s('Sorry, '), toggleRValue(cellValue), s(`, not ${target}`)];
+    };
+
+    const sumDiffSuccess = (cellValue: ExpressionTypes) => {
+      return  [toggleRValue(cellValue)]
     };
     
     const sumFailure = (cellValue: ExpressionTypes) => {
-    return [s('Sorry, '), toggleRValue(cellValue), s(`, not ${randomAdditionTarget}`)];
+       return sumDiffFailure(cellValue, randomAdditionTarget);
     };
 
+    const diffFailure = (cellValue: ExpressionTypes) => {
+    return  sumDiffFailure(cellValue, randomSubtractionTarget);
+  };
+    
+
+
+
+
+
+   
 
     return [
       new Puzzle(
@@ -572,13 +593,25 @@ export class Puzzle {
         (cellValue: ExpressionData) => cellValue.value === randomAdditionTarget,
         dataUpperBound,
         [s(`Find sums equal to ${randomAdditionTarget}`)],
-        sumSuccess,
+        sumDiffSuccess,
         sumFailure,
         () => getValidSumPairs(randomAdditionTarget),
         (count: number) => getRandomSumPairs(count),
         PuzzleType.ADDITION,
         true,
         'Addition',
+      ),
+      new Puzzle(
+        (cellValue: ExpressionData) => cellValue.value === randomSubtractionTarget,
+        dataUpperBound,
+        [s(`Find differences equal to ${randomSubtractionTarget}`)],
+        sumDiffSuccess,
+        diffFailure,
+        () => getValidDifferencePairs(randomSubtractionTarget),
+        (count: number) => getRandomDifferencePairs(count, randomSubtractionTarget),
+        PuzzleType.SUBTRACTION,
+        true,
+        'Subtraction',
       ),
     ];
   }
