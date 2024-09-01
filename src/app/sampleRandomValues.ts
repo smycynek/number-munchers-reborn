@@ -13,6 +13,7 @@ import {
   getNaturalNumberSet,
   getValidDifferencePairs,
   getValidDivisionPairs,
+  getValidSumPairs,
 } from './sampleValidValues';
 import {
   AdditionExpressionData,
@@ -121,17 +122,25 @@ export function getRandomMultiplicationPairs(
 }
 
 export function getRandomSumPairs(
-  count: number,
+  count: number, target: number
 ): Set<AdditionExpressionData> {
   const valueSet: Set<AdditionExpressionData> = new Set();
-  for (let idx = 10; idx < 50; idx+=2) {
-    for (let idy = 10; idy < 50; idy+=3) {
+  for (let idx = 10; idx < 50; idx+=5) {
+    for (let idy = 10; idy < 50; idy+=9) {
       const pair = new AdditionExpressionData(idx, idy);
       if (!expressionDataSetHas(pair, valueSet)) {
         valueSet.add(pair);
       }
     }
   }
+
+  const validPairs = getValidSumPairs(target);
+  validPairs.forEach(pair => {
+    valueSet.add(new AdditionExpressionData(pair.left, pair.right -1));
+    valueSet.add(new AdditionExpressionData(pair.left + 2, pair.right));
+  });
+
+
 
   const returnSet: Set<AdditionExpressionData> = new Set();
   for (let ic = 0; ic !== count; ic++) {

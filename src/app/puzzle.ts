@@ -596,7 +596,7 @@ export class Puzzle {
         sumDiffSuccess,
         sumFailure,
         () => getValidSumPairs(randomAdditionTarget),
-        (count: number) => getRandomSumPairs(count),
+        (count: number) => getRandomSumPairs(count, randomAdditionTarget),
         PuzzleType.ADDITION,
         true,
         'Addition',
