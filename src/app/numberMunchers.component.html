@@ -69,8 +69,13 @@
             [ngClass]="getAvatarSizeClass(idxr, idxc)" [src]="getMertinImage()" />
         </div>
       </div>
-      <div class="container large">
-        <p class="version">||v219||</p>
+      <div class="container footer" (click)="toggleScore()">
+        @if (showScore()) {
+       <span>Current streak: {{winStreak()}}, High score:  {{highScore()}} </span>
+        } @else {
+        <p class="version">||{{getVersion()}}||</p>
+        }
+
       </div>
     </div>
 
@@ -102,12 +107,15 @@
             (change)="toggleType(misc, puzzleType.MISC)" type="checkbox" />
           <label for="cbMisc">Miscellaneous</label>
         </div>
+
+        @if (!shouldHideFractions()) 
+        {
         <div class="choice-group">
           <input class="checkbox-wide highlighted" id="cbFractions" [disabled]="isCheckboxDisabled(fractions)"
             [(ngModel)]="fractions" (change)="toggleType(fractions, puzzleType.FRACTIONS)" type="checkbox" />
           <label for="cbFractions">Fractions</label>
         </div>
-
+        }
         <div class="choice-group">
           <input class="checkbox-wide highlighted" id="cbAddition" [disabled]="isCheckboxDisabled(addition)"
             [(ngModel)]="addition" (change)="toggleType(addition, puzzleType.ADDITION)" type="checkbox" />
@@ -152,7 +160,7 @@
       <button class="button-base button-cancel highlighted">X</button>
       <h1 class="centered">{{title}}</h1>
       <h2 class="centered">A math game</h2>
-      <p class="paragraph">Number Munchers Reborn is a re-imagining of the classic 90s game for the Apple II.</p>
+      <p class="paragraph">Number Munchers Reborn is a re-imagining of the classic 90s game.</p>
       <p class="paragraph">{{getGeneralInstructions()}}</p>
       <p class="paragraph">
         I recommend that children try this game out with a parent. I hope that it will be a fun experience for both!
@@ -163,7 +171,7 @@
           <summary>Perfect square</summary>
           A number that can be expressed as another whole number multiplied by itself. For example, 9 is a perfect
           square,
-          because 3x3 is 9.
+          because 3&times;3 is 9.
         </details>
 
         <details>
@@ -175,8 +183,24 @@
         <details>
           <summary>Factor</summary>
           A whole number that, when multiplied by another whole number, is equal to another number. For example,
-          3 is a factor of 6, since 3x2 is 6.
+          3 is a factor of 6, since 3&times;2 is 6.
         </details>
+        
+        <details>
+          <summary>Equivalent fractions</summary>
+         Fractions that have the same value.  For example, <math><mfrac><mn>1</mn><mn>2</mn></mfrac></math> is equivalent to
+         <math><mfrac><mn>2</mn><mn>4</mn></mfrac></math>
+        </details>
+
+        <details>
+          <summary>Equality operators</summary>
+          <p class="detail-content"> &gt; Greater than </p>
+          <p class="detail-content"> &lt; Less than </p>
+          <p class="detail-content"> &GreaterEqual; Greater than or equal to</p>
+          <p class="detail-content"> &le;  Less than or equal to</p>
+          <p class="detail-content"> &NotEqual; Not equal to</p>
+        </details>
+
       </div>
       <p class="paragraph">Not all solutions are shown. For example, for "find factors of 21," you might find
         3, 7, 1, or 21, but not necessarily all of them.
@@ -223,15 +247,16 @@
       </div>
 
       <hr />
-      <ul>
-        <li class="credits">Steven Mycynek 2024 </li>
-        <li class="credits"><a
-            href="mailto:sv@stevenvictor.net?subject=Number Munchers Reborn info">sv&#64;stevenvictor.net</a></li>
-        <li class="credits">
-          <a href="https://github.com/smycynek/number-munchers-reborn">Source</a>
-        </li>
-
+      
+     <ul>
+        <li class="credits">Steven Mycynek 2024 | 
+          <a href="mailto:sv@stevenvictor.net?subject=Number Munchers Reborn info">sv&#64;stevenvictor.net</a> |
+          <a href="https://github.com/smycynek/number-munchers-reborn">Source</a> | 
+          v{{getVersion()}}
       </ul>
+        
+
+
 
       <button class="button-base button-centered highlighted">OK</button>
     </form>

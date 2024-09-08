@@ -40,6 +40,7 @@ import {
   MultiplicationExpressionName,
   s,
 } from '../math-components/expression-data/expressionData';
+import { version } from './version';
 
 const allPuzzles = new Set<PuzzleType>([
   PuzzleType.MISC,
@@ -104,6 +105,14 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   public addition: boolean = true;
   public subtraction: boolean = true;
 
+  public readonly highScore: WritableSignal<number> = signal(0);
+  public readonly winStreak: WritableSignal<number> = signal(0);
+  public readonly showScore: WritableSignal<boolean> = signal(true);
+
+  public shouldHideFractions(): boolean {
+    return window.navigator.userAgent.includes('Firefox'); // not ideal but no easy way around it.
+  }
+
   private timerSubscription: Subscription | undefined;
   public get puzzleType(): typeof PuzzleType {
     return PuzzleType;
@@ -119,6 +128,10 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     this.puzzleTypes = allPuzzles;
     this.timerInit();
     this.init();
+    if (this.shouldHideFractions()) {
+      this.fractions = false;
+      this.toggleType(false, PuzzleType.FRACTIONS);
+    }
   }
 
   /* Init */
@@ -200,6 +213,10 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     this.statusMessageDetail = [s(StringResources.YOU_CAN_DO_IT)];
     this.statusMessageClass.set('status-default');
     this.cellData.set([]);
+  }
+
+  public getVersion(): number {
+    return version;
   }
 
   public newGame() {
@@ -554,6 +571,10 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
           debug(StringResources.PERFECT_SCORE);
           const jsConfetti = new JSConfetti();
           jsConfetti.addConfetti();
+          this.winStreak.set(this.winStreak() +1);
+          if (this.winStreak() > this.highScore()) {
+            this.highScore.set(this.winStreak());
+          }
         } else {
           this.soundManager.playWhoo();
         }
@@ -567,6 +588,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
       this.statusMessageClass.set('status-success');
     } else {
       this.soundManager.playYuck();
+      this.winStreak.set(0);
       this.statusMessage.set(StringResources.INCORRECT);
       this.statusMessageDetail = this.activePuzzle().errorDetails(
         data.expressionValue.clone(),
@@ -622,5 +644,9 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   public toggleDebug(): void {
     const logStatus = toggleLog();
     console.log(`Logging: ${logStatus}`);
+  }
+
+  public toggleScore(): void {
+    this.showScore.set(!this.showScore());
   }
 }

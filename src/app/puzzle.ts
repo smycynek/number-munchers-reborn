@@ -163,7 +163,7 @@ export class Puzzle {
     const perfectSquareSuccess = (cellValue: ExpressionData) => {
       return [
         new MixedNumberExpressionData(Math.sqrt(cellValue.value), 0, 0),
-        s('time itself is'),
+        s('times itself is'),
         new MixedNumberExpressionData(cellValue.value, 0, 0),
       ];
     };
