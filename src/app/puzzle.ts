@@ -33,6 +33,7 @@ import {
   getValidFactors,
   getRandomSumPairs,
   getRandomDifferencePairs,
+  getRandomExponentPairs,
 } from './sampleRandomValues';
 
 import {
@@ -54,6 +55,8 @@ import {
   getValidSumPairs,
   getValidDifferencePairs,
   toExpressionDataSet,
+  getValidExponentPairs,
+  getExponentTargets,
 } from './sampleValidValues';
 import { OP_GTE } from '../math-components/expression-data/operators';
 
@@ -69,7 +72,8 @@ export enum PuzzleType {
   DIVISION,
   GREATER_LESS_THAN,
   ADDITION,
-  SUBTRACTION
+  SUBTRACTION,
+  EXPONENTS
 }
 
 export class Puzzle {
@@ -159,6 +163,7 @@ export class Puzzle {
     const randomFractionBase = getRandomFractionBase();
     const randomAdditionTarget = getRandomNumberWithinRange(20, 99);
     const randomSubtractionTarget = getRandomNumberWithinRange(1, 80);
+    const exponentTargets = getExponentTargets();
 
     const perfectSquareSuccess = (cellValue: ExpressionData) => {
       return [
@@ -351,12 +356,13 @@ export class Puzzle {
     return  sumDiffFailure(cellValue, randomSubtractionTarget);
   };
     
+  const expSuccess = (cellValue: ExpressionTypes) => {
+      return [toggleRValue(cellValue)];
+  }
 
-
-
-
-
-   
+  const expFailure = (cellValue: ExpressionTypes) => {
+    return [s('Sorry, '), toggleRValue(cellValue), s(`Not ${exponentTargets[0]}, ${exponentTargets[1]}, or ${exponentTargets[2]} `)];
+}
 
     return [
       new Puzzle(
@@ -613,6 +619,20 @@ export class Puzzle {
         true,
         'Subtraction',
       ),
+
+      new Puzzle(
+        (cellValue: ExpressionData) => (cellValue.value === exponentTargets[0]) || (cellValue.value === exponentTargets[1]) || (cellValue.value === exponentTargets[2]),
+        dataUpperBound,
+        [s(`Find exponents equal to ${exponentTargets[0]}, ${exponentTargets[1]}, or ${exponentTargets[2]}` )],
+        expSuccess,
+        expFailure,
+        () => getValidExponentPairs(exponentTargets),
+        (count: number) => getRandomExponentPairs(count),
+        PuzzleType.EXPONENTS,
+        true,
+        'Exponents',
+      ),
+
     ];
   }
 }

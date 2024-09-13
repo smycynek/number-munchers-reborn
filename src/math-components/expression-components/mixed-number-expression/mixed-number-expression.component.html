@@ -3,7 +3,7 @@
         <mn *ngIf="(whole !== 0)">
             {{whole | number}}
         </mn>
-        <mfrac *ngIf="numerator!==0 && denominator!==0" [ngClass]="{'mfrac-large': (whole === 0)}">>
+        <mfrac *ngIf="numerator!==0 && denominator!==0" [ngClass]="{'mfrac-large': (whole === 0)}">
             <mn>{{numerator}}</mn>
             <mn>{{denominator}}</mn>
         </mfrac>

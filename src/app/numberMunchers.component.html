@@ -102,20 +102,25 @@
             [(ngModel)]="division" (change)="toggleType(division, puzzleType.DIVISION)" type="checkbox" />
           <label for="cbDiv">Division</label>
         </div>
+
+        <div class="choice-group">
+          <input class="checkbox-wide highlighted" id="cbExponents" [disabled]="isCheckboxDisabled(exponents)"
+            [(ngModel)]="exponents" (change)="toggleType(exponents, puzzleType.EXPONENTS)" type="checkbox" />
+          <label for="cbExponents">Exponents</label>
+        </div>
+
         <div class="choice-group">
           <input class="checkbox-wide highlighted" id="cbMisc" [disabled]="isCheckboxDisabled(misc)" [(ngModel)]="misc"
             (change)="toggleType(misc, puzzleType.MISC)" type="checkbox" />
           <label for="cbMisc">Miscellaneous</label>
         </div>
 
-        @if (!shouldHideFractions()) 
-        {
         <div class="choice-group">
           <input class="checkbox-wide highlighted" id="cbFractions" [disabled]="isCheckboxDisabled(fractions)"
             [(ngModel)]="fractions" (change)="toggleType(fractions, puzzleType.FRACTIONS)" type="checkbox" />
           <label for="cbFractions">Fractions</label>
         </div>
-        }
+
         <div class="choice-group">
           <input class="checkbox-wide highlighted" id="cbAddition" [disabled]="isCheckboxDisabled(addition)"
             [(ngModel)]="addition" (change)="toggleType(addition, puzzleType.ADDITION)" type="checkbox" />

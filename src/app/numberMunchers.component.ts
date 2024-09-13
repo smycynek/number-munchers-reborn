@@ -49,7 +49,8 @@ const allPuzzles = new Set<PuzzleType>([
   PuzzleType.DIVISION,
   PuzzleType.GREATER_LESS_THAN,
   PuzzleType.ADDITION,
-  PuzzleType.SUBTRACTION
+  PuzzleType.SUBTRACTION,
+  PuzzleType.EXPONENTS,
 ]);
 
 @Component({
@@ -104,14 +105,11 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   public fractions: boolean = true;
   public addition: boolean = true;
   public subtraction: boolean = true;
+  public exponents: boolean = true;
 
   public readonly highScore: WritableSignal<number> = signal(0);
   public readonly winStreak: WritableSignal<number> = signal(0);
   public readonly showScore: WritableSignal<boolean> = signal(true);
-
-  public shouldHideFractions(): boolean {
-    return window.navigator.userAgent.includes('Firefox'); // not ideal but no easy way around it.
-  }
 
   private timerSubscription: Subscription | undefined;
   public get puzzleType(): typeof PuzzleType {
@@ -128,10 +126,6 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     this.puzzleTypes = allPuzzles;
     this.timerInit();
     this.init();
-    if (this.shouldHideFractions()) {
-      this.fractions = false;
-      this.toggleType(false, PuzzleType.FRACTIONS);
-    }
   }
 
   /* Init */

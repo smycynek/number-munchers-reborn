@@ -1,6 +1,7 @@
 import {
   AdditionExpressionData,
   DivisionExpressionData,
+  ExponentExpressionData,
   ExpressionData,
   ExpressionTypes,
   MixedNumberExpressionData,
@@ -9,7 +10,7 @@ import {
 } from '../math-components/expression-data/expressionData';
 import { dataUpperBound } from './constants';
 import { isBetween, isOutsideExclusive, isPerfectSquare } from './predicates';
-import { getValidFactors } from './sampleRandomValues';
+import { getAllExponentPairs, getAllExponentValues, getRandomItemFromSetAndRemove, getValidFactors } from './sampleRandomValues';
 import { debug } from './utility';
 
 const perfectSquares = new Set<number>(
@@ -29,6 +30,14 @@ export function getPrimes(): Set<number> {
   return new Set<number>([...primes]);
 }
 
+export function getExponentTargets(): number[] {
+  const exponents = getAllExponentValues();
+  const numbers = [];
+  numbers.push(getRandomItemFromSetAndRemove(exponents));
+  numbers.push(getRandomItemFromSetAndRemove(exponents));
+  numbers.push(getRandomItemFromSetAndRemove(exponents));
+  return numbers;
+}
 
 export function getNaturalNumberSet(upperBound: number): Set<number> {
   const base = [...[].constructor(upperBound + 1).keys()];
@@ -227,6 +236,14 @@ export function getValidDivisionPairs(
     pairs.add(new DivisionExpressionData(mul, otherParam));
   });
   return pairs;
+}
+
+export function getValidExponentPairs(targets: number[]): Set<ExponentExpressionData> {
+  const allPairs = getAllExponentPairs();
+  return new Set<ExponentExpressionData>([...allPairs].filter(pair => pair.value === targets[0] 
+    || pair.value === targets[1]
+    || pair.value === targets[2]
+     ));
 }
 
 export function toExpressionDataSet(values: Set<number>): Set<ExpressionTypes> {
