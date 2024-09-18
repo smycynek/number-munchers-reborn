@@ -66,14 +66,14 @@ function toggleRValue(cellValue: ExpressionTypes): ExpressionTypes {
 }
 
 export enum PuzzleType {
-  MISC,
-  MULTIPLICATION,
-  FRACTIONS,
-  DIVISION,
-  GREATER_LESS_THAN,
-  ADDITION,
-  SUBTRACTION,
-  EXPONENTS
+  Miscellaneous,
+  Multiplication,
+  Fractions,
+  Division,
+  Greater_or_less_than,
+  Addition,
+  Subtraction,
+  Exponents,
 }
 
 export class Puzzle {
@@ -125,9 +125,15 @@ export class Puzzle {
     if (addValidValues) {
       const validSamples = this.getValidSamples();
       let replacements = maxReplacements;
-      if ([PuzzleType.MULTIPLICATION, PuzzleType.ADDITION, PuzzleType.SUBTRACTION].includes(this.type)) {
+      if (
+        [
+          PuzzleType.Multiplication,
+          PuzzleType.Addition,
+          PuzzleType.Subtraction,
+        ].includes(this.type)
+      ) {
         replacements *= 2;
-        debug('Extra replacements')
+        debug('Extra replacements');
       }
       const replacementCount =
         validSamples.size < replacements ? validSamples.size : replacements;
@@ -186,10 +192,14 @@ export class Puzzle {
         ),
       ];
     };
-    
+
     const primeFailure = (cellValue: ExpressionTypes) => {
-      const validFactorsFormatted = format_and([...getValidFactors(cellValue.value)]);
-      return [s(`${cellValue.value} has factors such as ${validFactorsFormatted}`)];
+      const validFactorsFormatted = format_and([
+        ...getValidFactors(cellValue.value),
+      ]);
+      return [
+        s(`${cellValue.value} has factors such as ${validFactorsFormatted}`),
+      ];
     };
 
     const betweenSuccess = (cellValue: ExpressionTypes) => {
@@ -338,31 +348,35 @@ export class Puzzle {
       ];
     };
 
-
- 
     const sumDiffFailure = (cellValue: ExpressionTypes, target: number) => {
       return [s('Sorry, '), toggleRValue(cellValue), s(`, not ${target}`)];
     };
 
     const sumDiffSuccess = (cellValue: ExpressionTypes) => {
-      return  [toggleRValue(cellValue)]
+      return [toggleRValue(cellValue)];
     };
-    
+
     const sumFailure = (cellValue: ExpressionTypes) => {
-       return sumDiffFailure(cellValue, randomAdditionTarget);
+      return sumDiffFailure(cellValue, randomAdditionTarget);
     };
 
     const diffFailure = (cellValue: ExpressionTypes) => {
-    return  sumDiffFailure(cellValue, randomSubtractionTarget);
-  };
-    
-  const expSuccess = (cellValue: ExpressionTypes) => {
-      return [toggleRValue(cellValue)];
-  }
+      return sumDiffFailure(cellValue, randomSubtractionTarget);
+    };
 
-  const expFailure = (cellValue: ExpressionTypes) => {
-    return [s('Sorry, '), toggleRValue(cellValue), s(`Not ${exponentTargets[0]}, ${exponentTargets[1]}, or ${exponentTargets[2]} `)];
-}
+    const expSuccess = (cellValue: ExpressionTypes) => {
+      return [toggleRValue(cellValue)];
+    };
+
+    const expFailure = (cellValue: ExpressionTypes) => {
+      return [
+        s('Sorry, '),
+        toggleRValue(cellValue),
+        s(
+          `Not ${exponentTargets[0]}, ${exponentTargets[1]}, or ${exponentTargets[2]} `,
+        ),
+      ];
+    };
 
     return [
       new Puzzle(
@@ -374,7 +388,7 @@ export class Puzzle {
         () => toExpressionDataSet(getPerfectSquares()),
         (count: number) =>
           toExpressionDataSet(getRandomNaturalNumberSet(dataUpperBound, count)),
-        PuzzleType.MISC,
+        PuzzleType.Miscellaneous,
         true,
         'Perfect Squares',
       ),
@@ -388,7 +402,7 @@ export class Puzzle {
         () => toExpressionDataSet(getPrimes()),
         (count: number) =>
           toExpressionDataSet(getRandomNaturalNumberSet(dataUpperBound, count)),
-        PuzzleType.MISC,
+        PuzzleType.Miscellaneous,
         true,
         'Primes',
       ),
@@ -419,7 +433,7 @@ export class Puzzle {
           ),
         (count: number) =>
           toExpressionDataSet(getRandomNaturalNumberSet(dataUpperBound, count)),
-        PuzzleType.GREATER_LESS_THAN,
+        PuzzleType.Greater_or_less_than,
         true,
         'Between',
       ),
@@ -449,7 +463,7 @@ export class Puzzle {
           ),
         (count: number) =>
           toExpressionDataSet(getRandomNaturalNumberSet(dataUpperBound, count)),
-        PuzzleType.GREATER_LESS_THAN,
+        PuzzleType.Greater_or_less_than,
         true,
         'Between inclusive',
       ),
@@ -478,7 +492,7 @@ export class Puzzle {
           ),
         (count: number) =>
           toExpressionDataSet(getRandomNaturalNumberSet(dataUpperBound, count)),
-        PuzzleType.GREATER_LESS_THAN,
+        PuzzleType.Greater_or_less_than,
         true,
         'Outside exclusive',
       ),
@@ -492,7 +506,7 @@ export class Puzzle {
         multiplicationFailure,
         () => getValidMultiplicationPairs(randomMultiplicationTarget),
         (count: number) => getRandomMultiplicationPairs(count),
-        PuzzleType.MULTIPLICATION,
+        PuzzleType.Multiplication,
         true,
         'Multiplication Expressions',
       ),
@@ -507,7 +521,7 @@ export class Puzzle {
         () => toExpressionDataSet(getValidMultiples(randomMultipleBase)),
         (count: number) =>
           toExpressionDataSet(getRandomNaturalNumberSet(dataUpperBound, count)),
-        PuzzleType.MULTIPLICATION,
+        PuzzleType.Multiplication,
         true,
         'Multiples',
       ),
@@ -524,7 +538,7 @@ export class Puzzle {
           toExpressionDataSet(
             getRandomNaturalNumberSet(dataUpperBoundLow, count),
           ),
-        PuzzleType.MULTIPLICATION,
+        PuzzleType.Multiplication,
         true,
         'Factors',
       ),
@@ -537,7 +551,7 @@ export class Puzzle {
         divisionFailure,
         () => getValidDivisionPairs(randomQuotientTarget),
         (count: number) => getRandomDivisionPairs(count),
-        PuzzleType.DIVISION,
+        PuzzleType.Division,
         true,
         'Division Expressions',
       ),
@@ -552,7 +566,7 @@ export class Puzzle {
         () => toExpressionDataSet(getValidMultiples(randomMultipleBase)),
         (count: number) =>
           toExpressionDataSet(getRandomNaturalNumberSet(dataUpperBound, count)),
-        PuzzleType.DIVISION,
+        PuzzleType.Division,
         true,
         'Divisible by',
       ),
@@ -566,7 +580,7 @@ export class Puzzle {
         fractionEquivalentFailure,
         () => getValidFractions(randomFractionBase),
         (count: number) => getRandomFractions(count, randomFractionBase),
-        PuzzleType.FRACTIONS,
+        PuzzleType.Fractions,
         true,
         'Fraction Equivalents',
       ),
@@ -578,7 +592,7 @@ export class Puzzle {
         gteHalfFailure,
         () => getValidFractions(randomFractionBase),
         (count: number) => getRandomFractions(count, randomFractionBase),
-        PuzzleType.FRACTIONS,
+        PuzzleType.Fractions,
         true,
         `Fraction ${greaterEqual} 1/2`,
       ),
@@ -591,7 +605,7 @@ export class Puzzle {
         ltHalfFailure,
         () => getValidFractions(randomFractionBase),
         (count: number) => getRandomFractions(count, randomFractionBase),
-        PuzzleType.FRACTIONS,
+        PuzzleType.Fractions,
         true,
         'Fraction < 1/2',
       ),
@@ -603,36 +617,44 @@ export class Puzzle {
         sumFailure,
         () => getValidSumPairs(randomAdditionTarget),
         (count: number) => getRandomSumPairs(count, randomAdditionTarget),
-        PuzzleType.ADDITION,
+        PuzzleType.Addition,
         true,
         'Addition',
       ),
       new Puzzle(
-        (cellValue: ExpressionData) => cellValue.value === randomSubtractionTarget,
+        (cellValue: ExpressionData) =>
+          cellValue.value === randomSubtractionTarget,
         dataUpperBound,
         [s(`Find differences equal to ${randomSubtractionTarget}`)],
         sumDiffSuccess,
         diffFailure,
         () => getValidDifferencePairs(randomSubtractionTarget),
-        (count: number) => getRandomDifferencePairs(count, randomSubtractionTarget),
-        PuzzleType.SUBTRACTION,
+        (count: number) =>
+          getRandomDifferencePairs(count, randomSubtractionTarget),
+        PuzzleType.Subtraction,
         true,
         'Subtraction',
       ),
 
       new Puzzle(
-        (cellValue: ExpressionData) => (cellValue.value === exponentTargets[0]) || (cellValue.value === exponentTargets[1]) || (cellValue.value === exponentTargets[2]),
+        (cellValue: ExpressionData) =>
+          cellValue.value === exponentTargets[0] ||
+          cellValue.value === exponentTargets[1] ||
+          cellValue.value === exponentTargets[2],
         dataUpperBound,
-        [s(`Find exponents equal to ${exponentTargets[0]}, ${exponentTargets[1]}, or ${exponentTargets[2]}` )],
+        [
+          s(
+            `Find exponents equal to ${exponentTargets[0]}, ${exponentTargets[1]}, or ${exponentTargets[2]}`,
+          ),
+        ],
         expSuccess,
         expFailure,
         () => getValidExponentPairs(exponentTargets),
         (count: number) => getRandomExponentPairs(count),
-        PuzzleType.EXPONENTS,
+        PuzzleType.Exponents,
         true,
         'Exponents',
       ),
-
     ];
   }
 }

@@ -19,9 +19,9 @@ describe('PseudoUnitTests-Predicates', () => {
         expect(isBetween(2, 2, 5, true)).toBe(true);  // in range inc
         expect(isBetween(5, 2, 5, true)).toBe(true);  // in range inc
         expect(isBetween(1, 2, 5, true)).toBe(false); // not in range inc
-        expect(isBetween(6, 2, 5, true)).toBe(false); // not in range inc 
+        expect(isBetween(6, 2, 5, true)).toBe(false); // not in range inc
 
-        expect(isBetween(3, 2, 5, false)).toBe(true);  // in range ni 
+        expect(isBetween(3, 2, 5, false)).toBe(true);  // in range ni
         expect(isBetween(2, 2, 5, false)).toBe(false); // not in range ni
         expect(isBetween(5, 2, 5, false)).toBe(false); // not in range ni
         expect(isBetween(1, 2, 5, false)).toBe(false); // not in range ni

@@ -10,7 +10,12 @@ import {
 } from '../math-components/expression-data/expressionData';
 import { dataUpperBound } from './constants';
 import { isBetween, isOutsideExclusive, isPerfectSquare } from './predicates';
-import { getAllExponentPairs, getAllExponentValues, getRandomItemFromSetAndRemove, getValidFactors } from './sampleRandomValues';
+import {
+  getAllExponentPairs,
+  getAllExponentValues,
+  getRandomItemFromSetAndRemove,
+  getValidFactors,
+} from './sampleRandomValues';
 import { debug } from './utility';
 
 const perfectSquares = new Set<number>(
@@ -46,7 +51,6 @@ export function getNaturalNumberSet(upperBound: number): Set<number> {
   return baseSet;
 }
 
-
 export function getValidBetweenValues(
   lower: number,
   upper: number,
@@ -69,8 +73,6 @@ export function getValidOutsideExclusiveValues(
     ),
   );
 }
-
-
 
 export function getBaseFractions(): Set<MixedNumberExpressionData> {
   const newFractionPair = (idn: number, idd: number) =>
@@ -190,8 +192,6 @@ export function getValidMultiples(num: number): Set<number> {
   return multiples;
 }
 
-
-
 export function getValidMultiplicationPairs(
   target: number,
 ): Set<MultiplicationExpressionData> {
@@ -203,13 +203,11 @@ export function getValidMultiplicationPairs(
   return pairs;
 }
 
-export function getValidSumPairs(
-  target: number,
-): Set<AdditionExpressionData> {
+export function getValidSumPairs(target: number): Set<AdditionExpressionData> {
   const pairs: Set<AdditionExpressionData> = new Set();
-  const halfTarget = Math.round(target/2);
-  for (let left = halfTarget -9; left != halfTarget +9; left++) {
-    pairs.add(new AdditionExpressionData(left, target-left));
+  const halfTarget = Math.round(target / 2);
+  for (let left = halfTarget - 9; left != halfTarget + 9; left++) {
+    pairs.add(new AdditionExpressionData(left, target - left));
   }
   return pairs;
 }
@@ -219,7 +217,7 @@ export function getValidDifferencePairs(
 ): Set<SubtractionExpressionData> {
   const pairs: Set<SubtractionExpressionData> = new Set();
   for (let upper = 99; upper != target; upper--) {
-    pairs.add(new SubtractionExpressionData(upper, upper-target));
+    pairs.add(new SubtractionExpressionData(upper, upper - target));
   }
   return pairs;
 }
@@ -238,12 +236,18 @@ export function getValidDivisionPairs(
   return pairs;
 }
 
-export function getValidExponentPairs(targets: number[]): Set<ExponentExpressionData> {
+export function getValidExponentPairs(
+  targets: number[],
+): Set<ExponentExpressionData> {
   const allPairs = getAllExponentPairs();
-  return new Set<ExponentExpressionData>([...allPairs].filter(pair => pair.value === targets[0] 
-    || pair.value === targets[1]
-    || pair.value === targets[2]
-     ));
+  return new Set<ExponentExpressionData>(
+    [...allPairs].filter(
+      (pair) =>
+        pair.value === targets[0] ||
+        pair.value === targets[1] ||
+        pair.value === targets[2],
+    ),
+  );
 }
 
 export function toExpressionDataSet(values: Set<number>): Set<ExpressionTypes> {

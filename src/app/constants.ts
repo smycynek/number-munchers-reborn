@@ -13,3 +13,5 @@ export const divSymbol = '\u{00F7}';
 export const greaterEqual = '\u{2265}';
 export const lessEqual = '\u{2264}';
 export const multSymbol = '\u{00D7}';
+export const fracSymbol = '\u{00BD}';
+export const expSymbol = '\u{33a5}';

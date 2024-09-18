@@ -123,11 +123,12 @@ export function getRandomMultiplicationPairs(
 }
 
 export function getRandomSumPairs(
-  count: number, target: number
+  count: number,
+  target: number,
 ): Set<AdditionExpressionData> {
   const valueSet: Set<AdditionExpressionData> = new Set();
-  for (let idx = 10; idx < 50; idx+=5) {
-    for (let idy = 10; idy < 50; idy+=9) {
+  for (let idx = 10; idx < 50; idx += 5) {
+    for (let idy = 10; idy < 50; idy += 9) {
       const pair = new AdditionExpressionData(idx, idy);
       if (!expressionDataSetHas(pair, valueSet)) {
         valueSet.add(pair);
@@ -136,12 +137,10 @@ export function getRandomSumPairs(
   }
 
   const validPairs = getValidSumPairs(target);
-  validPairs.forEach(pair => {
-    valueSet.add(new AdditionExpressionData(pair.left, pair.right -1));
+  validPairs.forEach((pair) => {
+    valueSet.add(new AdditionExpressionData(pair.left, pair.right - 1));
     valueSet.add(new AdditionExpressionData(pair.left + 2, pair.right));
   });
-
-
 
   const returnSet: Set<AdditionExpressionData> = new Set();
   for (let ic = 0; ic !== count; ic++) {
@@ -151,11 +150,16 @@ export function getRandomSumPairs(
 }
 
 export function getRandomDifferencePairs(
-  count: number, target: number): Set<SubtractionExpressionData> {
+  count: number,
+  target: number,
+): Set<SubtractionExpressionData> {
   const valueSet: Set<SubtractionExpressionData> = new Set();
-  for (let idx = 99; idx > target; idx-=5) {
-    for (let idy = 98; idy > 10; idy-=6) {
-      const pair = (idx > idy) ? (new SubtractionExpressionData(idx, idy)) : (new SubtractionExpressionData(idy, idx));
+  for (let idx = 99; idx > target; idx -= 5) {
+    for (let idy = 98; idy > 10; idy -= 6) {
+      const pair =
+        idx > idy
+          ? new SubtractionExpressionData(idx, idy)
+          : new SubtractionExpressionData(idy, idx);
       if (!expressionDataSetHas(pair, valueSet)) {
         valueSet.add(pair);
       }
@@ -163,8 +167,8 @@ export function getRandomDifferencePairs(
   }
 
   const validPairs = getValidDifferencePairs(target);
-  validPairs.forEach(pair => {
-    valueSet.add(new SubtractionExpressionData(pair.left, pair.right -1));
+  validPairs.forEach((pair) => {
+    valueSet.add(new SubtractionExpressionData(pair.left, pair.right - 1));
     valueSet.add(new SubtractionExpressionData(pair.left + 1, pair.right));
   });
 
@@ -175,51 +179,53 @@ export function getRandomDifferencePairs(
   return returnSet;
 }
 
-export function getAllExponentPairs(): Set<ExponentExpressionData>  {
+export function getAllExponentPairs(): Set<ExponentExpressionData> {
   const pairs: Set<ExponentExpressionData> = new Set();
-  pairs.add(new ExponentExpressionData(2,1));
-  pairs.add(new ExponentExpressionData(2,2));
-  pairs.add(new ExponentExpressionData(2,3));
-  pairs.add(new ExponentExpressionData(2,4));
-  pairs.add(new ExponentExpressionData(2,5));
-  pairs.add(new ExponentExpressionData(2,6));
-  pairs.add(new ExponentExpressionData(2,7));
-  pairs.add(new ExponentExpressionData(2,8));
-  pairs.add(new ExponentExpressionData(3,1));
-  pairs.add(new ExponentExpressionData(3,2));
-  pairs.add(new ExponentExpressionData(3,3));
-  pairs.add(new ExponentExpressionData(3,4));
-  pairs.add(new ExponentExpressionData(3,5));
-  pairs.add(new ExponentExpressionData(4,1));
-  pairs.add(new ExponentExpressionData(4,2));
-  pairs.add(new ExponentExpressionData(4,3));
-  pairs.add(new ExponentExpressionData(4,4));
-  pairs.add(new ExponentExpressionData(5,1));
-  pairs.add(new ExponentExpressionData(5,2));
-  pairs.add(new ExponentExpressionData(5,3));
-  pairs.add(new ExponentExpressionData(7,1));
-  pairs.add(new ExponentExpressionData(7,2));
-  pairs.add(new ExponentExpressionData(8,1));
-  pairs.add(new ExponentExpressionData(8,2));
-  pairs.add(new ExponentExpressionData(9,1));
-  pairs.add(new ExponentExpressionData(9,2));
-  pairs.add(new ExponentExpressionData(10,1));
-  pairs.add(new ExponentExpressionData(10,2));
+  pairs.add(new ExponentExpressionData(2, 1));
+  pairs.add(new ExponentExpressionData(2, 2));
+  pairs.add(new ExponentExpressionData(2, 3));
+  pairs.add(new ExponentExpressionData(2, 4));
+  pairs.add(new ExponentExpressionData(2, 5));
+  pairs.add(new ExponentExpressionData(2, 6));
+  pairs.add(new ExponentExpressionData(2, 7));
+  pairs.add(new ExponentExpressionData(2, 8));
+  pairs.add(new ExponentExpressionData(3, 1));
+  pairs.add(new ExponentExpressionData(3, 2));
+  pairs.add(new ExponentExpressionData(3, 3));
+  pairs.add(new ExponentExpressionData(3, 4));
+  pairs.add(new ExponentExpressionData(3, 5));
+  pairs.add(new ExponentExpressionData(4, 1));
+  pairs.add(new ExponentExpressionData(4, 2));
+  pairs.add(new ExponentExpressionData(4, 3));
+  pairs.add(new ExponentExpressionData(4, 4));
+  pairs.add(new ExponentExpressionData(5, 1));
+  pairs.add(new ExponentExpressionData(5, 2));
+  pairs.add(new ExponentExpressionData(5, 3));
+  pairs.add(new ExponentExpressionData(7, 1));
+  pairs.add(new ExponentExpressionData(7, 2));
+  pairs.add(new ExponentExpressionData(8, 1));
+  pairs.add(new ExponentExpressionData(8, 2));
+  pairs.add(new ExponentExpressionData(9, 1));
+  pairs.add(new ExponentExpressionData(9, 2));
+  pairs.add(new ExponentExpressionData(10, 1));
+  pairs.add(new ExponentExpressionData(10, 2));
   return pairs;
 }
 
 export function getAllExponentValues(): Set<number> {
-  return new Set<number>([...getAllExponentPairs()].map( exp => exp.value));
+  return new Set<number>([...getAllExponentPairs()].map((exp) => exp.value));
 }
 
-export function getRandomExponentPairs(count: number): Set<ExponentExpressionData> {
-    const pairs = getAllExponentPairs();
-    const returnSet: Set<ExponentExpressionData> = new Set();
+export function getRandomExponentPairs(
+  count: number,
+): Set<ExponentExpressionData> {
+  const pairs = getAllExponentPairs();
+  const returnSet: Set<ExponentExpressionData> = new Set();
 
-    for (let idc = 0; idc !== count; idc++) {
-      returnSet.add(getRandomItemFromSetAndRemove(pairs));
-    }
-    return returnSet;
+  for (let idc = 0; idc !== count; idc++) {
+    returnSet.add(getRandomItemFromSetAndRemove(pairs));
+  }
+  return returnSet;
 }
 export function getRandomMultipleBase(): number {
   return getRandomNumberWithinRange(multipleLowerBound, multipleUpperBound);
@@ -239,7 +245,7 @@ export function getRandomDivisionPairs(
     });
   }
   let itemCount = count;
-  if (valueSet.size < itemCount){
+  if (valueSet.size < itemCount) {
     itemCount = valueSet.size;
   }
   for (let idc = 0; idc !== itemCount; idc++) {
@@ -275,4 +281,3 @@ export function getRandomFractions(
   }
   return returnSet;
 }
-

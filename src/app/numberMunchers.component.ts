@@ -27,8 +27,16 @@ import JSConfetti from 'js-confetti';
 import { StringResources } from './strings';
 import { Observable, Subscription, timer } from 'rxjs';
 import { getRandomItemFromSetAndRemove } from './sampleRandomValues';
-import { mertinDelay, mertinInterval } from './constants';
-import { ActivatedRoute, RouterOutlet } from '@angular/router';
+import {
+  divSymbol,
+  expSymbol,
+  fracSymbol,
+  greaterEqual,
+  mertinDelay,
+  mertinInterval,
+  multSymbol,
+} from './constants';
+import { ActivatedRoute, Params, Router, RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MathExpressionComponent } from '../math-components/math-expression/math-expression.component';
 import { MathSentenceComponent } from '../math-components/math-sentence/math-sentence.component';
@@ -41,16 +49,39 @@ import {
   s,
 } from '../math-components/expression-data/expressionData';
 import { version } from './version';
+import { Title } from '@angular/platform-browser';
 
 const allPuzzles = new Set<PuzzleType>([
-  PuzzleType.MISC,
-  PuzzleType.MULTIPLICATION,
-  PuzzleType.FRACTIONS,
-  PuzzleType.DIVISION,
-  PuzzleType.GREATER_LESS_THAN,
-  PuzzleType.ADDITION,
-  PuzzleType.SUBTRACTION,
-  PuzzleType.EXPONENTS,
+  PuzzleType.Miscellaneous,
+  PuzzleType.Multiplication,
+  PuzzleType.Fractions,
+  PuzzleType.Division,
+  PuzzleType.Greater_or_less_than,
+  PuzzleType.Addition,
+  PuzzleType.Subtraction,
+  PuzzleType.Exponents,
+]);
+
+const puzzleCodes: Map<PuzzleType, string> = new Map([
+  [PuzzleType.Miscellaneous, 'o'],
+  [PuzzleType.Multiplication, 'm'],
+  [PuzzleType.Division, 'd'],
+  [PuzzleType.Exponents, 'e'],
+  [PuzzleType.Fractions, 'f'],
+  [PuzzleType.Addition, 'a'],
+  [PuzzleType.Subtraction, 's'],
+  [PuzzleType.Greater_or_less_than, 'g'],
+]);
+
+const puzzleSymbols: Map<PuzzleType, string> = new Map([
+  [PuzzleType.Miscellaneous, '?'],
+  [PuzzleType.Multiplication, multSymbol],
+  [PuzzleType.Division, divSymbol],
+  [PuzzleType.Exponents, expSymbol],
+  [PuzzleType.Fractions, fracSymbol],
+  [PuzzleType.Addition, '+'],
+  [PuzzleType.Subtraction, '-'],
+  [PuzzleType.Greater_or_less_than, greaterEqual],
 ]);
 
 @Component({
@@ -77,6 +108,8 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   @ViewChild('btnShowPuzzleTypes') btnShowPuzzleTypes!: ElementRef;
   @ViewChild('btnHelp') btnHelp!: ElementRef;
 
+  public symbols: WritableSignal<string> = signal('');
+
   private puzzleTypes = allPuzzles;
   public readonly cellData: WritableSignal<DataCell[]> = signal([]);
   public readonly statusMessage: WritableSignal<string> = signal(
@@ -98,15 +131,77 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   );
   private speed: number = 0;
 
-  public multiplication: boolean = true;
-  public glt: boolean = true;
-  public division: boolean = true;
-  public misc: boolean = true;
-  public fractions: boolean = true;
-  public addition: boolean = true;
-  public subtraction: boolean = true;
-  public exponents: boolean = true;
+  public get multiplication(): boolean {
+    return this.puzzleTypes.has(PuzzleType.Multiplication);
+  }
+  public set multiplication(val: boolean) {
+    val
+      ? this.puzzleTypes.add(PuzzleType.Multiplication)
+      : this.puzzleTypes.delete(PuzzleType.Multiplication);
+  }
 
+  public get division(): boolean {
+    return this.puzzleTypes.has(PuzzleType.Division);
+  }
+  public set division(val: boolean) {
+    val
+      ? this.puzzleTypes.add(PuzzleType.Division)
+      : this.puzzleTypes.delete(PuzzleType.Division);
+  }
+
+  public get glt(): boolean {
+    return this.puzzleTypes.has(PuzzleType.Greater_or_less_than);
+  }
+  public set glt(val: boolean) {
+    val
+      ? this.puzzleTypes.add(PuzzleType.Greater_or_less_than)
+      : this.puzzleTypes.delete(PuzzleType.Greater_or_less_than);
+  }
+
+  public get misc(): boolean {
+    return this.puzzleTypes.has(PuzzleType.Miscellaneous);
+  }
+  public set misc(val: boolean) {
+    val
+      ? this.puzzleTypes.add(PuzzleType.Miscellaneous)
+      : this.puzzleTypes.delete(PuzzleType.Miscellaneous);
+  }
+
+  public get fractions(): boolean {
+    return this.puzzleTypes.has(PuzzleType.Fractions);
+  }
+  public set fractions(val: boolean) {
+    val
+      ? this.puzzleTypes.add(PuzzleType.Fractions)
+      : this.puzzleTypes.delete(PuzzleType.Fractions);
+  }
+
+  public get addition(): boolean {
+    return this.puzzleTypes.has(PuzzleType.Addition);
+  }
+  public set addition(val: boolean) {
+    val
+      ? this.puzzleTypes.add(PuzzleType.Addition)
+      : this.puzzleTypes.delete(PuzzleType.Addition);
+  }
+
+  public get subtraction(): boolean {
+    return this.puzzleTypes.has(PuzzleType.Subtraction);
+  }
+  public set subtraction(val: boolean) {
+    val
+      ? this.puzzleTypes.add(PuzzleType.Subtraction)
+      : this.puzzleTypes.delete(PuzzleType.Subtraction);
+  }
+
+  public get exponents(): boolean {
+    return this.puzzleTypes.has(PuzzleType.Exponents);
+  }
+  public set exponents(val: boolean) {
+    val
+      ? this.puzzleTypes.add(PuzzleType.Exponents)
+      : this.puzzleTypes.delete(PuzzleType.Exponents);
+  }
   public readonly highScore: WritableSignal<number> = signal(0);
   public readonly winStreak: WritableSignal<number> = signal(0);
   public readonly showScore: WritableSignal<boolean> = signal(true);
@@ -119,13 +214,45 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   constructor(
     private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
+    private router: Router,
+    private titleService: Title,
   ) {
     this.route.queryParams.subscribe((params) => {
       debug(params.toString());
     });
+
     this.puzzleTypes = allPuzzles;
-    this.timerInit();
     this.init();
+    this.timerInit();
+    route.queryParams.subscribe((p: Params) => {
+      this.setQueryOptions(p['p']);
+      this.reset();
+      this.init();
+      this.timerInit();
+
+      this.symbols.set(this.getActivePuzzleSymbols());
+      if (this.puzzleTypes.size !== Object.keys(PuzzleType).length / 2) {
+        this.titleService.setTitle(
+          'Number Munchers Reborn - ' +
+            [...this.puzzleTypes.values()].map((p) => PuzzleType[p]).join(', '),
+        );
+      }
+    });
+  }
+
+  private setQueryOptions(queryString: string) {
+    const queryLc = queryString?.toLowerCase();
+    if (!queryLc || queryLc.search('/|m|a|s|d|e|f|o|g|/') === -1) {
+      return;
+    }
+    this.toggleType(queryLc.includes('m'), PuzzleType.Multiplication);
+    this.toggleType(queryLc.includes('a'), PuzzleType.Addition);
+    this.toggleType(queryLc.includes('s'), PuzzleType.Subtraction);
+    this.toggleType(queryLc.includes('d'), PuzzleType.Division);
+    this.toggleType(queryLc.includes('e'), PuzzleType.Exponents);
+    this.toggleType(queryLc.includes('f'), PuzzleType.Fractions);
+    this.toggleType(queryLc.includes('o'), PuzzleType.Miscellaneous);
+    this.toggleType(queryLc.includes('g'), PuzzleType.Greater_or_less_than);
   }
 
   /* Init */
@@ -187,13 +314,43 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     else return false;
   }
 
-  public toggleType(value: boolean, type: PuzzleType) {
+  private getActivePuzzleSymbols(): string {
+    return `(Puzzles: ${[...this.puzzleTypes.values()].map((p) => puzzleSymbols.get(p)).join('')})`;
+  }
+
+  private getActivePuzzleCodes(): string {
+    const codes: string[] = [...this.puzzleTypes.values()].map(
+      (p) => puzzleCodes.get(p) ?? '',
+    );
+    return codes.sort((a, b) => a.localeCompare(b)).join('');
+  }
+  public toggleType(value: boolean, type: PuzzleType, updateQuery?: boolean) {
     if (value) {
       debug(`Add: ${PuzzleType[type]}`);
       this.puzzleTypes.add(type);
     } else {
       debug(`Remove: ${PuzzleType[type]}`);
       this.puzzleTypes.delete(type);
+    }
+
+    if (updateQuery) {
+      const activeTypeCodes = this.getActivePuzzleCodes();
+      let queryParams: Params = { p: activeTypeCodes };
+      if (this.puzzleTypes.size === Object.keys(PuzzleType).length / 2) {
+        queryParams = {};
+      }
+
+      this.symbols.set(this.getActivePuzzleSymbols());
+
+      this.titleService.setTitle(
+        'Number Munchers Reborn - ' +
+          [...this.puzzleTypes.values()].map((p) => PuzzleType[p]).join(', '),
+      );
+
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams,
+      });
     }
   }
 
@@ -292,7 +449,11 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   }
 
   public getAvatarSizeClass(idxr: number, idxc: number): string {
-    if (this.isActive(idxr, idxc) && this.hasMertin(idxr, idxc) || this.activePuzzle().type === PuzzleType.ADDITION || this.activePuzzle().type === PuzzleType.SUBTRACTION) {
+    if (
+      (this.isActive(idxr, idxc) && this.hasMertin(idxr, idxc)) ||
+      this.activePuzzle().type === PuzzleType.Addition ||
+      this.activePuzzle().type === PuzzleType.Subtraction
+    ) {
       return 'double';
     }
     return 'single';
@@ -565,7 +726,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
           debug(StringResources.PERFECT_SCORE);
           const jsConfetti = new JSConfetti();
           jsConfetti.addConfetti();
-          this.winStreak.set(this.winStreak() +1);
+          this.winStreak.set(this.winStreak() + 1);
           if (this.winStreak() > this.highScore()) {
             this.highScore.set(this.winStreak());
           }

@@ -69,9 +69,9 @@
             [ngClass]="getAvatarSizeClass(idxr, idxc)" [src]="getMertinImage()" />
         </div>
       </div>
-      <div class="container footer" (click)="toggleScore()">
+      <div class="footer" (click)="toggleScore()">
         @if (showScore()) {
-       <span>Current streak: {{winStreak()}}, High score:  {{highScore()}} </span>
+        <span> Streak: {{winStreak()}}, High score: {{highScore()}} {{symbols()}}  </span>
         } @else {
         <p class="version">||{{getVersion()}}||</p>
         }
@@ -88,50 +88,57 @@
       <div class="choice-menu">
         <div class="choice-group form-check">
           <input class="checkbox-wide highlighted" id="cbGlt" [disabled]="isCheckboxDisabled(glt)" [(ngModel)]="glt"
-            (change)="toggleType(glt, puzzleType.GREATER_LESS_THAN)" type="checkbox" />
+            (change)="toggleType(glt, puzzleType.Greater_or_less_than, true)" type="checkbox" />
           <label for="cbGlt">Greater or Less Than</label>
-        </div>
-        <div class="choice-group">
-          <input class="checkbox-wide highlighted" id="cbMult" [disabled]="isCheckboxDisabled(multiplication)"
-            [(ngModel)]="multiplication" (change)="toggleType(multiplication, puzzleType.MULTIPLICATION)"
-            type="checkbox" />
-          <label for="cbMult">Multiplication</label>
-        </div>
-        <div class="choice-group">
-          <input class="checkbox-wide highlighted" id="cbDiv" [disabled]="isCheckboxDisabled(division)"
-            [(ngModel)]="division" (change)="toggleType(division, puzzleType.DIVISION)" type="checkbox" />
-          <label for="cbDiv">Division</label>
-        </div>
-
-        <div class="choice-group">
-          <input class="checkbox-wide highlighted" id="cbExponents" [disabled]="isCheckboxDisabled(exponents)"
-            [(ngModel)]="exponents" (change)="toggleType(exponents, puzzleType.EXPONENTS)" type="checkbox" />
-          <label for="cbExponents">Exponents</label>
-        </div>
-
-        <div class="choice-group">
-          <input class="checkbox-wide highlighted" id="cbMisc" [disabled]="isCheckboxDisabled(misc)" [(ngModel)]="misc"
-            (change)="toggleType(misc, puzzleType.MISC)" type="checkbox" />
-          <label for="cbMisc">Miscellaneous</label>
-        </div>
-
-        <div class="choice-group">
-          <input class="checkbox-wide highlighted" id="cbFractions" [disabled]="isCheckboxDisabled(fractions)"
-            [(ngModel)]="fractions" (change)="toggleType(fractions, puzzleType.FRACTIONS)" type="checkbox" />
-          <label for="cbFractions">Fractions</label>
         </div>
 
         <div class="choice-group">
           <input class="checkbox-wide highlighted" id="cbAddition" [disabled]="isCheckboxDisabled(addition)"
-            [(ngModel)]="addition" (change)="toggleType(addition, puzzleType.ADDITION)" type="checkbox" />
+            [(ngModel)]="addition" (change)="toggleType(addition, puzzleType.Addition, true)" type="checkbox" />
           <label for="cbAddition">Addition</label>
         </div>
 
         <div class="choice-group">
           <input class="checkbox-wide highlighted" id="cbSubtraction" [disabled]="isCheckboxDisabled(subtraction)"
-            [(ngModel)]="subtraction" (change)="toggleType(subtraction, puzzleType.SUBTRACTION)" type="checkbox" />
+            [(ngModel)]="subtraction" (change)="toggleType(subtraction, puzzleType.Subtraction, true)" type="checkbox" />
           <label for="cbSubtraction">Subtraction</label>
         </div>
+
+        <div class="choice-group">
+          <input class="checkbox-wide highlighted" id="cbMult" [disabled]="isCheckboxDisabled(multiplication)"
+            [(ngModel)]="multiplication" (change)="toggleType(multiplication, puzzleType.Multiplication, true)"
+            type="checkbox" />
+          <label for="cbMult">Multiplication</label>
+        </div>
+        <div class="choice-group">
+          <input class="checkbox-wide highlighted" id="cbDiv" [disabled]="isCheckboxDisabled(division)"
+            [(ngModel)]="division" (change)="toggleType(division, puzzleType.Division, true)" type="checkbox" />
+          <label for="cbDiv">Division</label>
+        </div>
+
+        <div class="choice-group">
+          <input class="checkbox-wide highlighted" id="cbFractions" [disabled]="isCheckboxDisabled(fractions)"
+            [(ngModel)]="fractions" (change)="toggleType(fractions, puzzleType.Fractions, true)" type="checkbox" />
+          <label for="cbFractions">Fractions</label>
+        </div>
+
+        <div class="choice-group">
+          <input class="checkbox-wide highlighted" id="cbExponents" [disabled]="isCheckboxDisabled(exponents)"
+            [(ngModel)]="exponents" (change)="toggleType(exponents, puzzleType.Exponents, true)" type="checkbox" />
+          <label for="cbExponents">Exponents</label>
+        </div>
+
+        <div class="choice-group">
+          <input class="checkbox-wide highlighted" id="cbMisc" [disabled]="isCheckboxDisabled(misc)" [(ngModel)]="misc"
+            (change)="toggleType(misc, puzzleType.Miscellaneous, true)" type="checkbox" />
+          <label for="cbMisc">Odds and Ends</label>
+        </div>
+
+        <p class="detail-content">
+          Puzzle type preference changes are encoded in the page's URL. Copy, text, bookmark, or post it to save a custom puzzle configuration.
+        </p>
+
+
 
 
 
@@ -190,11 +197,21 @@
           A whole number that, when multiplied by another whole number, is equal to another number. For example,
           3 is a factor of 6, since 3&times;2 is 6.
         </details>
-        
+
         <details>
           <summary>Equivalent fractions</summary>
-         Fractions that have the same value.  For example, <math><mfrac><mn>1</mn><mn>2</mn></mfrac></math> is equivalent to
-         <math><mfrac><mn>2</mn><mn>4</mn></mfrac></math>
+          Fractions that have the same value. For example, <math>
+            <mfrac>
+              <mn>1</mn>
+              <mn>2</mn>
+            </mfrac>
+          </math> is equivalent to
+          <math>
+            <mfrac>
+              <mn>2</mn>
+              <mn>4</mn>
+            </mfrac>
+          </math>
         </details>
 
         <details>
@@ -202,7 +219,7 @@
           <p class="detail-content"> &gt; Greater than </p>
           <p class="detail-content"> &lt; Less than </p>
           <p class="detail-content"> &GreaterEqual; Greater than or equal to</p>
-          <p class="detail-content"> &le;  Less than or equal to</p>
+          <p class="detail-content"> &le; Less than or equal to</p>
           <p class="detail-content"> &NotEqual; Not equal to</p>
         </details>
 
@@ -210,7 +227,39 @@
       <p class="paragraph">Not all solutions are shown. For example, for "find factors of 21," you might find
         3, 7, 1, or 21, but not necessarily all of them.
       </p>
+      <div class="glossary">
+        <details>
+          <summary>Puzzle bookmark tip</summary>
 
+          
+          <p class="paragraph">You can pre-configure which puzzles are selected with a URL query string, which you can
+            then bookmark.
+            For example, <a
+              href="https://stevenvictor.net/number-munchers?p=asm">https://stevenvictor.net/number-munchers?p=asm</a>
+            automatically selects only "addition," "subtraction," and "multiplication" puzzles. Just place the characters
+            below in any order after <code>?p=</code>
+     
+            </p>
+
+          <ul>
+            <p class="detail-content"> <code>g - </code>greater or less than</p>
+            <p class="detail-content"> <code>a - </code>addition</p>
+            <p class="detail-content"> <code>s - </code>subtraction</p>
+            <p class="detail-content"> <code>m - </code>multiplication</p>
+            <p class="detail-content"> <code>d - </code>division</p>
+            <p class="detail-content"> <code>f - </code>fractions</p>
+            <p class="detail-content"> <code>e - </code>exponents</p>
+            <p class="detail-content"> <code>o - </code>odds and ends / miscellaneous</p>
+          </ul>
+
+          <p class="paragraph">
+            You may also notice that the query string in the URL bar is updated when you manually change the active puzzle types
+            in the puzzle type dialog.  Find a configuration you like, and text the link to a friend or post on social media
+            to share your favorite puzzle types.
+        </p>
+
+        </details>
+      </div>
       <h1>Cast of Characters</h1>
       <div class="glossary">
         <details>
@@ -235,7 +284,13 @@
       <div class="glossary">
         <details>
           <summary>What is your philosophy?</summary>
-          No ads, no logins, no cookies, no downloads -- just content.
+          <i>No ads, no logins, no cookies, no downloads -- just content.</i> I'd rather make websites that have a low
+          barrier to entry
+          than develop an app you need to download or install. I like to avoid any complications with logins or anything
+          that collects personal information,
+          so we can both just focus on the content. Finally, I try to be mobile and multi-platform friendly with most
+          modern browsers. In short,
+          I develop content I'd want my own children to access.
         </details>
         <details>
           <summary>What's next for Number Munchers Reborn?</summary>
@@ -252,14 +307,14 @@
       </div>
 
       <hr />
-      
-     <ul>
-        <li class="credits">Steven Mycynek 2024 | 
+
+      <ul>
+        <li class="credits">Steven Mycynek 2024 |
           <a href="mailto:sv@stevenvictor.net?subject=Number Munchers Reborn info">sv&#64;stevenvictor.net</a> |
-          <a href="https://github.com/smycynek/number-munchers-reborn">Source</a> | 
+          <a href="https://github.com/smycynek/number-munchers-reborn">Source</a> |
           v{{getVersion()}}
       </ul>
-        
+
 
 
 
