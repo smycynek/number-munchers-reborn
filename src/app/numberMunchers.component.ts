@@ -35,6 +35,7 @@ import {
   mertinDelay,
   mertinInterval,
   multSymbol,
+  rootSymbol,
 } from './constants';
 import { ActivatedRoute, Params, Router, RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -60,6 +61,7 @@ const allPuzzles = new Set<PuzzleType>([
   PuzzleType.Addition,
   PuzzleType.Subtraction,
   PuzzleType.Exponents,
+  PuzzleType.Roots,
 ]);
 
 const puzzleCodes: Map<PuzzleType, string> = new Map([
@@ -71,6 +73,7 @@ const puzzleCodes: Map<PuzzleType, string> = new Map([
   [PuzzleType.Addition, 'a'],
   [PuzzleType.Subtraction, 's'],
   [PuzzleType.Greater_or_less_than, 'g'],
+  [PuzzleType.Roots, 'r'],
 ]);
 
 const puzzleSymbols: Map<PuzzleType, string> = new Map([
@@ -82,6 +85,7 @@ const puzzleSymbols: Map<PuzzleType, string> = new Map([
   [PuzzleType.Addition, '+'],
   [PuzzleType.Subtraction, '-'],
   [PuzzleType.Greater_or_less_than, greaterEqual],
+  [PuzzleType.Roots, rootSymbol],
 ]);
 
 @Component({
@@ -202,6 +206,16 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
       ? this.puzzleTypes.add(PuzzleType.Exponents)
       : this.puzzleTypes.delete(PuzzleType.Exponents);
   }
+
+  public get roots(): boolean {
+    return this.puzzleTypes.has(PuzzleType.Roots);
+  }
+  public set roots(val: boolean) {
+    val
+      ? this.puzzleTypes.add(PuzzleType.Roots)
+      : this.puzzleTypes.delete(PuzzleType.Roots);
+  }
+
   public readonly highScore: WritableSignal<number> = signal(0);
   public readonly winStreak: WritableSignal<number> = signal(0);
   public readonly showScore: WritableSignal<boolean> = signal(true);
@@ -220,7 +234,6 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     this.route.queryParams.subscribe((params) => {
       debug(params.toString());
     });
-
     this.puzzleTypes = allPuzzles;
     this.init();
     this.timerInit();
@@ -242,7 +255,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
 
   private setQueryOptions(queryString: string) {
     const queryLc = queryString?.toLowerCase();
-    if (!queryLc || queryLc.search('/|m|a|s|d|e|f|o|g|/') === -1) {
+    if (!queryLc || queryLc.search('/|m|a|s|d|e|f|o|g|r|/') === -1) {
       return;
     }
     this.toggleType(queryLc.includes('m'), PuzzleType.Multiplication);
@@ -253,6 +266,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     this.toggleType(queryLc.includes('f'), PuzzleType.Fractions);
     this.toggleType(queryLc.includes('o'), PuzzleType.Miscellaneous);
     this.toggleType(queryLc.includes('g'), PuzzleType.Greater_or_less_than);
+    this.toggleType(queryLc.includes('r'), PuzzleType.Roots);
   }
 
   /* Init */
@@ -452,7 +466,8 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     if (
       (this.isActive(idxr, idxc) && this.hasMertin(idxr, idxc)) ||
       this.activePuzzle().type === PuzzleType.Addition ||
-      this.activePuzzle().type === PuzzleType.Subtraction
+      this.activePuzzle().type === PuzzleType.Subtraction ||
+      this.activePuzzle().type === PuzzleType.Roots
     ) {
       return 'double';
     }

@@ -6,6 +6,7 @@ import {
   ExpressionTypes,
   MixedNumberExpressionData,
   MultiplicationExpressionData,
+  RootExpressionData,
   SubtractionExpressionData,
 } from '../math-components/expression-data/expressionData';
 import { dataUpperBound } from './constants';
@@ -13,6 +14,8 @@ import { isBetween, isOutsideExclusive, isPerfectSquare } from './predicates';
 import {
   getAllExponentPairs,
   getAllExponentValues,
+  getAllRootValues,
+  getAllRootPairs,
   getRandomItemFromSetAndRemove,
   getValidFactors,
 } from './sampleRandomValues';
@@ -41,6 +44,15 @@ export function getExponentTargets(): number[] {
   numbers.push(getRandomItemFromSetAndRemove(exponents));
   numbers.push(getRandomItemFromSetAndRemove(exponents));
   numbers.push(getRandomItemFromSetAndRemove(exponents));
+  return numbers;
+}
+
+export function getRootTargets(): number[] {
+  const roots = getAllRootValues();
+  const numbers = [];
+  numbers.push(getRandomItemFromSetAndRemove(roots));
+  numbers.push(getRandomItemFromSetAndRemove(roots));
+  numbers.push(getRandomItemFromSetAndRemove(roots));
   return numbers;
 }
 
@@ -249,6 +261,22 @@ export function getValidExponentPairs(
     ),
   );
 }
+
+export function getValidRootPairs(
+  targets: number[],
+): Set<RootExpressionData> {
+  const allPairs = getAllRootPairs();
+  return new Set<RootExpressionData>(
+    [...allPairs].filter(
+      (pair) =>
+        pair.value === targets[0] ||
+        pair.value === targets[1] ||
+        pair.value === targets[2],
+    ),
+  );
+}
+
+
 
 export function toExpressionDataSet(values: Set<number>): Set<ExpressionTypes> {
   return new Set<ExpressionData>(

@@ -120,6 +120,18 @@ export class DivisionExpressionData extends ExpressionData {
   }
 }
 
+function fracPart(value: number): number {
+  return value - Math.trunc(value);
+}
+
+function roundIf(value: number) {
+  const fraction = fracPart(value)
+  if (fraction < .01 || fraction > .99) {
+    return Math.round(value);
+  }
+  return value;
+}
+
 export class ExponentExpressionData extends ExpressionData {
   public constructor(
     public base: number,
@@ -141,7 +153,7 @@ export class RootExpressionData extends ExpressionData {
     public displayOp = '',
     public displayRval = NaN,
   ) {
-    super(coefficient * Math.pow(radicand, 1 / index), RootExpressionName);
+    super(roundIf(coefficient * Math.pow(radicand, 1 / index)), RootExpressionName);
   }
 }
 

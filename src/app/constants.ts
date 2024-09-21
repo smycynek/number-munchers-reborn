@@ -15,3 +15,4 @@ export const lessEqual = '\u{2264}';
 export const multSymbol = '\u{00D7}';
 export const fracSymbol = '\u{00BD}';
 export const expSymbol = '\u{33a5}';
+export const rootSymbol = '\u{221A}';

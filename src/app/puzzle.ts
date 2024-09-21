@@ -34,6 +34,7 @@ import {
   getRandomSumPairs,
   getRandomDifferencePairs,
   getRandomExponentPairs,
+  getRandomRootPairs,
 } from './sampleRandomValues';
 
 import {
@@ -57,6 +58,8 @@ import {
   toExpressionDataSet,
   getValidExponentPairs,
   getExponentTargets,
+  getRootTargets,
+  getValidRootPairs,
 } from './sampleValidValues';
 import { OP_GTE } from '../math-components/expression-data/operators';
 
@@ -74,6 +77,7 @@ export enum PuzzleType {
   Addition,
   Subtraction,
   Exponents,
+  Roots,
 }
 
 export class Puzzle {
@@ -170,6 +174,7 @@ export class Puzzle {
     const randomAdditionTarget = getRandomNumberWithinRange(20, 99);
     const randomSubtractionTarget = getRandomNumberWithinRange(1, 80);
     const exponentTargets = getExponentTargets();
+    const rootTargets = getRootTargets();
 
     const perfectSquareSuccess = (cellValue: ExpressionData) => {
       return [
@@ -364,7 +369,7 @@ export class Puzzle {
       return sumDiffFailure(cellValue, randomSubtractionTarget);
     };
 
-    const expSuccess = (cellValue: ExpressionTypes) => {
+    const expRootSuccess = (cellValue: ExpressionTypes) => {
       return [toggleRValue(cellValue)];
     };
 
@@ -374,6 +379,16 @@ export class Puzzle {
         toggleRValue(cellValue),
         s(
           `Not ${exponentTargets[0]}, ${exponentTargets[1]}, or ${exponentTargets[2]} `,
+        ),
+      ];
+    };
+
+    const rootFailure = (cellValue: ExpressionTypes) => {
+      return [
+        s('Sorry, '),
+        toggleRValue(cellValue),
+        s(
+          `Not ${rootTargets[0]}, ${rootTargets[1]}, or ${rootTargets[2]} `,
         ),
       ];
     };
@@ -647,7 +662,7 @@ export class Puzzle {
             `Find exponents equal to ${exponentTargets[0]}, ${exponentTargets[1]}, or ${exponentTargets[2]}`,
           ),
         ],
-        expSuccess,
+        expRootSuccess,
         expFailure,
         () => getValidExponentPairs(exponentTargets),
         (count: number) => getRandomExponentPairs(count),
@@ -655,6 +670,27 @@ export class Puzzle {
         true,
         'Exponents',
       ),
+
+      new Puzzle(
+        (cellValue: ExpressionData) =>
+          cellValue.value === rootTargets[0] ||
+          cellValue.value === rootTargets[1] ||
+          cellValue.value === rootTargets[2],
+        dataUpperBound,
+        [
+          s(
+            `Find roots equal to ${rootTargets[0]}, ${rootTargets[1]}, or ${rootTargets[2]}`,
+          ),
+        ],
+        expRootSuccess,
+        rootFailure,
+        () => getValidRootPairs(rootTargets),
+        (count: number) => getRandomRootPairs(count),
+        PuzzleType.Roots,
+        true,
+        'Roots',
+      ),
+
     ];
   }
 }

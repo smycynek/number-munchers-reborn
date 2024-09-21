@@ -129,6 +129,12 @@
         </div>
 
         <div class="choice-group">
+          <input class="checkbox-wide highlighted" id="cbRoots" [disabled]="isCheckboxDisabled(roots)"
+            [(ngModel)]="roots" (change)="toggleType(roots, puzzleType.Roots, true)" type="checkbox" />
+          <label for="cbRoots">Roots</label>
+        </div>
+
+        <div class="choice-group">
           <input class="checkbox-wide highlighted" id="cbMisc" [disabled]="isCheckboxDisabled(misc)" [(ngModel)]="misc"
             (change)="toggleType(misc, puzzleType.Miscellaneous, true)" type="checkbox" />
           <label for="cbMisc">Odds and Ends</label>

@@ -21,6 +21,7 @@ import {
   ExponentExpressionData,
   MixedNumberExpressionData,
   MultiplicationExpressionData,
+  RootExpressionData,
   SubtractionExpressionData,
 } from '../math-components/expression-data/expressionData';
 
@@ -212,6 +213,36 @@ export function getAllExponentPairs(): Set<ExponentExpressionData> {
   return pairs;
 }
 
+export function getAllRootPairs(): Set<RootExpressionData> {
+  const pairs: Set<RootExpressionData> = new Set();
+  pairs.add(new RootExpressionData(1,2,4));
+  pairs.add(new RootExpressionData(1,2,9));
+  pairs.add(new RootExpressionData(1,2,16));
+  pairs.add(new RootExpressionData(1,2,25));
+  pairs.add(new RootExpressionData(1,2,36));
+  pairs.add(new RootExpressionData(1,2,49));
+  pairs.add(new RootExpressionData(1,2,64));
+  pairs.add(new RootExpressionData(1,2,81));
+  pairs.add(new RootExpressionData(1,2,100));
+  pairs.add(new RootExpressionData(1,3,8));
+  pairs.add(new RootExpressionData(1,3,27));
+  pairs.add(new RootExpressionData(1,3,64));
+  pairs.add(new RootExpressionData(1,3,125));
+  pairs.add(new RootExpressionData(1,3,216));
+  pairs.add(new RootExpressionData(1,4,81));
+  pairs.add(new RootExpressionData(1,4,256));
+  pairs.add(new RootExpressionData(1,5,32));
+  pairs.add(new RootExpressionData(1,6,64));
+  pairs.add(new RootExpressionData(1,7,128));
+  pairs.add(new RootExpressionData(1,8,256));
+  return pairs;
+}
+
+export function getAllRootValues(): Set<number> {
+  return new Set<number>([...getAllRootPairs()].map((exp) => exp.value));
+}
+
+
 export function getAllExponentValues(): Set<number> {
   return new Set<number>([...getAllExponentPairs()].map((exp) => exp.value));
 }
@@ -227,6 +258,19 @@ export function getRandomExponentPairs(
   }
   return returnSet;
 }
+
+export function getRandomRootPairs(
+  count: number,
+): Set<RootExpressionData> {
+  const pairs = getAllRootPairs();
+  const returnSet: Set<RootExpressionData> = new Set();
+
+  for (let idc = 0; idc !== count; idc++) {
+    returnSet.add(getRandomItemFromSetAndRemove(pairs));
+  }
+  return returnSet;
+}
+
 export function getRandomMultipleBase(): number {
   return getRandomNumberWithinRange(multipleLowerBound, multipleUpperBound);
 }
