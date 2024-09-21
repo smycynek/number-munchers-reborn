@@ -378,7 +378,7 @@ export class Puzzle {
         s('Sorry, '),
         toggleRValue(cellValue),
         s(
-          `Not ${exponentTargets[0]}, ${exponentTargets[1]}, or ${exponentTargets[2]} `,
+          `, not ${exponentTargets[0]}, ${exponentTargets[1]}, or ${exponentTargets[2]} `,
         ),
       ];
     };
@@ -388,7 +388,7 @@ export class Puzzle {
         s('Sorry, '),
         toggleRValue(cellValue),
         s(
-          `Not ${rootTargets[0]}, ${rootTargets[1]}, or ${rootTargets[2]} `,
+          `, not ${rootTargets[0]}, ${rootTargets[1]}, or ${rootTargets[2]} `,
         ),
       ];
     };
