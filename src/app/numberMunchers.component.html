@@ -71,7 +71,7 @@
       </div>
       <div class="footer" (click)="toggleScore()">
         @if (showScore()) {
-        <span> Streak: {{winStreak()}}, High score: {{highScore()}} {{symbols()}}  </span>
+        <span> Streak: {{winStreak()}}, High score: {{highScore()}} {{symbols()}} </span>
         } @else {
         <p class="version">||{{getVersion()}}||</p>
         }
@@ -100,7 +100,8 @@
 
         <div class="choice-group">
           <input class="checkbox-wide highlighted" id="cbSubtraction" [disabled]="isCheckboxDisabled(subtraction)"
-            [(ngModel)]="subtraction" (change)="toggleType(subtraction, puzzleType.Subtraction, true)" type="checkbox" />
+            [(ngModel)]="subtraction" (change)="toggleType(subtraction, puzzleType.Subtraction, true)"
+            type="checkbox" />
           <label for="cbSubtraction">Subtraction</label>
         </div>
 
@@ -141,7 +142,8 @@
         </div>
 
         <p class="detail-content">
-          Puzzle type preference changes are encoded in the page's URL. Copy, text, bookmark, or post it to save a custom puzzle configuration.
+          Puzzle type preference changes are encoded in the page's URL. Copy, text, bookmark, or post it to save a
+          custom puzzle configuration.
         </p>
 
 
@@ -237,15 +239,16 @@
         <details>
           <summary>Puzzle bookmark tip</summary>
 
-          
+
           <p class="paragraph">You can pre-configure which puzzles are selected with a URL query string, which you can
             then bookmark.
             For example, <a
               href="https://stevenvictor.net/number-munchers?p=asm">https://stevenvictor.net/number-munchers?p=asm</a>
-            automatically selects only "addition," "subtraction," and "multiplication" puzzles. Just place the characters
+            automatically selects only "addition," "subtraction," and "multiplication" puzzles. Just place the
+            characters
             below in any order after <code>?p=</code>
-     
-            </p>
+
+          </p>
 
           <ul>
             <p class="detail-content"> <code>g - </code>greater or less than</p>
@@ -255,14 +258,17 @@
             <p class="detail-content"> <code>d - </code>division</p>
             <p class="detail-content"> <code>f - </code>fractions</p>
             <p class="detail-content"> <code>e - </code>exponents</p>
+            <p class="detail-content"> <code>r - </code>roots</p>
             <p class="detail-content"> <code>o - </code>odds and ends / miscellaneous</p>
           </ul>
 
           <p class="paragraph">
-            You may also notice that the query string in the URL bar is updated when you manually change the active puzzle types
-            in the puzzle type dialog.  Find a configuration you like, and text the link to a friend or post on social media
+            You may also notice that the query string in the URL bar is updated when you manually change the active
+            puzzle types
+            in the puzzle type dialog. Find a configuration you like, and text the link to a friend or post on social
+            media
             to share your favorite puzzle types.
-        </p>
+          </p>
 
         </details>
       </div>
