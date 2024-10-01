@@ -348,6 +348,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     );
     return codes.sort((a, b) => a.localeCompare(b)).join('');
   }
+
   public toggleType(value: boolean, type: PuzzleType, updateQuery?: boolean) {
     if (value) {
       debug(`Add: ${PuzzleType[type]}`);
@@ -358,17 +359,16 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     }
 
     if (updateQuery) {
-      const activeTypeCodes = this.getActivePuzzleCodes();
-      let queryParams = activeTypeCodes;
+      let activeTypeCodes = this.getActivePuzzleCodes();
       if (this.puzzleTypes.size === Object.keys(PuzzleType).length / 2) {
-        queryParams = '';
+        activeTypeCodes = '';
       }
       this.symbols.set(this.getActivePuzzleSymbols());
       this.titleService.setTitle(
         'Number Munchers Reborn - ' +
           [...this.puzzleTypes.values()].map((p) => PuzzleType[p]).join(', '),
       );
-      this.updateUrl('p', queryParams);
+      this.updateUrl('p', activeTypeCodes);
     }
   }
 
@@ -377,16 +377,13 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   }
 
   private updateQueryString(param: string, value: string): string {
-     if (value) {
-      this.params[param] = value;
+     if (!value || value === '0' || value === 'true') {
+       delete this.params[param];
      }
-     else { delete this.params[param];
+     else {
+       this.params[param] = value;
      }
-      const paramStrings: string[] = [];
-      Object.keys(this.params).forEach((key: string) => {
-        paramStrings.push(key + '=' + this.params[key])
-      })
-      return paramStrings.join('&');
+     return new URLSearchParams(this.params).toString();
   }
 
   private params: {[key: string]: string} = {};
@@ -810,7 +807,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
 
   private setMertinOptions(mertinValue: string) {
     const mertinValueNumber = Number(mertinValue);
-    if (mertinValue && !isNaN(mertinValueNumber) && [1,2,3].includes(mertinValueNumber)) {
+    if ([1,2,3].includes(mertinValueNumber)) {
       if (this.speed === 0 ) {
         this.timerInit();
         this.speed = Number(mertinValue);
