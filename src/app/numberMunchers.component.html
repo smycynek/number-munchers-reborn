@@ -1,4 +1,4 @@
-<main id="keytarget" class="main disable-dbl-tap-zoom">
+cred<main id="keytarget" class="main disable-dbl-tap-zoom">
   <div class="content">
     <div class="container">
       <h1 class="header" (click)="toggleDebug()">{{title}}</h1>
@@ -240,14 +240,12 @@
           <summary>Puzzle bookmark tip</summary>
 
 
-          <p class="paragraph">You can pre-configure which puzzles are selected with a URL query string, which you can
-            then bookmark.
-            For example, <a
-              href="https://stevenvictor.net/number-munchers?p=asm">https://stevenvictor.net/number-munchers?p=asm</a>
-            automatically selects only "addition," "subtraction," and "multiplication" puzzles. Just place the
-            characters
-            below in any order after <code>?p=</code>
-
+  
+          <p class="paragraph">
+            You may notice that the query string in the URL bar is updated when you manually change the active
+            puzzle types in the puzzle type dialog (the <code>?p=</code> part). 
+            Find a configuration you like, and bookmark the link, text to a friend, 
+            or post on social media to share your favorite puzzle types.
           </p>
 
           <ul>
@@ -263,11 +261,7 @@
           </ul>
 
           <p class="paragraph">
-            You may also notice that the query string in the URL bar is updated when you manually change the active
-            puzzle types
-            in the puzzle type dialog. Find a configuration you like, and text the link to a friend or post on social
-            media
-            to share your favorite puzzle types.
+            Sound and Mertin-mode options are also saved in the url as query parameters.
           </p>
 
         </details>
