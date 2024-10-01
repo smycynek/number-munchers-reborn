@@ -7,7 +7,7 @@ import {
   WritableSignal,
   signal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChangeDetectorRef } from '@angular/core';
 import { DataCell } from './dataCell';
@@ -20,6 +20,7 @@ import {
   wrapDown,
   wrapUp,
 } from './utility';
+
 import { HostListener } from '@angular/core';
 import { SoundManager } from './soundManager';
 import { PositionManager } from './positionManager';
@@ -230,6 +231,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     private route: ActivatedRoute,
     private router: Router,
     private titleService: Title,
+    private location: Location
   ) {
     this.route.queryParams.subscribe((params) => {
       debug(params.toString());
@@ -237,8 +239,10 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     this.puzzleTypes = allPuzzles;
     this.init();
     this.timerInit();
-    route.queryParams.subscribe((p: Params) => {
-      this.setQueryOptions(p['p']);
+    route.queryParams.subscribe((params: Params) => {
+      this.setPuzzleOptions(params['p']);
+      this.setSoundOptions(params['s']);
+      this.setMertinOptions(params['m']);
       this.reset();
       this.init();
       this.timerInit();
@@ -253,20 +257,26 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     });
   }
 
-  private setQueryOptions(queryString: string) {
-    const queryLc = queryString?.toLowerCase();
-    if (!queryLc || queryLc.search('/|m|a|s|d|e|f|o|g|r|/') === -1) {
+  private setSoundOptions(soundOptionsString: string) {
+    if (soundOptionsString?.toLowerCase() === 'false') {
+      this.soundManager.toggleSound();
+    }
+  }
+
+  private setPuzzleOptions(puzzleString: string) {
+    const puzzleStringLc = puzzleString?.toLowerCase();
+    if (!puzzleStringLc || puzzleStringLc.search('/|m|a|s|d|e|f|o|g|r|/') === -1) {
       return;
     }
-    this.toggleType(queryLc.includes('m'), PuzzleType.Multiplication);
-    this.toggleType(queryLc.includes('a'), PuzzleType.Addition);
-    this.toggleType(queryLc.includes('s'), PuzzleType.Subtraction);
-    this.toggleType(queryLc.includes('d'), PuzzleType.Division);
-    this.toggleType(queryLc.includes('e'), PuzzleType.Exponents);
-    this.toggleType(queryLc.includes('f'), PuzzleType.Fractions);
-    this.toggleType(queryLc.includes('o'), PuzzleType.Miscellaneous);
-    this.toggleType(queryLc.includes('g'), PuzzleType.Greater_or_less_than);
-    this.toggleType(queryLc.includes('r'), PuzzleType.Roots);
+    this.toggleType(puzzleStringLc.includes('m'), PuzzleType.Multiplication);
+    this.toggleType(puzzleStringLc.includes('a'), PuzzleType.Addition);
+    this.toggleType(puzzleStringLc.includes('s'), PuzzleType.Subtraction);
+    this.toggleType(puzzleStringLc.includes('d'), PuzzleType.Division);
+    this.toggleType(puzzleStringLc.includes('e'), PuzzleType.Exponents);
+    this.toggleType(puzzleStringLc.includes('f'), PuzzleType.Fractions);
+    this.toggleType(puzzleStringLc.includes('o'), PuzzleType.Miscellaneous);
+    this.toggleType(puzzleStringLc.includes('g'), PuzzleType.Greater_or_less_than);
+    this.toggleType(puzzleStringLc.includes('r'), PuzzleType.Roots);
   }
 
   /* Init */
@@ -338,6 +348,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     );
     return codes.sort((a, b) => a.localeCompare(b)).join('');
   }
+
   public toggleType(value: boolean, type: PuzzleType, updateQuery?: boolean) {
     if (value) {
       debug(`Add: ${PuzzleType[type]}`);
@@ -348,26 +359,34 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     }
 
     if (updateQuery) {
-      const activeTypeCodes = this.getActivePuzzleCodes();
-      let queryParams: Params = { p: activeTypeCodes };
+      let activeTypeCodes = this.getActivePuzzleCodes();
       if (this.puzzleTypes.size === Object.keys(PuzzleType).length / 2) {
-        queryParams = {};
+        activeTypeCodes = '';
       }
-
       this.symbols.set(this.getActivePuzzleSymbols());
-
       this.titleService.setTitle(
         'Number Munchers Reborn - ' +
           [...this.puzzleTypes.values()].map((p) => PuzzleType[p]).join(', '),
       );
-
-      this.router.navigate([], {
-        relativeTo: this.route,
-        queryParams,
-      });
+      this.updateUrl('p', activeTypeCodes);
     }
   }
 
+  private updateUrl( param: string, value: string): void {
+    this.location.replaceState('/', this.updateQueryString(param, value))
+  }
+
+  private updateQueryString(param: string, value: string): string {
+     if (!value || value === '0' || value === 'true') {
+       delete this.params[param];
+     }
+     else {
+       this.params[param] = value;
+     }
+     return new URLSearchParams(this.params).toString();
+  }
+
+  private params: {[key: string]: string} = {};
   /* Game state */
 
   private reset() {
@@ -782,7 +801,18 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   public toggleSound(): void {
     this.soundManager.toggleSound();
     debug(`Sound: ${this.soundManager.getSoundOn()}`);
+    this.updateUrl('s', this.soundManager.getSoundOn().toString());
     this.btnSound.nativeElement.blur();
+  }
+
+  private setMertinOptions(mertinValue: string) {
+    const mertinValueNumber = Number(mertinValue);
+    if ([1,2,3].includes(mertinValueNumber)) {
+      if (this.speed === 0 ) {
+        this.timerInit();
+        this.speed = Number(mertinValue);
+      }
+    }
   }
 
   public toggleMertin(): void {
@@ -792,6 +822,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     } else {
       this.speed--;
     }
+    this.updateUrl('m', this.speed ? this.speed.toString() : '' );
     if (this.speed === 0) {
       this.positionManager.mertinIndex.set(-1);
     }

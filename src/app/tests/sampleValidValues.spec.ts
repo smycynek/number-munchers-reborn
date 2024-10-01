@@ -7,6 +7,7 @@ Eventualy, I'll add standalone unit tests that doesn't
 require ng test
 */
 
+import { ExponentExpressionData, MixedNumberExpressionData, RootExpressionData } from '../../math-components/expression-data/expressionData';
 import { getValidFactors, getFactorTargets } from '../sampleRandomValues';
 import { getNaturalNumberSet, getValidBetweenValues, getValidOutsideExclusiveValues, getValidMultiples } from '../sampleValidValues';
 
@@ -67,6 +68,27 @@ describe('PseudoUnitTests-SampleValidValues', () => {
         // Note, we do not include 1 and the number itself here
         const factorTargets_10 = getFactorTargets(10);
         expect(factorTargets_10.size).toEqual(5)
+    });
+
+    it('Fraction values should be evaluated', () => {
+        const exp1 = new MixedNumberExpressionData(0,2,3);
+        const exp2 = new MixedNumberExpressionData(1,3,4);
+        expect(exp1.value).toEqual(2/3);
+        expect(exp2.value).toEqual(1.75);
+    });
+
+    it('Exponent values should be evaluated', () => {
+        const exp1 = new ExponentExpressionData(2,3);
+        const exp2 = new ExponentExpressionData(3,4);
+        expect(exp1.value).toEqual(8);
+        expect(exp2.value).toEqual(81);
+    });
+
+    it('Root values should be evaluated', () => {
+        const exp1 = new RootExpressionData(1,2,64);
+        const exp2 = new RootExpressionData(1,4,81);
+        expect(exp1.value).toEqual(8);
+        expect(exp2.value).toEqual(3);
     });
 
 });
