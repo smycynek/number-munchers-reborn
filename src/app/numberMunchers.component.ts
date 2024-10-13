@@ -543,7 +543,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
       this.positionManager.activeRow(),
       this.positionManager.activeColumn(),
     );
-    if (data.valid && data.discovered) return 'assets/muncher-happy.png';
+    if (data.valid && data.discovered) return 'assets/muncher-happy-h.png';
     else if (!data.valid && data.discovered) {
       return 'assets/muncher-sad.png';
     } else {
