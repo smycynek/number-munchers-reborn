@@ -532,11 +532,11 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   }
 
   public getMertinImage(): string {
-    return 'assets/mertin.png';
+    return 'assets/mertin-tg.png';
   }
 
   public getMertinButtonImage(): string {
-    return `assets/mertin-${this.speed}.png`;
+    return `assets/mertin-tg-${this.speed}.png`;
   }
   public getAvatarImage(): string {
     const data = this.getCellData(
