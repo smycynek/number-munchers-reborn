@@ -52,6 +52,7 @@ import {
 } from '../math-components/expression-data/expressionData';
 import { version } from './version';
 import { Title } from '@angular/platform-browser';
+import { HeartComponent } from '../heart/heart.component';
 
 const allPuzzles = new Set<PuzzleType>([
   PuzzleType.Miscellaneous,
@@ -99,6 +100,7 @@ const puzzleSymbols: Map<PuzzleType, string> = new Map([
     FormsModule,
     MathExpressionComponent,
     MathSentenceComponent,
+    HeartComponent
   ],
   templateUrl: './numberMunchers.component.html',
   styleUrl: './less/numberMunchers.component.less',
