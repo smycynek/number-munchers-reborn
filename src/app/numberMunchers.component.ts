@@ -33,6 +33,7 @@ import {
   expSymbol,
   fracSymbol,
   greaterEqual,
+  holiday,
   mertinDelay,
   mertinInterval,
   multSymbol,
@@ -52,6 +53,7 @@ import {
 } from '../math-components/expression-data/expressionData';
 import { version } from './version';
 import { Title } from '@angular/platform-browser';
+import { HeartComponent } from '../heart/heart.component';
 
 const allPuzzles = new Set<PuzzleType>([
   PuzzleType.Miscellaneous,
@@ -99,6 +101,7 @@ const puzzleSymbols: Map<PuzzleType, string> = new Map([
     FormsModule,
     MathExpressionComponent,
     MathSentenceComponent,
+    HeartComponent
   ],
   templateUrl: './numberMunchers.component.html',
   styleUrl: './less/numberMunchers.component.less',
@@ -530,20 +533,23 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     });
     debug('---');
   }
-
+  
+  public getMunchyImage(): string {
+    return `assets/muncher${holiday}-happy.png`;
+  }
   public getMertinImage(): string {
-    return 'assets/mertin.png';
+    return `assets/mertin${holiday}.png`;
   }
 
   public getMertinButtonImage(): string {
-    return `assets/mertin-${this.speed}.png`;
+    return `assets/mertin${holiday}-${this.speed}.png`;
   }
   public getAvatarImage(): string {
     const data = this.getCellData(
       this.positionManager.activeRow(),
       this.positionManager.activeColumn(),
     );
-    if (data.valid && data.discovered) return 'assets/muncher-happy.png';
+    if (data.valid && data.discovered) return `assets/muncher${holiday}-happy.png`;
     else if (!data.valid && data.discovered) {
       return 'assets/muncher-sad.png';
     } else {

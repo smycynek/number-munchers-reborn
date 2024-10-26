@@ -16,3 +16,11 @@ export const multSymbol = '\u{00D7}';
 export const fracSymbol = '\u{00BD}';
 export const expSymbol = '\u{33a5}';
 export const rootSymbol = '\u{221A}';
+
+
+const halloween = "-hw";
+const thanksgiving = "-tg";
+const christmas = "-cx";
+const none = "";
+
+export const holiday=halloween;  // TODO, replace with config
