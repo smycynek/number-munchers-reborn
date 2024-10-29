@@ -541,8 +541,15 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     return `assets/mertin${holiday}.png`;
   }
 
+  public getMunchyImageStandard(): string {
+    return 'assets/muncher-happy.png';
+  }
+  public getMertinImageStandard(): string {
+    return 'assets/mertin.png';
+  }
+
   public getMertinButtonImage(): string {
-    return `assets/mertin${holiday}-${this.speed}.png`;
+    return `assets/mertin-${this.speed}.png`;
   }
   public getAvatarImage(): string {
     const data = this.getCellData(
