@@ -1,0 +1,2 @@
+source ./sitevars.sh
+source ./deploy.sh

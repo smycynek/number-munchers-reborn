@@ -1,7 +1,5 @@
 #! /bin/bash
 
-. ./sitevars.sh # Defined externally
-
 rm -rf dist # Remove old build
 
 # Bump version

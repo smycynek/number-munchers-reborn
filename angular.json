@@ -33,6 +33,12 @@
                 "glob": "**/*",
                 "input": "src/heart/assets",
                 "output": "assets"
+              },
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "src/config",
+                "output": "config"
               }
             ],
             "styles": [

@@ -33,7 +33,6 @@ import {
   expSymbol,
   fracSymbol,
   greaterEqual,
-  holiday,
   mertinDelay,
   mertinInterval,
   multSymbol,
@@ -54,6 +53,7 @@ import {
 import { version } from './version';
 import { Title } from '@angular/platform-browser';
 import { HeartComponent } from '../heart/heart.component';
+import { ConfigService } from '../configService';
 
 const allPuzzles = new Set<PuzzleType>([
   PuzzleType.Miscellaneous,
@@ -115,7 +115,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   @ViewChild('btnMertin') btnMertin!: ElementRef;
   @ViewChild('btnShowPuzzleTypes') btnShowPuzzleTypes!: ElementRef;
   @ViewChild('btnHelp') btnHelp!: ElementRef;
-
+  private holiday: string ='';
   public symbols: WritableSignal<string> = signal('');
 
   private puzzleTypes = allPuzzles;
@@ -234,11 +234,14 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     private route: ActivatedRoute,
     private router: Router,
     private titleService: Title,
-    private location: Location
+    private location: Location,
+    private configService: ConfigService,
   ) {
     this.route.queryParams.subscribe((params) => {
       debug(params.toString());
     });
+    this.holiday = configService.getConfig().holiday;
+    console.log('HOLIDAY: ' + this.holiday);
     this.puzzleTypes = allPuzzles;
     this.init();
     this.timerInit();
@@ -533,16 +536,16 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     });
     debug('---');
   }
-  
+
   public getMunchyImage(): string {
-    return `assets/muncher${holiday}-happy.png`;
+    return `assets/munchy${this.holiday}-happy.png`;
   }
   public getMertinImage(): string {
-    return `assets/mertin${holiday}.png`;
+    return `assets/mertin${this.holiday}.png`;
   }
 
   public getMunchyImageStandard(): string {
-    return 'assets/muncher-happy.png';
+    return 'assets/munchy-happy.png';
   }
   public getMertinImageStandard(): string {
     return 'assets/mertin.png';
@@ -556,11 +559,11 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
       this.positionManager.activeRow(),
       this.positionManager.activeColumn(),
     );
-    if (data.valid && data.discovered) return `assets/muncher${holiday}-happy.png`;
+    if (data.valid && data.discovered) return `assets/munchy${this.holiday}-happy.png`;
     else if (!data.valid && data.discovered) {
-      return 'assets/muncher-sad.png';
+      return 'assets/munchy-sad.png';
     } else {
-      return 'assets/muncher-neutral.png';
+      return 'assets/munchy-neutral.png';
     }
   }
 
