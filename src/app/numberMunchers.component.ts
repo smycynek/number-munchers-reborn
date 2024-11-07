@@ -38,7 +38,7 @@ import {
   multSymbol,
   rootSymbol,
 } from './constants';
-import { ActivatedRoute, Params, Router, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Params, RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MathExpressionComponent } from '../math-components/math-expression/math-expression.component';
 import { MathSentenceComponent } from '../math-components/math-sentence/math-sentence.component';
@@ -54,6 +54,8 @@ import { version } from './version';
 import { Title } from '@angular/platform-browser';
 import { HeartComponent } from '../heart/heart.component';
 import { ConfigService } from '../configService';
+
+
 
 const allPuzzles = new Set<PuzzleType>([
   PuzzleType.Miscellaneous,
@@ -232,7 +234,6 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   constructor(
     private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
-    private router: Router,
     private titleService: Title,
     private location: Location,
     private configService: ConfigService,
@@ -240,8 +241,9 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     this.route.queryParams.subscribe((params) => {
       debug(params.toString());
     });
-    this.holiday = configService.getConfig().holiday;
-    console.log('HOLIDAY: ' + this.holiday);
+    this.holiday = this.configService.getConfig().holiday;
+    debug('HOLIDAY: ' + this.holiday);
+    this.preload();
     this.puzzleTypes = allPuzzles;
     this.init();
     this.timerInit();
@@ -261,6 +263,20 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
         );
       }
     });
+  }
+
+  private preload() {
+    const happy = new Image();
+    happy.src = this.getMunchyHappyImage();
+
+    const sad = new Image();
+    sad.src = this.getMunchyNeutralImage();
+
+    const neutral = new Image();
+    neutral.src = this.getMunchySadImage();
+
+    const mertin = new Image();
+    mertin.src = this.getMertinImage();
   }
 
   private setSoundOptions(soundOptionsString: string) {
@@ -538,32 +554,45 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   }
 
   public getMunchyImage(): string {
-    return `assets/munchy${this.holiday}-happy.png`;
+    return `assets/munchy${this.holiday}-happy.svg`;
   }
   public getMertinImage(): string {
-    return `assets/mertin${this.holiday}.png`;
+    return `assets/mertin${this.holiday}.svg`;
   }
 
   public getMunchyImageStandard(): string {
-    return 'assets/munchy-happy.png';
+    return 'assets/munchy-happy.svg';
   }
   public getMertinImageStandard(): string {
-    return 'assets/mertin.png';
+    return 'assets/mertin.svg';
   }
 
   public getMertinButtonImage(): string {
-    return `assets/mertin-${this.speed}.png`;
+    return `assets/mertin-${this.speed}.svg`;
   }
+
+  public getMunchyHappyImage(): string {
+    return `assets/munchy${this.holiday}-happy.svg`;
+  }
+
+  public getMunchySadImage(): string {
+    return 'assets/munchy-sad.svg';
+  }
+
+  public getMunchyNeutralImage(): string {
+    return 'assets/munchy-neutral.svg';
+  }
+
   public getAvatarImage(): string {
     const data = this.getCellData(
       this.positionManager.activeRow(),
       this.positionManager.activeColumn(),
     );
-    if (data.valid && data.discovered) return `assets/munchy${this.holiday}-happy.png`;
+    if (data.valid && data.discovered) return this.getMunchyHappyImage();
     else if (!data.valid && data.discovered) {
-      return 'assets/munchy-sad.png';
+      return this.getMunchySadImage();
     } else {
-      return 'assets/munchy-neutral.png';
+      return this.getMunchyNeutralImage();
     }
   }
 

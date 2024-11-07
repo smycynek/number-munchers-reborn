@@ -2,4 +2,6 @@
 if [ $# -eq 0 ]; then echo "usage: config hw | tg"; exit; fi
 if [ -z $SITE ]; then echo "no SITE"; exit; fi
 if [ -z $APP ]; then echo "no APP"; exit; fi
+
+echo "Config: $APP"
 scp src/config/config-$1.json $SITE:public_html/$APP/config/config.json

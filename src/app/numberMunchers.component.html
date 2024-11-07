@@ -1,4 +1,10 @@
 <main id="keytarget" class="main disable-dbl-tap-zoom">
+
+  <link rel="preload" href="assets/mertin-0.svg" as="image">
+  <link rel="preload" href="assets/mertin-1.svg" as="image">
+  <link rel="preload" href="assets/mertin-2.svg" as="image">
+  <link rel="preload" href="assets/mertin-3.svg" as="image">
+
   <div class="content">
     <div class="container">
       <h1 class="header" (click)="toggleDebug()">{{title}}</h1>
@@ -71,13 +77,15 @@
       </div>
       <div class="footer" (click)="toggleScore()">
         @if (showScore()) {
-
+<div>
           <span class="scoreLabel">Streak</span>
           <app-heart value={{winStreak()}}></app-heart>
           <span class="scoreLabel">High Score</span>
           <app-heart value={{highScore()}}></app-heart>
+        </div>
+        <div>
           <span>{{symbols()}}</span>
-
+        </div>
         } @else {
         <p class="version">||{{getVersion()}}||</p>
         }

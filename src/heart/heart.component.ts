@@ -10,4 +10,9 @@ import { Component, Input } from '@angular/core';
 export class HeartComponent {
     @Input()
     public value = '';
+
+    public format(val: string) {
+        return val.padStart(2, '0')
+       }
+
 }

@@ -1,2 +1,4 @@
 source ./sitevars_beta.sh
 source ./deploy.sh
+
+echo $APP

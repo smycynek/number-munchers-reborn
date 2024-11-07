@@ -22,7 +22,7 @@ mv dist/$FOLDER/browser dist/$FOLDER/$APP
 cd dist/$FOLDER
 
 # compress output
-zip -vr $APP.zip $APP
+zip -vr  $APP.zip $APP -x $APP/assets/preview-number-munchers.png
 
 # copy zip to site
 scp $APP.zip $SITE:public_html
