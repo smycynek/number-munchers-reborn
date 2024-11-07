@@ -55,8 +55,6 @@ import { Title } from '@angular/platform-browser';
 import { HeartComponent } from '../heart/heart.component';
 import { ConfigService } from '../configService';
 
-
-
 const allPuzzles = new Set<PuzzleType>([
   PuzzleType.Miscellaneous,
   PuzzleType.Multiplication,
@@ -103,7 +101,7 @@ const puzzleSymbols: Map<PuzzleType, string> = new Map([
     FormsModule,
     MathExpressionComponent,
     MathSentenceComponent,
-    HeartComponent
+    HeartComponent,
   ],
   templateUrl: './numberMunchers.component.html',
   styleUrl: './less/numberMunchers.component.less',
@@ -117,7 +115,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   @ViewChild('btnMertin') btnMertin!: ElementRef;
   @ViewChild('btnShowPuzzleTypes') btnShowPuzzleTypes!: ElementRef;
   @ViewChild('btnHelp') btnHelp!: ElementRef;
-  private holiday: string ='';
+  private holiday: string = '';
   public symbols: WritableSignal<string> = signal('');
 
   private puzzleTypes = allPuzzles;
@@ -238,22 +236,22 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     private location: Location,
     private configService: ConfigService,
   ) {
-    this.route.queryParams.subscribe((params) => {
-      debug(params.toString());
-    });
     this.holiday = this.configService.getConfig().holiday;
     debug('HOLIDAY: ' + this.holiday);
     this.preload();
     this.puzzleTypes = allPuzzles;
     this.init();
     this.timerInit();
-    route.queryParams.subscribe((params: Params) => {
+    this.route.queryParams.subscribe((params: Params) => {
       this.setPuzzleOptions(params['p']);
       this.setSoundOptions(params['s']);
       this.setMertinOptions(params['m']);
       this.reset();
       this.init();
       this.timerInit();
+      this.params['p'] = params['p'];
+      this.params['s'] = params['s'];
+      this.params['m'] = params['m'];
 
       this.symbols.set(this.getActivePuzzleSymbols());
       if (this.puzzleTypes.size !== Object.keys(PuzzleType).length / 2) {
@@ -287,7 +285,10 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
 
   private setPuzzleOptions(puzzleString: string) {
     const puzzleStringLc = puzzleString?.toLowerCase();
-    if (!puzzleStringLc || puzzleStringLc.search('/|m|a|s|d|e|f|o|g|r|/') === -1) {
+    if (
+      !puzzleStringLc ||
+      puzzleStringLc.search('/|m|a|s|d|e|f|o|g|r|/') === -1
+    ) {
       return;
     }
     this.toggleType(puzzleStringLc.includes('m'), PuzzleType.Multiplication);
@@ -297,7 +298,10 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     this.toggleType(puzzleStringLc.includes('e'), PuzzleType.Exponents);
     this.toggleType(puzzleStringLc.includes('f'), PuzzleType.Fractions);
     this.toggleType(puzzleStringLc.includes('o'), PuzzleType.Miscellaneous);
-    this.toggleType(puzzleStringLc.includes('g'), PuzzleType.Greater_or_less_than);
+    this.toggleType(
+      puzzleStringLc.includes('g'),
+      PuzzleType.Greater_or_less_than,
+    );
     this.toggleType(puzzleStringLc.includes('r'), PuzzleType.Roots);
   }
 
@@ -394,21 +398,29 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     }
   }
 
-  private updateUrl( param: string, value: string): void {
-    this.location.replaceState('/', this.updateQueryString(param, value))
+  private updateUrl(param: string, value: string): void {
+    this.location.replaceState('/', this.updateQueryString(param, value));
   }
 
   private updateQueryString(param: string, value: string): string {
-     if (!value || value === '0' || value === 'true') {
-       delete this.params[param];
-     }
-     else {
-       this.params[param] = value;
-     }
-     return new URLSearchParams(this.params).toString();
+    if (!value || value === '0' || value === 'true' || value === 'undefined') {
+      delete this.params[param];
+    } else {
+      this.params[param] = value;
+    }
+    if (!this.params['s']) {
+      delete this.params['s'];
+    }
+    if (!this.params['m']) {
+      delete this.params['m'];
+    }
+    if (!this.params['p']) {
+      delete this.params['p'];
+    }
+    return new URLSearchParams(this.params).toString();
   }
 
-  private params: {[key: string]: string} = {};
+  private params: Params = {};
   /* Game state */
 
   private reset() {
@@ -852,8 +864,8 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
 
   private setMertinOptions(mertinValue: string) {
     const mertinValueNumber = Number(mertinValue);
-    if ([1,2,3].includes(mertinValueNumber)) {
-      if (this.speed === 0 ) {
+    if ([1, 2, 3].includes(mertinValueNumber)) {
+      if (this.speed === 0) {
         this.timerInit();
         this.speed = Number(mertinValue);
       }
@@ -867,7 +879,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     } else {
       this.speed--;
     }
-    this.updateUrl('m', this.speed ? this.speed.toString() : '' );
+    this.updateUrl('m', this.speed ? this.speed.toString() : '');
     if (this.speed === 0) {
       this.positionManager.mertinIndex.set(-1);
     }

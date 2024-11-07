@@ -77,7 +77,7 @@
       </div>
       <div class="footer" (click)="toggleScore()">
         @if (showScore()) {
-<div>
+        <div>
           <span class="scoreLabel">Streak</span>
           <app-heart value={{winStreak()}}></app-heart>
           <span class="scoreLabel">High Score</span>
@@ -92,13 +92,16 @@
 
       </div>
 
-      
+
 
     </div>
 
   </div>
 
   <dialog class="dialog-base dialog-general dialog-narrow" typeDialog #puzzleTypeDialog closed>
+    <form method="dialog">
+      <button class="button-base button-cancel highlighted">X</button>
+    </form>
     <div>
       <h1>Puzzle Types</h1>
 
@@ -257,11 +260,11 @@
           <summary>Puzzle bookmark tip</summary>
 
 
-  
+
           <p class="paragraph">
             You may notice that the query string in the URL bar is updated when you manually change the active
-            puzzle types in the puzzle type dialog (the <code>?p=</code> part). 
-            Find a configuration you like, and bookmark the link, text to a friend, 
+            puzzle types in the puzzle type dialog (the <code>?p=</code> part).
+            Find a configuration you like, and bookmark the link, text to a friend,
             or post on social media to share your favorite puzzle types.
           </p>
 
