@@ -11,15 +11,8 @@ import { CommonModule, Location } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChangeDetectorRef } from '@angular/core';
 import { DataCell } from './dataCell';
-import { Puzzle, PuzzleType } from './puzzle';
-import {
-  debug,
-  hasTouch,
-  parseId,
-  toggleLog,
-  wrapDown,
-  wrapUp,
-} from './utility';
+import { Puzzle } from './puzzle';
+import { debug, hasTouch, parseId, toggleLog } from './utility';
 
 import { HostListener } from '@angular/core';
 import { SoundManager } from './soundManager';
@@ -28,16 +21,7 @@ import JSConfetti from 'js-confetti';
 import { StringResources } from './strings';
 import { Observable, Subscription, timer } from 'rxjs';
 import { getRandomItemFromSetAndRemove } from './sampleRandomValues';
-import {
-  divSymbol,
-  expSymbol,
-  fracSymbol,
-  greaterEqual,
-  mertinDelay,
-  mertinInterval,
-  multSymbol,
-  rootSymbol,
-} from './constants';
+import { mertinDelay, mertinInterval } from './constants';
 import { ActivatedRoute, Params, RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MathExpressionComponent } from '../math-components/math-expression/math-expression.component';
@@ -54,42 +38,14 @@ import { version } from './version';
 import { Title } from '@angular/platform-browser';
 import { HeartComponent } from '../heart/heart.component';
 import { ConfigService } from '../configService';
-
-const allPuzzles = new Set<PuzzleType>([
-  PuzzleType.Miscellaneous,
-  PuzzleType.Multiplication,
-  PuzzleType.Fractions,
-  PuzzleType.Division,
-  PuzzleType.Greater_or_less_than,
-  PuzzleType.Addition,
-  PuzzleType.Subtraction,
-  PuzzleType.Exponents,
-  PuzzleType.Roots,
-]);
-
-const puzzleCodes: Map<PuzzleType, string> = new Map([
-  [PuzzleType.Miscellaneous, 'o'],
-  [PuzzleType.Multiplication, 'm'],
-  [PuzzleType.Division, 'd'],
-  [PuzzleType.Exponents, 'e'],
-  [PuzzleType.Fractions, 'f'],
-  [PuzzleType.Addition, 'a'],
-  [PuzzleType.Subtraction, 's'],
-  [PuzzleType.Greater_or_less_than, 'g'],
-  [PuzzleType.Roots, 'r'],
-]);
-
-const puzzleSymbols: Map<PuzzleType, string> = new Map([
-  [PuzzleType.Miscellaneous, '?'],
-  [PuzzleType.Multiplication, multSymbol],
-  [PuzzleType.Division, divSymbol],
-  [PuzzleType.Exponents, expSymbol],
-  [PuzzleType.Fractions, fracSymbol],
-  [PuzzleType.Addition, '+'],
-  [PuzzleType.Subtraction, '-'],
-  [PuzzleType.Greater_or_less_than, greaterEqual],
-  [PuzzleType.Roots, rootSymbol],
-]);
+import {
+  allPuzzles,
+  puzzleCodes,
+  puzzleSymbols,
+  PuzzleType,
+  PuzzleTypeManager,
+} from './puzzleTypeManager';
+import { ImageManager } from './imageManager';
 
 @Component({
   selector: 'app-number-munchers',
@@ -115,110 +71,33 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   @ViewChild('btnMertin') btnMertin!: ElementRef;
   @ViewChild('btnShowPuzzleTypes') btnShowPuzzleTypes!: ElementRef;
   @ViewChild('btnHelp') btnHelp!: ElementRef;
-  private holiday: string = '';
+  public holiday: WritableSignal<string> = signal('');
   public symbols: WritableSignal<string> = signal('');
 
-  private puzzleTypes = allPuzzles;
   public readonly cellData: WritableSignal<DataCell[]> = signal([]);
   public readonly statusMessage: WritableSignal<string> = signal(
     StringResources.START,
   );
-  public statusMessageDetail: ExpressionTypes[] = [];
+  public statusMessageDetail: WritableSignal<ExpressionTypes[]> = signal([]);
   public readonly statusMessageClass: WritableSignal<string> =
     signal('status-default');
   public readonly activePuzzle: WritableSignal<Puzzle> = signal(
-    Puzzle.getRandomPuzzle(this.puzzleTypes),
+    Puzzle.getRandomPuzzle(allPuzzles),
   );
+  private params: Params = {};
   private soundManager: SoundManager = new SoundManager();
   private positionManager: PositionManager = new PositionManager();
-  public title: string = StringResources.TITLE;
+  public imageManager: ImageManager = new ImageManager();
+  public title: WritableSignal<string> = signal(StringResources.TITLE);
+
+  private settingsChanged: WritableSignal<boolean> = signal(false);
 
   private timer: Observable<number> = timer(
     mertinDelay * 1000,
     mertinInterval * 1000,
   );
-  private speed: number = 0;
-
-  public get multiplication(): boolean {
-    return this.puzzleTypes.has(PuzzleType.Multiplication);
-  }
-  public set multiplication(val: boolean) {
-    val
-      ? this.puzzleTypes.add(PuzzleType.Multiplication)
-      : this.puzzleTypes.delete(PuzzleType.Multiplication);
-  }
-
-  public get division(): boolean {
-    return this.puzzleTypes.has(PuzzleType.Division);
-  }
-  public set division(val: boolean) {
-    val
-      ? this.puzzleTypes.add(PuzzleType.Division)
-      : this.puzzleTypes.delete(PuzzleType.Division);
-  }
-
-  public get glt(): boolean {
-    return this.puzzleTypes.has(PuzzleType.Greater_or_less_than);
-  }
-  public set glt(val: boolean) {
-    val
-      ? this.puzzleTypes.add(PuzzleType.Greater_or_less_than)
-      : this.puzzleTypes.delete(PuzzleType.Greater_or_less_than);
-  }
-
-  public get misc(): boolean {
-    return this.puzzleTypes.has(PuzzleType.Miscellaneous);
-  }
-  public set misc(val: boolean) {
-    val
-      ? this.puzzleTypes.add(PuzzleType.Miscellaneous)
-      : this.puzzleTypes.delete(PuzzleType.Miscellaneous);
-  }
-
-  public get fractions(): boolean {
-    return this.puzzleTypes.has(PuzzleType.Fractions);
-  }
-  public set fractions(val: boolean) {
-    val
-      ? this.puzzleTypes.add(PuzzleType.Fractions)
-      : this.puzzleTypes.delete(PuzzleType.Fractions);
-  }
-
-  public get addition(): boolean {
-    return this.puzzleTypes.has(PuzzleType.Addition);
-  }
-  public set addition(val: boolean) {
-    val
-      ? this.puzzleTypes.add(PuzzleType.Addition)
-      : this.puzzleTypes.delete(PuzzleType.Addition);
-  }
-
-  public get subtraction(): boolean {
-    return this.puzzleTypes.has(PuzzleType.Subtraction);
-  }
-  public set subtraction(val: boolean) {
-    val
-      ? this.puzzleTypes.add(PuzzleType.Subtraction)
-      : this.puzzleTypes.delete(PuzzleType.Subtraction);
-  }
-
-  public get exponents(): boolean {
-    return this.puzzleTypes.has(PuzzleType.Exponents);
-  }
-  public set exponents(val: boolean) {
-    val
-      ? this.puzzleTypes.add(PuzzleType.Exponents)
-      : this.puzzleTypes.delete(PuzzleType.Exponents);
-  }
-
-  public get roots(): boolean {
-    return this.puzzleTypes.has(PuzzleType.Roots);
-  }
-  public set roots(val: boolean) {
-    val
-      ? this.puzzleTypes.add(PuzzleType.Roots)
-      : this.puzzleTypes.delete(PuzzleType.Roots);
-  }
+  public speed: WritableSignal<number> = signal(0);
+  public puzzleTypeManager: PuzzleTypeManager = new PuzzleTypeManager();
 
   public readonly highScore: WritableSignal<number> = signal(0);
   public readonly winStreak: WritableSignal<number> = signal(0);
@@ -236,10 +115,9 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     private location: Location,
     private configService: ConfigService,
   ) {
-    this.holiday = this.configService.getConfig().holiday;
-    debug('HOLIDAY: ' + this.holiday);
-    this.preload();
-    this.puzzleTypes = allPuzzles;
+    this.holiday.set(this.configService.getConfig().holiday);
+    debug('HOLIDAY: ' + this.holiday());
+    this.imageManager.preload(this.holiday());
     this.init();
     this.timerInit();
     this.route.queryParams.subscribe((params: Params) => {
@@ -254,55 +132,18 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
       this.params['m'] = params['m'];
 
       this.symbols.set(this.getActivePuzzleSymbols());
-      if (this.puzzleTypes.size !== Object.keys(PuzzleType).length / 2) {
+      if (
+        this.puzzleTypeManager.getPuzzleTypes().size !==
+        Object.keys(PuzzleType).length / 2
+      ) {
         this.titleService.setTitle(
           'Number Munchers Reborn - ' +
-            [...this.puzzleTypes.values()].map((p) => PuzzleType[p]).join(', '),
+            [...this.puzzleTypeManager.getPuzzleTypes().values()]
+              .map((p) => PuzzleType[p])
+              .join(', '),
         );
       }
     });
-  }
-
-  private preload() {
-    const happy = new Image();
-    happy.src = this.getMunchyHappyImage();
-
-    const sad = new Image();
-    sad.src = this.getMunchyNeutralImage();
-
-    const neutral = new Image();
-    neutral.src = this.getMunchySadImage();
-
-    const mertin = new Image();
-    mertin.src = this.getMertinImage();
-  }
-
-  private setSoundOptions(soundOptionsString: string) {
-    if (soundOptionsString?.toLowerCase() === 'false') {
-      this.soundManager.toggleSound();
-    }
-  }
-
-  private setPuzzleOptions(puzzleString: string) {
-    const puzzleStringLc = puzzleString?.toLowerCase();
-    if (
-      !puzzleStringLc ||
-      puzzleStringLc.search('/|m|a|s|d|e|f|o|g|r|/') === -1
-    ) {
-      return;
-    }
-    this.toggleType(puzzleStringLc.includes('m'), PuzzleType.Multiplication);
-    this.toggleType(puzzleStringLc.includes('a'), PuzzleType.Addition);
-    this.toggleType(puzzleStringLc.includes('s'), PuzzleType.Subtraction);
-    this.toggleType(puzzleStringLc.includes('d'), PuzzleType.Division);
-    this.toggleType(puzzleStringLc.includes('e'), PuzzleType.Exponents);
-    this.toggleType(puzzleStringLc.includes('f'), PuzzleType.Fractions);
-    this.toggleType(puzzleStringLc.includes('o'), PuzzleType.Miscellaneous);
-    this.toggleType(
-      puzzleStringLc.includes('g'),
-      PuzzleType.Greater_or_less_than,
-    );
-    this.toggleType(puzzleStringLc.includes('r'), PuzzleType.Roots);
   }
 
   /* Init */
@@ -321,10 +162,10 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     this.positionManager.mertinIndex.set(-1);
     this.timerSubscription = this.timer.subscribe((val) => {
       debug(`Pulse: ${val}`);
-      if (this.speed !== 0 && !this.noRemainingSolutions()) {
-        if (val % this.speed === 0) {
+      if (this.speed() !== 0 && !this.noRemainingSolutions()) {
+        if (val % this.speed() === 0) {
           debug(
-            `Reset square event: ${val}, Interval length: ${this.speed * mertinInterval}`,
+            `Reset square event: ${val}, Interval length: ${this.speed() * mertinInterval}`,
           );
           this.positionManager.mertinIndex.set(
             this.getRandomNonOccupiedIndex(),
@@ -338,7 +179,9 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
 
   private init() {
     if (!this.cellData().length) {
-      this.activePuzzle.set(Puzzle.getRandomPuzzle(this.puzzleTypes));
+      this.activePuzzle.set(
+        Puzzle.getRandomPuzzle(this.puzzleTypeManager.getPuzzleTypes()),
+      );
       debug(`Puzzle: ${this.activePuzzle().questionText}`);
       debug('Set up puzzle data:');
       this.cellData.set([
@@ -353,46 +196,52 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
       if (this.noRemainingSolutions()) {
         // should not happen
         this.statusMessage.set('No solutions, try a new game');
-        this.statusMessageDetail = [s('-')];
+        this.statusMessageDetail.set([s('-')]);
       }
     }
   }
 
   /* Options */
   public isCheckboxDisabled(val: boolean) {
-    if (val && this.puzzleTypes.size <= 1) return true;
+    if (val && this.puzzleTypeManager.getPuzzleTypes().size <= 1) return true;
     else return false;
   }
 
   private getActivePuzzleSymbols(): string {
-    return `(Puzzles: ${[...this.puzzleTypes.values()].map((p) => puzzleSymbols.get(p)).join('')})`;
+    return `(Puzzles: ${[...this.puzzleTypeManager.getPuzzleTypes().values()].map((p) => puzzleSymbols.get(p)).join('')})`;
   }
 
   private getActivePuzzleCodes(): string {
-    const codes: string[] = [...this.puzzleTypes.values()].map(
-      (p) => puzzleCodes.get(p) ?? '',
-    );
+    const codes: string[] = [
+      ...this.puzzleTypeManager.getPuzzleTypes().values(),
+    ].map((p) => puzzleCodes.get(p) ?? '');
     return codes.sort((a, b) => a.localeCompare(b)).join('');
   }
 
   public toggleType(value: boolean, type: PuzzleType, updateQuery?: boolean) {
+    this.settingsChanged.set(true);
     if (value) {
       debug(`Add: ${PuzzleType[type]}`);
-      this.puzzleTypes.add(type);
+      this.puzzleTypeManager.add(type);
     } else {
       debug(`Remove: ${PuzzleType[type]}`);
-      this.puzzleTypes.delete(type);
+      this.puzzleTypeManager.delete(type);
     }
 
     if (updateQuery) {
       let activeTypeCodes = this.getActivePuzzleCodes();
-      if (this.puzzleTypes.size === Object.keys(PuzzleType).length / 2) {
+      if (
+        this.puzzleTypeManager.getPuzzleTypes().size ===
+        Object.keys(PuzzleType).length / 2
+      ) {
         activeTypeCodes = '';
       }
       this.symbols.set(this.getActivePuzzleSymbols());
       this.titleService.setTitle(
         'Number Munchers Reborn - ' +
-          [...this.puzzleTypes.values()].map((p) => PuzzleType[p]).join(', '),
+          [...this.puzzleTypeManager.getPuzzleTypes().values()]
+            .map((p) => PuzzleType[p])
+            .join(', '),
       );
       this.updateUrl('p', activeTypeCodes);
     }
@@ -420,7 +269,75 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     return new URLSearchParams(this.params).toString();
   }
 
-  private params: Params = {};
+  private setMertinOptions(mertinValue: string) {
+    const mertinValueNumber = Number(mertinValue);
+    if ([1, 2, 3].includes(mertinValueNumber)) {
+      if (this.speed() === 0) {
+        this.timerInit();
+        this.speed.set(Number(mertinValue));
+      }
+    }
+  }
+
+  public toggleMertin(): void {
+    if (this.speed() === 0) {
+      this.timerInit();
+      this.speed.set(3);
+    } else {
+      this.speed.set(this.speed() - 1);
+    }
+    this.updateUrl('m', this.speed ? this.speed.toString() : '');
+    if (this.speed() === 0) {
+      this.positionManager.mertinIndex.set(-1);
+    }
+    debug(`Toggle/change interval length: ${this.speed() * mertinInterval}`);
+    this.btnMertin.nativeElement.blur();
+  }
+
+  private setPuzzleOptions(puzzleString: string) {
+    const puzzleStringLc = puzzleString?.toLowerCase();
+    if (
+      !puzzleStringLc ||
+      puzzleStringLc.search('/|m|a|s|d|e|f|o|g|r|/') === -1
+    ) {
+      return;
+    }
+    this.toggleType(puzzleStringLc.includes('m'), PuzzleType.Multiplication);
+    this.toggleType(puzzleStringLc.includes('a'), PuzzleType.Addition);
+    this.toggleType(puzzleStringLc.includes('s'), PuzzleType.Subtraction);
+    this.toggleType(puzzleStringLc.includes('d'), PuzzleType.Division);
+    this.toggleType(puzzleStringLc.includes('e'), PuzzleType.Exponents);
+    this.toggleType(puzzleStringLc.includes('f'), PuzzleType.Fractions);
+    this.toggleType(puzzleStringLc.includes('o'), PuzzleType.Miscellaneous);
+    this.toggleType(
+      puzzleStringLc.includes('g'),
+      PuzzleType.Greater_or_less_than,
+    );
+    this.toggleType(puzzleStringLc.includes('r'), PuzzleType.Roots);
+  }
+
+  public showPuzzleTypes(): void {
+    this.btnShowPuzzleTypes.nativeElement.blur();
+    this.puzzleTypeDialog.nativeElement.showModal();
+    console.log('Show puzzle types');
+  }
+
+  public toggleSound(): void {
+    this.soundManager.toggleSound();
+    debug(`Sound: ${this.soundManager.getSoundOn()}`);
+    this.updateUrl('s', this.soundManager.getSoundOn().toString());
+    this.btnSound.nativeElement.blur();
+  }
+
+  public toggleDebug(): void {
+    const logStatus = toggleLog();
+    console.log(`Logging: ${logStatus}`);
+  }
+
+  public toggleScore(): void {
+    this.showScore.set(!this.showScore());
+  }
+
   /* Game state */
 
   private reset() {
@@ -428,13 +345,16 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     this.positionManager.activeColumn.set(0);
     this.positionManager.mertinIndex.set(-1);
     this.statusMessage.set(StringResources.START);
-    this.statusMessageDetail = [s(StringResources.YOU_CAN_DO_IT)];
+    this.statusMessageDetail.set([s(StringResources.YOU_CAN_DO_IT)]);
     this.statusMessageClass.set('status-default');
     this.cellData.set([]);
   }
 
-  public getVersion(): number {
-    return version;
+  public closeSettings() {
+    if (this.settingsChanged()) {
+      this.newGame();
+      this.settingsChanged.set(false);
+    }
   }
 
   public newGame() {
@@ -565,46 +485,17 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     debug('---');
   }
 
-  public getMunchyImage(): string {
-    return `assets/munchy${this.holiday}-happy.svg`;
-  }
-  public getMertinImage(): string {
-    return `assets/mertin${this.holiday}.svg`;
-  }
-
-  public getMunchyImageStandard(): string {
-    return 'assets/munchy-happy.svg';
-  }
-  public getMertinImageStandard(): string {
-    return 'assets/mertin.svg';
-  }
-
-  public getMertinButtonImage(): string {
-    return `assets/mertin-${this.speed}.svg`;
-  }
-
-  public getMunchyHappyImage(): string {
-    return `assets/munchy${this.holiday}-happy.svg`;
-  }
-
-  public getMunchySadImage(): string {
-    return 'assets/munchy-sad.svg';
-  }
-
-  public getMunchyNeutralImage(): string {
-    return 'assets/munchy-neutral.svg';
-  }
-
   public getAvatarImage(): string {
     const data = this.getCellData(
       this.positionManager.activeRow(),
       this.positionManager.activeColumn(),
     );
-    if (data.valid && data.discovered) return this.getMunchyHappyImage();
+    if (data.valid && data.discovered)
+      return this.imageManager.getMunchyHappyImage(this.holiday());
     else if (!data.valid && data.discovered) {
-      return this.getMunchySadImage();
+      return this.imageManager.getMunchySadImage();
     } else {
-      return this.getMunchyNeutralImage();
+      return this.imageManager.getMunchyNeutralImage();
     }
   }
 
@@ -667,13 +558,13 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
     if (event.key == 'ArrowUp') {
-      this.down();
+      this.positionManager.down();
     } else if (event.key == 'ArrowDown') {
-      this.up();
+      this.positionManager.up();
     } else if (event.key === 'ArrowLeft') {
-      this.left();
+      this.positionManager.left();
     } else if (event.key === 'ArrowRight') {
-      this.right();
+      this.positionManager.right();
     } else if (event.key === ' ') {
       this.choiceAction();
     } else if (event.key.toUpperCase() === 'N') {
@@ -750,53 +641,12 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     this.choiceAction();
   }
 
-  private getPosition(): string {
-    return `${this.positionManager.activeRow()}, ${this.positionManager.activeColumn()}`;
-  }
-
-  private up() {
-    this.positionManager.activeRow.set(
-      wrapUp(this.positionManager.activeRow(), this.positionManager.rowCount()),
-    );
-    debug(`Up: ${this.getPosition()}`);
-  }
-
-  private down() {
-    this.positionManager.activeRow.set(
-      wrapDown(
-        this.positionManager.activeRow(),
-        this.positionManager.rowCount(),
-      ),
-    );
-    debug(`Down: ${this.getPosition()}`);
-  }
-
-  private left() {
-    this.positionManager.activeColumn.set(
-      wrapDown(
-        this.positionManager.activeColumn(),
-        this.positionManager.columnCount(),
-      ),
-    );
-    debug(`Left: ${this.getPosition()}`);
-  }
-
-  private right() {
-    this.positionManager.activeColumn.set(
-      wrapUp(
-        this.positionManager.activeColumn(),
-        this.positionManager.columnCount(),
-      ),
-    );
-    debug(`Right: ${this.getPosition()}`);
-  }
-
   /* Action */
   private choiceAction(): void {
     if (this.noRemainingSolutions()) {
       return;
     }
-    debug(`Choice: ${this.getPosition()}`);
+    debug(`Choice: ${this.positionManager.getPosition()}`);
     const data = this.getCellData(
       this.positionManager.activeRow(),
       this.positionManager.activeColumn(),
@@ -808,8 +658,8 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
         debug('Game Over');
         this.statusMessageClass.set('status-success');
         this.statusMessage.set(StringResources.FOUND_ALL);
-        this.statusMessageDetail = this.activePuzzle().successDetails(
-          data.expressionValue.clone(),
+        this.statusMessageDetail.set(
+          this.activePuzzle().successDetails(data.expressionValue.clone()),
         );
         if (this.perfectScore()) {
           this.soundManager.playWhooAndPerfectScore();
@@ -828,16 +678,16 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
       }
       this.soundManager.playYum();
       this.statusMessage.set(StringResources.CORRECT);
-      this.statusMessageDetail = this.activePuzzle().successDetails(
-        data.expressionValue.clone(),
+      this.statusMessageDetail.set(
+        this.activePuzzle().successDetails(data.expressionValue.clone()),
       );
       this.statusMessageClass.set('status-success');
     } else {
       this.soundManager.playYuck();
       this.winStreak.set(0);
       this.statusMessage.set(StringResources.INCORRECT);
-      this.statusMessageDetail = this.activePuzzle().errorDetails(
-        data.expressionValue.clone(),
+      this.statusMessageDetail.set(
+        this.activePuzzle().errorDetails(data.expressionValue.clone()),
       );
       this.statusMessageClass.set('status-error');
     }
@@ -851,60 +701,24 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   }
 
   /* Sound */
+  private setSoundOptions(soundOptionsString: string) {
+    if (soundOptionsString?.toLowerCase() === 'false') {
+      this.soundManager.toggleSound();
+    }
+  }
+
   public getSoundManager(): SoundManager {
     return this.soundManager;
   }
 
-  public toggleSound(): void {
-    this.soundManager.toggleSound();
-    debug(`Sound: ${this.soundManager.getSoundOn()}`);
-    this.updateUrl('s', this.soundManager.getSoundOn().toString());
-    this.btnSound.nativeElement.blur();
-  }
-
-  private setMertinOptions(mertinValue: string) {
-    const mertinValueNumber = Number(mertinValue);
-    if ([1, 2, 3].includes(mertinValueNumber)) {
-      if (this.speed === 0) {
-        this.timerInit();
-        this.speed = Number(mertinValue);
-      }
-    }
-  }
-
-  public toggleMertin(): void {
-    if (this.speed === 0) {
-      this.timerInit();
-      this.speed = 3;
-    } else {
-      this.speed--;
-    }
-    this.updateUrl('m', this.speed ? this.speed.toString() : '');
-    if (this.speed === 0) {
-      this.positionManager.mertinIndex.set(-1);
-    }
-    debug(`Toggle/change interval length: ${this.speed * mertinInterval}`);
-    this.btnMertin.nativeElement.blur();
-  }
-
-  public showPuzzleTypes(): void {
-    this.btnShowPuzzleTypes.nativeElement.blur();
-    this.puzzleTypeDialog.nativeElement.showModal();
-    console.log('Show puzzle types');
+  /* Other */
+  public getVersion(): number {
+    return version;
   }
 
   public showHelp(): void {
     this.btnHelp.nativeElement.blur();
     this.helpDialog.nativeElement.showModal();
     console.log('Show help');
-  }
-
-  public toggleDebug(): void {
-    const logStatus = toggleLog();
-    console.log(`Logging: ${logStatus}`);
-  }
-
-  public toggleScore(): void {
-    this.showScore.set(!this.showScore());
   }
 }

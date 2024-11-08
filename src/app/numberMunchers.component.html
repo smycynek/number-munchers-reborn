@@ -7,7 +7,7 @@
 
   <div class="content">
     <div class="container">
-      <h1 class="header" (click)="toggleDebug()">{{title}}</h1>
+      <h1 class="header" (click)="toggleDebug()">{{title()}}</h1>
       <div class="question-container">
         <app-math-sentence [dataArray]="activePuzzle().questionText"></app-math-sentence>
       </div>
@@ -36,7 +36,7 @@
 
       <button #btnMertin [disabled]="this.noRemainingSolutions()" class="btn imagebutton row-button highlighted"
         [ngClass]="getMertinButtonClass()" (click)="toggleMertin()">
-        <img alt="Mertin avatar" title="Set Mertin-mode speed" [src]="getMertinButtonImage()" width="40" width="40">
+        <img alt="Mertin avatar" title="Set Mertin-mode speed" [src]="imageManager.getMertinButtonImage(speed())" width="40" width="40">
       </button>
 
       <button #btnShowPuzzleTypes title="Select puzzle types" class="btn imagebutton row-button highlighted"
@@ -60,7 +60,7 @@
       <p class="bold" [ngClass]="statusMessageClass()">{{statusMessage()}}</p>
       <div class="details-container">
         <p class="message-detail" [ngClass]="statusMessageClass()">
-          <app-math-sentence [dataArray]="statusMessageDetail"></app-math-sentence>
+          <app-math-sentence [dataArray]="statusMessageDetail()"></app-math-sentence>
         </p>
       </div>
       <div *ngFor="let r of [].constructor(getPositionManager().rowCount()); index as idxr" class="row">
@@ -72,7 +72,7 @@
           <img alt="muncher avatar" id="i{{idxr}}{{idxc}}" *ngIf="isActive(idxr, idxc)"
             [ngClass]="getAvatarSizeClass(idxr, idxc)" [src]="getAvatarImage()" />
           <img alt="mertin avatar" id="i{{idxr}}{{idxc}}m" *ngIf="hasMertin(idxr, idxc)"
-            [ngClass]="getAvatarSizeClass(idxr, idxc)" [src]="getMertinImage()" />
+            [ngClass]="getAvatarSizeClass(idxr, idxc)" [src]="imageManager.getMertinImage(holiday())" />
         </div>
       </div>
       <div class="footer" (click)="toggleScore()">
@@ -89,75 +89,67 @@
         } @else {
         <p class="version">||{{getVersion()}}||</p>
         }
-
       </div>
-
-
-
     </div>
-
   </div>
 
   <dialog class="dialog-base dialog-general dialog-narrow" typeDialog #puzzleTypeDialog closed>
-    <form method="dialog">
-      <button class="button-base button-cancel highlighted">X</button>
-    </form>
     <div>
       <h1>Puzzle Types</h1>
 
       <div class="choice-menu">
         <div class="choice-group form-check">
-          <input class="checkbox-wide highlighted" id="cbGlt" [disabled]="isCheckboxDisabled(glt)" [(ngModel)]="glt"
-            (change)="toggleType(glt, puzzleType.Greater_or_less_than, true)" type="checkbox" />
+          <input class="checkbox-wide highlighted" id="cbGlt" [disabled]="isCheckboxDisabled(puzzleTypeManager.glt)" [(ngModel)]="puzzleTypeManager.glt"
+            (change)="toggleType(puzzleTypeManager.glt, puzzleType.Greater_or_less_than, true)" type="checkbox" />
           <label for="cbGlt">Greater or Less Than</label>
         </div>
 
         <div class="choice-group">
-          <input class="checkbox-wide highlighted" id="cbAddition" [disabled]="isCheckboxDisabled(addition)"
-            [(ngModel)]="addition" (change)="toggleType(addition, puzzleType.Addition, true)" type="checkbox" />
+          <input class="checkbox-wide highlighted" id="cbAddition" [disabled]="isCheckboxDisabled(puzzleTypeManager.addition)"
+            [(ngModel)]="puzzleTypeManager.addition" (change)="toggleType(puzzleTypeManager.addition, puzzleType.Addition, true)" type="checkbox" />
           <label for="cbAddition">Addition</label>
         </div>
 
         <div class="choice-group">
-          <input class="checkbox-wide highlighted" id="cbSubtraction" [disabled]="isCheckboxDisabled(subtraction)"
-            [(ngModel)]="subtraction" (change)="toggleType(subtraction, puzzleType.Subtraction, true)"
+          <input class="checkbox-wide highlighted" id="cbSubtraction" [disabled]="isCheckboxDisabled(puzzleTypeManager.subtraction)"
+            [(ngModel)]="puzzleTypeManager.subtraction" (change)="toggleType(puzzleTypeManager.subtraction, puzzleType.Subtraction, true)"
             type="checkbox" />
           <label for="cbSubtraction">Subtraction</label>
         </div>
 
         <div class="choice-group">
-          <input class="checkbox-wide highlighted" id="cbMult" [disabled]="isCheckboxDisabled(multiplication)"
-            [(ngModel)]="multiplication" (change)="toggleType(multiplication, puzzleType.Multiplication, true)"
+          <input class="checkbox-wide highlighted" id="cbMult" [disabled]="isCheckboxDisabled(puzzleTypeManager.multiplication)"
+            [(ngModel)]="puzzleTypeManager.multiplication" (change)="toggleType(puzzleTypeManager.multiplication, puzzleType.Multiplication, true)"
             type="checkbox" />
           <label for="cbMult">Multiplication</label>
         </div>
         <div class="choice-group">
-          <input class="checkbox-wide highlighted" id="cbDiv" [disabled]="isCheckboxDisabled(division)"
-            [(ngModel)]="division" (change)="toggleType(division, puzzleType.Division, true)" type="checkbox" />
+          <input class="checkbox-wide highlighted" id="cbDiv" [disabled]="isCheckboxDisabled(puzzleTypeManager.division)"
+            [(ngModel)]="puzzleTypeManager.division" (change)="toggleType(puzzleTypeManager.division, puzzleType.Division, true)" type="checkbox" />
           <label for="cbDiv">Division</label>
         </div>
 
         <div class="choice-group">
-          <input class="checkbox-wide highlighted" id="cbFractions" [disabled]="isCheckboxDisabled(fractions)"
-            [(ngModel)]="fractions" (change)="toggleType(fractions, puzzleType.Fractions, true)" type="checkbox" />
+          <input class="checkbox-wide highlighted" id="cbFractions" [disabled]="isCheckboxDisabled(puzzleTypeManager.fractions)"
+            [(ngModel)]="puzzleTypeManager.fractions" (change)="toggleType(puzzleTypeManager.fractions, puzzleType.Fractions, true)" type="checkbox" />
           <label for="cbFractions">Fractions</label>
         </div>
 
         <div class="choice-group">
-          <input class="checkbox-wide highlighted" id="cbExponents" [disabled]="isCheckboxDisabled(exponents)"
-            [(ngModel)]="exponents" (change)="toggleType(exponents, puzzleType.Exponents, true)" type="checkbox" />
+          <input class="checkbox-wide highlighted" id="cbExponents" [disabled]="isCheckboxDisabled(puzzleTypeManager.exponents)"
+            [(ngModel)]="puzzleTypeManager.exponents" (change)="toggleType(puzzleTypeManager.exponents, puzzleType.Exponents, true)" type="checkbox" />
           <label for="cbExponents">Exponents</label>
         </div>
 
         <div class="choice-group">
-          <input class="checkbox-wide highlighted" id="cbRoots" [disabled]="isCheckboxDisabled(roots)"
-            [(ngModel)]="roots" (change)="toggleType(roots, puzzleType.Roots, true)" type="checkbox" />
+          <input class="checkbox-wide highlighted" id="cbRoots" [disabled]="isCheckboxDisabled(puzzleTypeManager.roots)"
+            [(ngModel)]="puzzleTypeManager.roots" (change)="toggleType(puzzleTypeManager.roots, puzzleType.Roots, true)" type="checkbox" />
           <label for="cbRoots">Roots</label>
         </div>
 
         <div class="choice-group">
-          <input class="checkbox-wide highlighted" id="cbMisc" [disabled]="isCheckboxDisabled(misc)" [(ngModel)]="misc"
-            (change)="toggleType(misc, puzzleType.Miscellaneous, true)" type="checkbox" />
+          <input class="checkbox-wide highlighted" id="cbMisc" [disabled]="isCheckboxDisabled(puzzleTypeManager.misc)" [(ngModel)]="puzzleTypeManager.misc"
+            (change)="toggleType(puzzleTypeManager.misc, puzzleType.Miscellaneous, true)" type="checkbox" />
           <label for="cbMisc">Odds and Ends</label>
         </div>
 
@@ -174,7 +166,7 @@
 
     </div>
     <form method="dialog">
-      <button (click)="newGame()" class="button-base button-centered highlighted">OK</button>
+      <button (click)="closeSettings()" class="button-base button-centered highlighted">OK</button>
     </form>
   </dialog>
 
@@ -198,7 +190,7 @@
 
     <form method="dialog">
       <button class="button-base button-cancel highlighted">X</button>
-      <h1 class="centered">{{title}}</h1>
+      <h1 class="centered">{{title()}}</h1>
       <h2 class="centered">A math game</h2>
       <p class="paragraph">Number Munchers Reborn is a re-imagining of the classic 90s game.</p>
       <p class="paragraph">{{getGeneralInstructions()}}</p>
@@ -290,7 +282,7 @@
       <div class="glossary">
         <details>
           <summary>Munchy</summary>
-          <img style="display: block" alt="Number Munchers Logo" [src]="getMunchyImageStandard()" width="70" />
+          <img style="display: block" alt="Number Munchers Logo" [src]="imageManager.getMunchyImageStandard()" width="70" />
           Our hero, a curious frog who loves numbers and has very specific tastes (that vary each game) for the kinds of
           numbers he likes to eat. Note that you can select specific puzzle types to play by tapping the puzzle piece
           icon above the grid.
@@ -298,7 +290,7 @@
 
         <details>
           <summary>Mertin</summary>
-          <img style="display: block" alt="Mertin Logo" [src]="getMertinImageStandard()" width="70" />
+          <img style="display: block" alt="Mertin Logo" [src]="imageManager.getMertinImageStandard()" width="70" />
           A mischievous gremlin who likes to reset areas of the board according to his own design.
           Mertin-mode is off by default, with three speed levels for a challenge. Tap the "Mertin" icon above
           the grid for him to appear.
