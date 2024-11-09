@@ -1,5 +1,6 @@
 import {
   dataUpperBound,
+  dataUpperBound3,
   dataUpperBoundLow,
   greaterEqual,
   lessEqual,
@@ -172,6 +173,7 @@ export class Puzzle {
     const randomFactorTarget = getRandomFactorTarget(2);
     const randomFractionBase = getRandomFractionBase();
     const randomAdditionTarget = getRandomNumberWithinRange(20, 99);
+    const randomAdditionTarget3 = getRandomNumberWithinRange(200, 999);
     const randomSubtractionTarget = getRandomNumberWithinRange(1, 80);
     const exponentTargets = getExponentTargets();
     const rootTargets = getRootTargets();
@@ -631,15 +633,27 @@ export class Puzzle {
         sumDiffSuccess,
         sumFailure,
         () => getValidSumPairs(randomAdditionTarget),
-        (count: number) => getRandomSumPairs(count, randomAdditionTarget),
+        (count: number) => getRandomSumPairs(count, randomAdditionTarget, 2),
         PuzzleType.Addition,
         true,
         'Addition',
       ),
       new Puzzle(
+        (cellValue: ExpressionData) => cellValue.value === randomAdditionTarget3,
+        dataUpperBound3,
+        [s(`Find sums equal to ${randomAdditionTarget3}`)],
+        sumDiffSuccess,
+        sumFailure,
+        () => getValidSumPairs(randomAdditionTarget3),
+        (count: number) => getRandomSumPairs(count, randomAdditionTarget3, 3),
+        PuzzleType.Addition,
+        true,
+        'Addition 3-digit',
+      ),
+      new Puzzle(
         (cellValue: ExpressionData) =>
           cellValue.value === randomSubtractionTarget,
-        dataUpperBound,
+        dataUpperBound3,
         [s(`Find differences equal to ${randomSubtractionTarget}`)],
         sumDiffSuccess,
         diffFailure,

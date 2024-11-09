@@ -66,7 +66,7 @@ export function getRandomNumberWithinRange(
 
 // A narrower range used for > and <
 export function getRandomBetweenBounds() {
-  const bound1 = getRandomNumberWithinRange(0, dataUpperBound);
+  const bound1 = getRandomNumberWithinRange(0, dataUpperBound - boundOffsetMax - 2);
   const bound2 =
     bound1 + getRandomNumberWithinRange(boundoffsetMin, boundOffsetMax);
   return [bound1, bound2];
@@ -126,10 +126,30 @@ export function getRandomMultiplicationPairs(
 export function getRandomSumPairs(
   count: number,
   target: number,
+  digits: number,
 ): Set<AdditionExpressionData> {
+  let lower = 1;
+  let upper = 5;
+  let skip1 = 1;
+  let skip2 = 1;
+
+  if (digits === 2) {
+    lower *= 10;
+    upper *= 10;
+    skip1 *= 5;
+    skip2 *= 9;
+  }
+
+  if (digits === 3) {
+    lower *= 100;
+    upper *= 100;
+    skip1 *= 50;
+    skip2 *= 90;
+  }
+
   const valueSet: Set<AdditionExpressionData> = new Set();
-  for (let idx = 10; idx < 50; idx += 5) {
-    for (let idy = 10; idy < 50; idy += 9) {
+  for (let idx = lower; idx < upper; idx += skip1) {
+    for (let idy = lower; idy < upper; idy += skip2) {
       const pair = new AdditionExpressionData(idx, idy);
       if (!expressionDataSetHas(pair, valueSet)) {
         valueSet.add(pair);

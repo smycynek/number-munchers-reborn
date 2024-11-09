@@ -1,4 +1,5 @@
 export const dataUpperBound = 99;  // largest value a square can contain
+export const dataUpperBound3 = 999;  // largest value a square can contain
 export const dataUpperBoundLow = 20;
 export const puzzleRows = 4
 export const puzzleColumns = 3;

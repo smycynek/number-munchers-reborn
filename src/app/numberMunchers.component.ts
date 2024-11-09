@@ -182,7 +182,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
       this.activePuzzle.set(
         Puzzle.getRandomPuzzle(this.puzzleTypeManager.getPuzzleTypes()),
       );
-      debug(`Puzzle: ${this.activePuzzle().questionText}`);
+      debug(`Puzzle: ${PuzzleType[this.activePuzzle().type]}, ${this.activePuzzle().questionText[0].stringValue}`);
       debug('Set up puzzle data:');
       this.cellData.set([
         ...this.activePuzzle().generateCells(
@@ -195,6 +195,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
       debug('--');
       if (this.noRemainingSolutions()) {
         // should not happen
+        debug('No solutions')
         this.statusMessage.set('No solutions, try a new game');
         this.statusMessageDetail.set([s('-')]);
       }
