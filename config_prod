@@ -1,0 +1,5 @@
+#! /bin/bash
+
+source ./sitevars_prod.sh
+source ./config $1
+

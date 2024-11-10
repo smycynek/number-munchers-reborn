@@ -1,5 +1,6 @@
 #! /bin/bash
-if [ $# -eq 0 ]; then echo "usage: config hw | tg"; exit; fi
+
+if [ $# -eq 0 ]; then echo "usage: config hw | tg | cx | sp | id | va"; exit; fi
 if [ -z $SITE ]; then echo "no SITE"; exit; fi
 if [ -z $APP ]; then echo "no APP"; exit; fi
 

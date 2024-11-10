@@ -1,0 +1,4 @@
+#! /bin/bash
+
+source ./sitevars_beta.sh
+source ./config $1
