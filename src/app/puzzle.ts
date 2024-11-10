@@ -367,6 +367,10 @@ export class Puzzle {
       return sumDiffFailure(cellValue, randomAdditionTarget);
     };
 
+    const sumFailure3 = (cellValue: ExpressionTypes) => {
+      return sumDiffFailure(cellValue, randomAdditionTarget3);
+    };
+
     const diffFailure = (cellValue: ExpressionTypes) => {
       return sumDiffFailure(cellValue, randomSubtractionTarget);
     };
@@ -643,7 +647,7 @@ export class Puzzle {
         dataUpperBound3,
         [s(`Find sums equal to ${randomAdditionTarget3}`)],
         sumDiffSuccess,
-        sumFailure,
+        sumFailure3,
         () => getValidSumPairs(randomAdditionTarget3),
         (count: number) => getRandomSumPairs(count, randomAdditionTarget3, 3),
         PuzzleType.Addition,
