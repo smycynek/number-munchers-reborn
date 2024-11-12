@@ -287,7 +287,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     } else {
       this.speed.set(this.speed() - 1);
     }
-    this.updateUrl('m', this.speed ? this.speed.toString() : '');
+    this.updateUrl('m', this.speed() ? this.speed().toString() : '');
     if (this.speed() === 0) {
       this.positionManager.mertinIndex.set(-1);
     }
