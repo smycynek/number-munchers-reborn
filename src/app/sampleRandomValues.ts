@@ -66,7 +66,10 @@ export function getRandomNumberWithinRange(
 
 // A narrower range used for > and <
 export function getRandomBetweenBounds() {
-  const bound1 = getRandomNumberWithinRange(0, dataUpperBound - boundOffsetMax - 2);
+  const bound1 = getRandomNumberWithinRange(
+    0,
+    dataUpperBound - boundOffsetMax - 2,
+  );
   const bound2 =
     bound1 + getRandomNumberWithinRange(boundoffsetMin, boundOffsetMax);
   return [bound1, bound2];
@@ -175,8 +178,8 @@ export function getRandomDifferencePairs(
   target: number,
 ): Set<SubtractionExpressionData> {
   const valueSet: Set<SubtractionExpressionData> = new Set();
-  for (let idx = 99; idx > target; idx -= 5) {
-    for (let idy = 98; idy > 10; idy -= 6) {
+  for (let idx = dataUpperBound; idx > target; idx -= 5) {
+    for (let idy = dataUpperBound -1; idy > 10; idy -= 6) {
       const pair =
         idx > idy
           ? new SubtractionExpressionData(idx, idy)
@@ -235,33 +238,32 @@ export function getAllExponentPairs(): Set<ExponentExpressionData> {
 
 export function getAllRootPairs(): Set<RootExpressionData> {
   const pairs: Set<RootExpressionData> = new Set();
-  pairs.add(new RootExpressionData(1,2,4));
-  pairs.add(new RootExpressionData(1,2,9));
-  pairs.add(new RootExpressionData(1,2,16));
-  pairs.add(new RootExpressionData(1,2,25));
-  pairs.add(new RootExpressionData(1,2,36));
-  pairs.add(new RootExpressionData(1,2,49));
-  pairs.add(new RootExpressionData(1,2,64));
-  pairs.add(new RootExpressionData(1,2,81));
-  pairs.add(new RootExpressionData(1,2,100));
-  pairs.add(new RootExpressionData(1,3,8));
-  pairs.add(new RootExpressionData(1,3,27));
-  pairs.add(new RootExpressionData(1,3,64));
-  pairs.add(new RootExpressionData(1,3,125));
-  pairs.add(new RootExpressionData(1,3,216));
-  pairs.add(new RootExpressionData(1,4,81));
-  pairs.add(new RootExpressionData(1,4,256));
-  pairs.add(new RootExpressionData(1,5,32));
-  pairs.add(new RootExpressionData(1,6,64));
-  pairs.add(new RootExpressionData(1,7,128));
-  pairs.add(new RootExpressionData(1,8,256));
+  pairs.add(new RootExpressionData(1, 2, 4));
+  pairs.add(new RootExpressionData(1, 2, 9));
+  pairs.add(new RootExpressionData(1, 2, 16));
+  pairs.add(new RootExpressionData(1, 2, 25));
+  pairs.add(new RootExpressionData(1, 2, 36));
+  pairs.add(new RootExpressionData(1, 2, 49));
+  pairs.add(new RootExpressionData(1, 2, 64));
+  pairs.add(new RootExpressionData(1, 2, 81));
+  pairs.add(new RootExpressionData(1, 2, 100));
+  pairs.add(new RootExpressionData(1, 3, 8));
+  pairs.add(new RootExpressionData(1, 3, 27));
+  pairs.add(new RootExpressionData(1, 3, 64));
+  pairs.add(new RootExpressionData(1, 3, 125));
+  pairs.add(new RootExpressionData(1, 3, 216));
+  pairs.add(new RootExpressionData(1, 4, 81));
+  pairs.add(new RootExpressionData(1, 4, 256));
+  pairs.add(new RootExpressionData(1, 5, 32));
+  pairs.add(new RootExpressionData(1, 6, 64));
+  pairs.add(new RootExpressionData(1, 7, 128));
+  pairs.add(new RootExpressionData(1, 8, 256));
   return pairs;
 }
 
 export function getAllRootValues(): Set<number> {
   return new Set<number>([...getAllRootPairs()].map((exp) => exp.value));
 }
-
 
 export function getAllExponentValues(): Set<number> {
   return new Set<number>([...getAllExponentPairs()].map((exp) => exp.value));
@@ -279,9 +281,7 @@ export function getRandomExponentPairs(
   return returnSet;
 }
 
-export function getRandomRootPairs(
-  count: number,
-): Set<RootExpressionData> {
+export function getRandomRootPairs(count: number): Set<RootExpressionData> {
   const pairs = getAllRootPairs();
   const returnSet: Set<RootExpressionData> = new Set();
 

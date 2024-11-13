@@ -1,19 +1,17 @@
 export class ImageManager {
+  public preload(holiday: string) {
+    const happy = new Image();
+    happy.src = this.getMunchyHappyImage(holiday);
 
-public preload(holiday: string) {
-        const happy = new Image();
-        happy.src = this.getMunchyHappyImage(holiday);
+    const sad = new Image();
+    sad.src = this.getMunchyNeutralImage();
 
-        const sad = new Image();
-        sad.src = this.getMunchyNeutralImage();
+    const neutral = new Image();
+    neutral.src = this.getMunchySadImage();
 
-        const neutral = new Image();
-        neutral.src = this.getMunchySadImage();
-
-        const mertin = new Image();
-        mertin.src = this.getMertinImage(holiday);
-      }
-
+    const mertin = new Image();
+    mertin.src = this.getMertinImage(holiday);
+  }
 
   public getMunchyImage(holiday: string): string {
     return `assets/munchy${holiday}-happy.svg`;

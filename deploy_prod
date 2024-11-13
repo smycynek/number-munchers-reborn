@@ -1,4 +1,10 @@
-source ./sitevars.sh
-source ./deploy.sh
+#! /bin/bash
 
-echo $APP
+VARS=./sitevars.sh
+if [ -f $VARS ]; then
+    source $VARS
+    source ./deploy.sh
+    echo $APP $FOLDER $SITE
+else
+    echo $VARS not found.
+fi

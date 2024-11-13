@@ -1,5 +1,9 @@
 #! /bin/bash
 
-source ./sitevars.sh
-source ./config $1
-
+VARS=./sitevars.sh
+if [ -f $VARS ]; then
+    source $VARS
+    source ./config $1
+else
+    echo $VARS not found.
+fi

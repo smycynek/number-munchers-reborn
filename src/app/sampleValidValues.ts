@@ -228,7 +228,7 @@ export function getValidDifferencePairs(
   target: number,
 ): Set<SubtractionExpressionData> {
   const pairs: Set<SubtractionExpressionData> = new Set();
-  for (let upper = 99; upper != target; upper--) {
+  for (let upper = dataUpperBound; upper != target; upper--) {
     pairs.add(new SubtractionExpressionData(upper, upper - target));
   }
   return pairs;
@@ -262,9 +262,7 @@ export function getValidExponentPairs(
   );
 }
 
-export function getValidRootPairs(
-  targets: number[],
-): Set<RootExpressionData> {
+export function getValidRootPairs(targets: number[]): Set<RootExpressionData> {
   const allPairs = getAllRootPairs();
   return new Set<RootExpressionData>(
     [...allPairs].filter(
@@ -275,8 +273,6 @@ export function getValidRootPairs(
     ),
   );
 }
-
-
 
 export function toExpressionDataSet(values: Set<number>): Set<ExpressionTypes> {
   return new Set<ExpressionData>(

@@ -1,11 +1,26 @@
 #! /bin/bash
 
+tools=("zip" "scp" "ssh" "npm" "npx" "sed")
+
+for tool in "${tools[@]}"
+do
+  if which $tool > /dev/null; then
+        echo $tool ok
+     else
+        echo $tool not found
+        exit 3
+  fi
+done
+
+if [ -z $SITE ]; then echo "no SITE"; exit; fi
+if [ -z $APP ]; then echo "no APP"; exit; fi
+if [ -z $FOLDER ]; then echo "no FOLDER"; exit; fi
+
 rm -rf dist # Remove old build
 
 # Bump version
 VERSION_PATH="./src/app/version.ts"
 version=$(grep -o -m 1 "[0-9][0-9][0-9]" $VERSION_PATH)
-echo $version
 echo $version
 version_inc=$((version+1))
 echo $version_inc
@@ -32,3 +47,4 @@ export SHELL_COMMAND="cd public_html; rm -rf $APP;  unzip $APP.zip; exit; bash"
 echo $SHELL_COMMAND
 ssh -t $SITE $SHELL_COMMAND
 cd ../..
+echo $version_inc

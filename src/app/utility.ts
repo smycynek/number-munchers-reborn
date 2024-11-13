@@ -1,9 +1,5 @@
-
-
-
-
 export function hasTouch(): boolean {
-  return ('ontouchstart' in window);
+  return 'ontouchstart' in window;
 }
 
 export function wrapUp(value: number, max: number): number {
@@ -35,9 +31,12 @@ export function toggleLog(): boolean {
   return LOG;
 }
 
-export function debug(message: string) {
+export function debug(message: string, errorLevel: number = 0) {
   if (LOG) {
-    console.log(message)
+    console.log(message);
+  }
+  if (errorLevel) {
+    console.error(message);
   }
 }
 
@@ -57,6 +56,5 @@ export function format_and(items: number[]): string {
 }
 
 export function round3(value: number) {
-  return Math.round(value*1000)/1000;
+  return Math.round(value * 1000) / 1000;
 }
-

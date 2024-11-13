@@ -7,19 +7,18 @@ export interface MuncherConfig {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ConfigService {
-  private config: MuncherConfig = {'holiday': ''};
-  constructor(private http: HttpClient) { }
-  async loadConfig()  {
+  private config: MuncherConfig = { holiday: '' };
+  constructor(private http: HttpClient) {}
+  async loadConfig() {
     const result = this.http.get('config/config.json', {
       headers: {
         'Cache-Control': 'no-cache',
-      }
-     }
-    );
-    const config =  await firstValueFrom(result)
+      },
+    });
+    const config = await firstValueFrom(result);
     this.config = config as MuncherConfig;
   }
   getConfig(): MuncherConfig {

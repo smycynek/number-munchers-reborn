@@ -85,6 +85,4 @@ export class SoundManager {
   public toggleSound(): void {
     this.sound = !this.sound;
   }
-
-
 }

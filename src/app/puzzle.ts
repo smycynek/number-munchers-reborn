@@ -1,3 +1,4 @@
+/*
 import {
   dataUpperBound,
   dataUpperBound3,
@@ -64,7 +65,7 @@ import {
 } from './sampleValidValues';
 import { OP_GTE } from '../math-components/expression-data/operators';
 
-function toggleRValue(cellValue: ExpressionTypes): ExpressionTypes {
+export function toggleRValue(cellValue: ExpressionTypes): ExpressionTypes {
   cellValue.showRval = !cellValue.showRval;
   return cellValue;
 }
@@ -712,3 +713,6 @@ export class Puzzle {
     ];
   }
 }
+
+
+*/

@@ -11,7 +11,6 @@ import { CommonModule, Location } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChangeDetectorRef } from '@angular/core';
 import { DataCell } from './dataCell';
-import { Puzzle } from './puzzle';
 import { debug, hasTouch, parseId, toggleLog } from './utility';
 
 import { HostListener } from '@angular/core';
@@ -46,6 +45,8 @@ import {
   PuzzleTypeManager,
 } from './puzzleTypeManager';
 import { ImageManager } from './imageManager';
+import { getRandomPuzzle } from './puzzles/PuzzleBroker';
+import { Puzzle } from './puzzles/Puzzle';
 
 @Component({
   selector: 'app-number-munchers',
@@ -82,7 +83,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   public readonly statusMessageClass: WritableSignal<string> =
     signal('status-default');
   public readonly activePuzzle: WritableSignal<Puzzle> = signal(
-    Puzzle.getRandomPuzzle(allPuzzles),
+    getRandomPuzzle(allPuzzles),
   );
   private params: Params = {};
   private soundManager: SoundManager = new SoundManager();
@@ -180,9 +181,11 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   private init() {
     if (!this.cellData().length) {
       this.activePuzzle.set(
-        Puzzle.getRandomPuzzle(this.puzzleTypeManager.getPuzzleTypes()),
+        getRandomPuzzle(this.puzzleTypeManager.getPuzzleTypes()),
       );
-      debug(`Puzzle: ${PuzzleType[this.activePuzzle().type]}, ${this.activePuzzle().questionText[0].stringValue}`);
+      debug(
+        `Puzzle: ${PuzzleType[this.activePuzzle().type]}, ${this.activePuzzle().getQuestionText()[0].stringValue}`,
+      );
       debug('Set up puzzle data:');
       this.cellData.set([
         ...this.activePuzzle().generateCells(
@@ -195,7 +198,8 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
       debug('--');
       if (this.noRemainingSolutions()) {
         // should not happen
-        debug('No solutions')
+        debug('No solutions', 1);
+        debug(this.activePuzzle.name), 1;
         this.statusMessage.set('No solutions, try a new game');
         this.statusMessageDetail.set([s('-')]);
       }
@@ -473,10 +477,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
       newValue = this.activePuzzle().getValidSamples(); // insert valid choice
       debug('Adding correct answer:');
     } else {
-      newValue = this.activePuzzle().getRandomSamples(
-        1,
-        this.activePuzzle().maxValue,
-      );
+      newValue = this.activePuzzle().getRandomSamples(1);
       debug('Adding random answer');
     }
     this.cellData.update((data: DataCell[]) => {

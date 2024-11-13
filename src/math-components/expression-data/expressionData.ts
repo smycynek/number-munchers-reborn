@@ -1,5 +1,3 @@
-
-
 export const MixedNumberExpressionName = 'MixedNumberExpressionName';
 export const AdditionExpressionName = 'AdditionExpressionName';
 export const SubtractionExpressionName = 'SubtractionExpressionName';
@@ -35,7 +33,7 @@ export class ExpressionData {
     return `opType: ${this.opType}, value: ${this.value}`;
   }
   public getHashCode(): string {
-    return JSON.stringify(this);  // obviously not ideal
+    return JSON.stringify(this); // obviously not ideal
   }
   public clone(): ExpressionTypes {
     return { ...this };
@@ -125,8 +123,8 @@ function fracPart(value: number): number {
 }
 
 function roundIf(value: number) {
-  const fraction = fracPart(value)
-  if (fraction < .01 || fraction > .99) {
+  const fraction = fracPart(value);
+  if (fraction < 0.01 || fraction > 0.99) {
     return Math.round(value);
   }
   return value;
@@ -153,7 +151,10 @@ export class RootExpressionData extends ExpressionData {
     public displayOp = '',
     public displayRval = NaN,
   ) {
-    super(roundIf(coefficient * Math.pow(radicand, 1 / index)), RootExpressionName);
+    super(
+      roundIf(coefficient * Math.pow(radicand, 1 / index)),
+      RootExpressionName,
+    );
   }
 }
 
