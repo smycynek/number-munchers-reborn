@@ -1,6 +1,6 @@
 #! /bin/bash
 
-USAGE="config <prod | beta>"
+USAGE="config [prod | beta]"
 if [ -z "$1" ]; then
     echo "$USAGE"
     exit 1
