@@ -15,6 +15,11 @@ else
     exit 1
 fi
 
+if [ ! -f "$VARS" ]; then
+   echo "You must supply app environment variables in $VARS to deploy"
+   exit 2
+fi
+
 source "$VARS"
 
 if [ -z "$SITE" ]; then

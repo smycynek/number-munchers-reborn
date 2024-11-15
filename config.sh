@@ -17,15 +17,20 @@ if [ "$1" == "prod" ]; then
     VARS=./sitevars.sh # user-supplied vars for SITE and APP
 fi
 
+if [ ! -f "$VARS" ]; then
+   echo "You must supply app environment variables in $VARS to deploy."
+   exit 2
+fi
+
 source "$VARS"
 
 if [ -z "$SITE" ]; then
     echo "no SITE"
-    exit
+    exit 3
 fi
 if [ -z "$APP" ]; then
     echo "no APP"
-    exit
+    exit 3
 fi
 
 echo Config: "$APP"
