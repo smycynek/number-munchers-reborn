@@ -1,6 +1,6 @@
 import { Signal, WritableSignal, signal } from '@angular/core';
-import { puzzleRows, puzzleColumns } from './constants';
-import { wrapUp, debug, wrapDown } from './utility';
+import { puzzleRows, puzzleColumns } from '../constants';
+import { wrapUp, debug, wrapDown } from '../utility';
 
 export class PositionManager {
   public readonly rowCount: Signal<number> = signal(puzzleRows);

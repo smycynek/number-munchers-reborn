@@ -4,12 +4,12 @@ import {
   s,
 } from '../../../math-components/expression-data/expressionData';
 import { dataUpperBound } from '../../constants';
-import { isPrime } from '../../predicates';
+import { isPrime } from '../predicates';
 import {
   getRandomNaturalNumberSet,
   getValidFactors,
-} from '../../sampleRandomValues';
-import { toExpressionDataSet, getPrimes } from '../../sampleValidValues';
+} from '../sampleRandomValues';
+import { toExpressionDataSet, getPrimes } from '../sampleValidValues';
 import { format_and } from '../../utility';
 import { Puzzle, PuzzleType } from '../Puzzle';
 

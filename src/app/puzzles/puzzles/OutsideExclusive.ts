@@ -5,15 +5,15 @@ import {
   ExpressionData,
 } from '../../../math-components/expression-data/expressionData';
 import { dataUpperBound } from '../../constants';
-import { isOutsideExclusive } from '../../predicates';
+import { isOutsideExclusive } from '../predicates';
 import {
   getRandomBetweenBoundsWide,
   getRandomNaturalNumberSet,
-} from '../../sampleRandomValues';
+} from '../sampleRandomValues';
 import {
   toExpressionDataSet,
   getValidOutsideExclusiveValues,
-} from '../../sampleValidValues';
+} from '../sampleValidValues';
 import { Puzzle, PuzzleType } from '../Puzzle';
 
 export class OutsideExclusive extends Puzzle {

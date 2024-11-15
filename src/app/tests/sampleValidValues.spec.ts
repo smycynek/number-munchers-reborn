@@ -11,13 +11,13 @@ import {
   MixedNumberExpressionData,
   RootExpressionData,
 } from '../../math-components/expression-data/expressionData';
-import { getValidFactors, getFactorTargets } from '../sampleRandomValues';
+import { getValidFactors, getFactorTargets } from '../puzzles/sampleRandomValues';
 import {
   getNaturalNumberSet,
   getValidBetweenValues,
   getValidOutsideExclusiveValues,
   getValidMultiples,
-} from '../sampleValidValues';
+} from '../puzzles/sampleValidValues';
 
 describe('PseudoUnitTests-SampleValidValues', () => {
   it('getNaturalNumberSet gives valid natural numbers', () => {

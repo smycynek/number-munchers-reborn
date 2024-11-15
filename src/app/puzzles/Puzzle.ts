@@ -5,8 +5,8 @@ import {
 } from '../../math-components/expression-data/expressionData';
 import { maxReplacements } from '../constants';
 import { DataCell } from '../dataCell';
-import { getRandomItemFromSetAndRemove } from '../sampleRandomValues';
-import { expressionDataSetHas } from '../sampleValidValues';
+import { getRandomItemFromSetAndRemove } from './sampleRandomValues';
+import { expressionDataSetHas } from './sampleValidValues';
 import { debug } from '../utility';
 
 export function toggleRValue(cellValue: ExpressionTypes): ExpressionTypes {

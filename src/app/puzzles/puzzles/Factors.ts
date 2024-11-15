@@ -5,13 +5,13 @@ import {
   s,
 } from '../../../math-components/expression-data/expressionData';
 import { dataUpperBoundLow } from '../../constants';
-import { isFactor } from '../../predicates';
+import { isFactor } from '../predicates';
 import {
   getRandomFactorTarget,
   getRandomNaturalNumberSet,
   getValidFactors,
-} from '../../sampleRandomValues';
-import { toExpressionDataSet } from '../../sampleValidValues';
+} from '../sampleRandomValues';
+import { toExpressionDataSet } from '../sampleValidValues';
 import { Puzzle, PuzzleType } from '../Puzzle';
 
 export class Factors extends Puzzle {

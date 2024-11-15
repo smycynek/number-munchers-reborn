@@ -7,8 +7,8 @@ import {
 import {
   getRandomFactorTarget,
   getRandomMultiplicationPairs,
-} from '../../sampleRandomValues';
-import { getValidMultiplicationPairs } from '../../sampleValidValues';
+} from '../sampleRandomValues';
+import { getValidMultiplicationPairs } from '../sampleValidValues';
 import { Puzzle, PuzzleType, toggleRValue } from '../Puzzle';
 
 export class Multiplication extends Puzzle {

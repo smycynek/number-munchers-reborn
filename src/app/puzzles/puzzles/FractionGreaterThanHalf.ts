@@ -4,8 +4,8 @@ import {
   s,
 } from '../../../math-components/expression-data/expressionData';
 import { greaterEqual, oneHalf } from '../../constants';
-import { getRandomFractions } from '../../sampleRandomValues';
-import { getValidFractions } from '../../sampleValidValues';
+import { getRandomFractions } from '../sampleRandomValues';
+import { getValidFractions } from '../sampleValidValues';
 import { Puzzle, PuzzleType } from '../Puzzle';
 
 

@@ -8,9 +8,9 @@ import { dataUpperBound } from '../../constants';
 import {
   getRandomNumberWithinRange,
   getRandomSumPairs,
-} from '../../sampleRandomValues';
-import { getValidSumPairs } from '../../sampleValidValues';
+} from '../sampleRandomValues';
 import { Puzzle, PuzzleType, toggleRValue } from '../Puzzle';
+import { getValidSumPairs } from '../sampleValidValues';
 
 export class Addition extends Puzzle {
   public constructor(private digits: number = 2) {

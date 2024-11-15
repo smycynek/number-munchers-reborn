@@ -1,5 +1,5 @@
-import { PuzzleType } from '../puzzleTypeManager';
-import { getRandomNumberWithinRange } from '../sampleRandomValues';
+import { PuzzleType } from '../managers/puzzleTypeManager';
+import { getRandomNumberWithinRange } from './sampleRandomValues';
 import { Puzzle } from './Puzzle';
 import { Addition } from './puzzles/Addition';
 import { Between } from './puzzles/Between';

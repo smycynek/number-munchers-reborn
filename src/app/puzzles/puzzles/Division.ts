@@ -7,8 +7,8 @@ import {
 import {
   getRandomDivisionPairs,
   getRandomNumberWithinRange,
-} from '../../sampleRandomValues';
-import { getValidDivisionPairs } from '../../sampleValidValues';
+} from '../sampleRandomValues';
+import { getValidDivisionPairs } from '../sampleValidValues';
 import { Puzzle, PuzzleType, toggleRValue } from '../Puzzle';
 
 export class Division extends Puzzle {

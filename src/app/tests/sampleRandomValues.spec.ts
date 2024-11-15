@@ -1,10 +1,10 @@
 import {
-  getRandomItemFromSetAndRemove,
   getRandomNaturalNumberSet,
   getRandomNumberWithinRange,
   getRandomNumberWithinRangeFromSeed,
-} from '../sampleRandomValues';
-import { getNaturalNumberSet } from '../sampleValidValues';
+} from '../puzzles/sampleRandomValues';
+import { getNaturalNumberSet } from '../puzzles/sampleValidValues';
+import { getRandomItemFromSetAndRemove } from '../utility';
 
 /*
 This is a little bit of overkill, but if I'm making a game

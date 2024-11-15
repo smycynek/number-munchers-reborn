@@ -132,6 +132,5 @@ dist
 .nx/
 .DS_Store
 ./src/DS_Store
-upload
 sitevars.sh
 sitevars_beta.sh

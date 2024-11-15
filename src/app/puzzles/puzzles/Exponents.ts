@@ -4,11 +4,11 @@ import {
   ExpressionTypes,
   s,
 } from '../../../math-components/expression-data/expressionData';
-import { getRandomExponentPairs } from '../../sampleRandomValues';
+import { getRandomExponentPairs } from '../sampleRandomValues';
 import {
   getExponentTargets,
   getValidExponentPairs,
-} from '../../sampleValidValues';
+} from '../sampleValidValues';
 import { Puzzle, PuzzleType, toggleRValue } from '../Puzzle';
 
 export class Exponents extends Puzzle {

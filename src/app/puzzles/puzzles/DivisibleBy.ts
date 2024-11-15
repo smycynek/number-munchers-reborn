@@ -5,15 +5,15 @@ import {
   s,
 } from '../../../math-components/expression-data/expressionData';
 import { dataUpperBound } from '../../constants';
-import { isMultiple } from '../../predicates';
+import { isMultiple } from '../predicates';
 import {
   getRandomMultipleBase,
   getRandomNaturalNumberSet,
-} from '../../sampleRandomValues';
+} from '../sampleRandomValues';
 import {
   getValidMultiples,
   toExpressionDataSet,
-} from '../../sampleValidValues';
+} from '../sampleValidValues';
 import { round3 } from '../../utility';
 import { Puzzle, PuzzleType } from '../Puzzle';
 

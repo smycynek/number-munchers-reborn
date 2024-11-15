@@ -6,8 +6,8 @@ import {
 import {
   getRandomFractionBase,
   getRandomFractions,
-} from '../../sampleRandomValues';
-import { getValidFractions } from '../../sampleValidValues';
+} from '../sampleRandomValues';
+import { getValidFractions } from '../sampleValidValues';
 import { Puzzle, PuzzleType } from '../Puzzle';
 
 export class FractionEquivalent extends Puzzle {

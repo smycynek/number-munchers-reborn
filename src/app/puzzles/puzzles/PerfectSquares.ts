@@ -5,12 +5,12 @@ import {
   MixedNumberExpressionData,
 } from '../../../math-components/expression-data/expressionData';
 import { dataUpperBound } from '../../constants';
-import { isPerfectSquare } from '../../predicates';
-import { getRandomNaturalNumberSet } from '../../sampleRandomValues';
+import { isPerfectSquare } from '../predicates';
+import { getRandomNaturalNumberSet } from '../sampleRandomValues';
 import {
   toExpressionDataSet,
   getPerfectSquares,
-} from '../../sampleValidValues';
+} from '../sampleValidValues';
 import { Puzzle, PuzzleType } from '../Puzzle';
 
 export class PerfectSquares extends Puzzle {

@@ -5,7 +5,7 @@ import {
   fracSymbol,
   greaterEqual,
   rootSymbol,
-} from './constants';
+} from '../constants';
 
 export enum PuzzleType {
   Miscellaneous,

@@ -11,15 +11,14 @@ import { CommonModule, Location } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChangeDetectorRef } from '@angular/core';
 import { DataCell } from './dataCell';
-import { debug, hasTouch, parseId, toggleLog } from './utility';
+import { debug, getRandomItemFromSetAndRemove, hasTouch, parseId, toggleLog } from './utility';
 
 import { HostListener } from '@angular/core';
-import { SoundManager } from './soundManager';
-import { PositionManager } from './positionManager';
+import { SoundManager } from './managers/soundManager';
+import { PositionManager } from './managers/positionManager';
 import JSConfetti from 'js-confetti';
 import { StringResources } from './strings';
 import { Observable, Subscription, timer } from 'rxjs';
-import { getRandomItemFromSetAndRemove } from './sampleRandomValues';
 import { mertinDelay, mertinInterval } from './constants';
 import { ActivatedRoute, Params, RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -43,8 +42,8 @@ import {
   puzzleSymbols,
   PuzzleType,
   PuzzleTypeManager,
-} from './puzzleTypeManager';
-import { ImageManager } from './imageManager';
+} from './managers/puzzleTypeManager';
+import { ImageManager } from './managers/imageManager';
 import { getRandomPuzzle } from './puzzles/PuzzleBroker';
 import { Puzzle } from './puzzles/Puzzle';
 

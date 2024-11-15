@@ -7,8 +7,8 @@ import {
 import {
   getRandomNumberWithinRange,
   getRandomDifferencePairs,
-} from '../../sampleRandomValues';
-import { getValidDifferencePairs } from '../../sampleValidValues';
+} from '../sampleRandomValues';
+import { getValidDifferencePairs } from '../sampleValidValues';
 import { Puzzle, PuzzleType, toggleRValue } from '../Puzzle';
 
 export class Subtraction extends Puzzle {

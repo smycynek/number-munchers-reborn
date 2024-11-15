@@ -5,15 +5,15 @@ import {
   ExpressionData,
 } from '../../../math-components/expression-data/expressionData';
 import { dataUpperBound } from '../../constants';
-import { isBetween } from '../../predicates';
+import { isBetween } from '../predicates';
 import {
   getRandomBetweenBounds,
   getRandomNaturalNumberSet,
-} from '../../sampleRandomValues';
+} from '../sampleRandomValues';
 import {
   toExpressionDataSet,
   getValidBetweenValues,
-} from '../../sampleValidValues';
+} from '../sampleValidValues';
 import { Puzzle, PuzzleType } from '../Puzzle';
 
 export class Between extends Puzzle {

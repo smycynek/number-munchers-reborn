@@ -4,8 +4,8 @@ import {
   ExpressionTypes,
   s,
 } from '../../../math-components/expression-data/expressionData';
-import { getRandomRootPairs } from '../../sampleRandomValues';
-import { getRootTargets, getValidRootPairs } from '../../sampleValidValues';
+import { getRandomRootPairs } from '../sampleRandomValues';
+import { getRootTargets, getValidRootPairs } from '../sampleValidValues';
 import { Puzzle, PuzzleType, toggleRValue } from '../Puzzle';
 
 export class Roots extends Puzzle {

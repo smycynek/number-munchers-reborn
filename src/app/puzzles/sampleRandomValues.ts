@@ -6,7 +6,7 @@ import {
   dataUpperBound,
   multipleLowerBound,
   multipleUpperBound,
-} from './constants';
+} from '../constants';
 import {
   expressionDataSetHas,
   getBaseFractions,
@@ -23,13 +23,13 @@ import {
   MultiplicationExpressionData,
   RootExpressionData,
   SubtractionExpressionData,
-} from '../math-components/expression-data/expressionData';
+} from '../../math-components/expression-data/expressionData';
 
-export function getRandomItemFromSetAndRemove<T>(numberSet: Set<T>): T {
-  const numbers = [...numberSet];
-  const number = numbers[Math.floor(Math.random() * numbers.length)];
-  numberSet.delete(number);
-  return number;
+export function getRandomItemFromSetAndRemove<T>(itemSet: Set<T>): T {
+  const items = [...itemSet];
+  const item = items[Math.floor(Math.random() * items.length)];
+  itemSet.delete(item);
+  return item;
 }
 
 export function getRandomNaturalNumberSet(

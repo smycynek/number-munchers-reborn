@@ -8,18 +8,17 @@ import {
   MultiplicationExpressionData,
   RootExpressionData,
   SubtractionExpressionData,
-} from '../math-components/expression-data/expressionData';
-import { dataUpperBound } from './constants';
+} from '../../math-components/expression-data/expressionData';
+import { dataUpperBound } from '../constants';
 import { isBetween, isOutsideExclusive, isPerfectSquare } from './predicates';
 import {
   getAllExponentPairs,
   getAllExponentValues,
   getAllRootValues,
   getAllRootPairs,
-  getRandomItemFromSetAndRemove,
   getValidFactors,
 } from './sampleRandomValues';
-import { debug } from './utility';
+import { debug, getRandomItemFromSetAndRemove } from '../utility';
 
 const perfectSquares = new Set<number>(
   [...getNaturalNumberSet(dataUpperBound)].filter((n) => isPerfectSquare(n)),

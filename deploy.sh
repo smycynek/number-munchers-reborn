@@ -6,10 +6,10 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
-if [ "$1" = "beta" ]; then 
+if [ "$1" = "beta" ]; then
     VARS=./sitevars_beta.sh
-elif [ "$1" == "prod" ]; then 
-    VARS=./sitevars.sh
+elif [ "$1" == "prod" ]; then
+    VARS=./sitevars.sh # user-supplied vars for SITE, APP, and FOLDER
 else
     echo "$USAGE"
     exit 1
@@ -17,18 +17,26 @@ fi
 
 source "$VARS"
 
-if [ -z "$SITE" ]; then echo "no SITE"; exit; fi
-if [ -z "$APP" ]; then echo "no APP"; exit; fi
-if [ -z "$FOLDER" ]; then echo "no FOLDER"; exit; fi
+if [ -z "$SITE" ]; then
+    echo "no SITE"
+    exit
+fi
+if [ -z "$APP" ]; then
+    echo "no APP"
+    exit
+fi
+if [ -z "$FOLDER" ]; then
+    echo "no FOLDER"
+    exit
+fi
 
 tools=("zip" "scp" "ssh" "npm" "npx" "sed")
 
-for tool in "${tools[@]}"
-do
-  if ! which "$tool" > /dev/null; then
+for tool in "${tools[@]}"; do
+    if ! which "$tool" >/dev/null; then
         echo "$tool" not found
         exit 3
-  fi
+    fi
 done
 
 rm -rf dist # Remove old build
@@ -37,14 +45,14 @@ rm -rf dist # Remove old build
 VERSION_PATH="./src/app/version.ts"
 version=$(grep -o -m 1 "[0-9][0-9][0-9]" "$VERSION_PATH")
 echo "$version"
-version_inc=$((version+1))
+version_inc=$((version + 1))
 echo "$version_inc"
 sed -i -e "s/[0-9][0-9][0-9]/$version_inc/g" "$VERSION_PATH"
 
 rm "$VERSION_PATH-e"
 
 # build
-npx ng build  --configuration=production --base-href /"$APP"/
+npx ng build --configuration=production --base-href /"$APP"/
 
 # rename output folder
 mv dist/"$FOLDER"/browser dist/"$FOLDER"/"$APP"
@@ -52,7 +60,7 @@ mv dist/"$FOLDER"/browser dist/"$FOLDER"/"$APP"
 cd dist/"$FOLDER" || exit
 
 # compress output
-zip -vr  "$APP".zip "$APP" -x "$APP"/assets/preview-number-munchers.png
+zip -vr "$APP".zip "$APP" -x "$APP"/assets/preview-number-munchers.png
 
 # copy zip to site
 scp "$APP".zip "$SITE":public_html

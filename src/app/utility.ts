@@ -1,3 +1,11 @@
+
+export function getRandomItemFromSetAndRemove<T>(itemSet: Set<T>): T {
+  const items = [...itemSet];
+  const item = items[Math.floor(Math.random() * items.length)];
+  itemSet.delete(item);
+  return item;
+}
+
 export function hasTouch(): boolean {
   return 'ontouchstart' in window;
 }

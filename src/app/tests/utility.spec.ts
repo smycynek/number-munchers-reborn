@@ -10,7 +10,7 @@ import { DivisionExpressionData } from '../../math-components/expression-data/ex
 import {
   getValidDivisionPairs,
   expressionDataSetHas,
-} from '../sampleValidValues';
+} from '../puzzles/sampleValidValues';
 
 describe('PseudoUnitTests-Utility', () => {
   it('expressionDataSetHas should work on sets', () => {
