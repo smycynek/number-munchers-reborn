@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { BaseExpressionComponent } from '../base-expression/base-expression.component';
 import { CommonModule } from '@angular/common';
 
@@ -10,13 +10,13 @@ import { CommonModule } from '@angular/common';
   styleUrl: './string-expression.component.less',
 })
 export class StringExpressionComponent extends BaseExpressionComponent {
-  @Input() stringValue!: string;
+  readonly stringValue = input.required<string>();
 
   public isPunctuationPhrase() {
     return (
-      this.stringValue.startsWith('.') ||
-      this.stringValue.startsWith(',') ||
-      this.stringValue.startsWith('?')
+      this.stringValue().startsWith('.') ||
+      this.stringValue().startsWith(',') ||
+      this.stringValue().startsWith('?')
     );
   }
 }

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-heart',
@@ -8,8 +8,7 @@ import { Component, Input } from '@angular/core';
   styleUrl: './heart.component.less',
 })
 export class HeartComponent {
-  @Input()
-  public value = '';
+  value = input<string>('');
 
   public format(val: string) {
     return val.padStart(2, '0');

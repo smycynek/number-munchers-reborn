@@ -1,13 +1,13 @@
 <math>
     <mrow>
         <msup>
-            <mn>{{base}}</mn>
-            <mn>{{power}}</mn>
+            <mn>{{base()}}</mn>
+            <mn>{{power()}}</mn>
         </msup>
-        @if (showRval) {
-        @if (displayOp) {
+        @if (showRval()) {
+        @if (displayOp()) {
         <mo>
-            {{displayOp}}
+            {{displayOp()}}
         </mo>
         }
         @else {
@@ -15,14 +15,14 @@
             =
         </mo>
         }
-        @if (displayRval) {
+        @if (displayRval()) {
         <mn>
-            {{displayRval}}
+            {{displayRval()}}
         </mn>
         }
         @else {
         <mn>
-            {{value}}
+            {{value()}}
         </mn>
         }
         }

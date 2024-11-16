@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import {
   BaseExpressionComponent,
   toNumber,
@@ -13,7 +13,8 @@ import {
   styleUrl: './root-expression.component.less',
 })
 export class RootExpressionComponent extends BaseExpressionComponent {
-  @Input({ transform: toNumber }) coefficient!: number;
-  @Input({ transform: toNumber }) index!: number;
-  @Input({ transform: toNumber }) radicand!: number;
+  readonly coefficient = input.required({ transform: toNumber });
+  readonly index = input.required({ transform: toNumber });
+  readonly radicand = input.required({ transform: toNumber });
+
 }

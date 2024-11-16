@@ -134,3 +134,4 @@ dist
 ./src/DS_Store
 sitevars.sh
 sitevars_beta.sh
+gh_deploy.sh

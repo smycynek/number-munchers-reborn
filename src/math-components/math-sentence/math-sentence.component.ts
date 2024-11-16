@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { MathExpressionComponent } from '../math-expression/math-expression.component';
 import { CommonModule } from '@angular/common';
 import { ExpressionData } from '../expression-data/expressionData';
@@ -16,6 +16,5 @@ export class MathSentenceComponent {
       value.startsWith('.') || value.startsWith(',') || value.startsWith('?')
     );
   }
-
-  @Input() dataArray!: ExpressionData[];
+  readonly dataArray = input.required<ExpressionData[]>();
 }

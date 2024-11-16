@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { CommonModule, NgComponentOutlet } from '@angular/common';
 import { LogarithmExpressionComponent } from '../expression-components/logarithm-expression/logarithm-expression.component';
 import { MixedNumberExpressionComponent } from '../expression-components/mixed-number-expression/mixed-number-expression.component';
@@ -30,12 +30,12 @@ import {
   styleUrl: './math-expression.component.less',
 })
 export class MathExpressionComponent {
-  @Input() mathData!: ExpressionData; // Could also be the base class ExpressionData;
+  readonly mathData = input.required<ExpressionData>(); // Could also be the base class ExpressionData;
 
   getMathComponent() {
     // Could be a factory call or a type map, but this is probably fine.
 
-    switch (this.mathData.opType) {
+    switch (this.mathData().opType) {
       case StringExpressionName:
         return StringExpressionComponent;
       case AdditionExpressionName:
@@ -55,7 +55,7 @@ export class MathExpressionComponent {
       case LogarithmExpressionName:
         return LogarithmExpressionComponent;
       default:
-        throw Error(`Unknown math opType ${this.mathData.opType}`);
+        throw Error(`Unknown math opType ${this.mathData().opType}`);
     }
   }
 }

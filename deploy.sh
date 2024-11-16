@@ -24,15 +24,15 @@ source "$VARS"
 
 if [ -z "$SITE" ]; then
     echo "no SITE"
-    exit
+    exit 4
 fi
 if [ -z "$APP" ]; then
     echo "no APP"
-    exit
+    exit 4
 fi
 if [ -z "$FOLDER" ]; then
     echo "no FOLDER"
-    exit
+    exit 4
 fi
 
 tools=("zip" "scp" "ssh" "npm" "npx" "sed")

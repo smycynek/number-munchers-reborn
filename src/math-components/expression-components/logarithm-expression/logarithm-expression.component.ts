@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import {
   BaseExpressionComponent,
   toNumber,
@@ -13,7 +13,8 @@ import {
   styleUrl: './logarithm-expression.component.less',
 })
 export class LogarithmExpressionComponent extends BaseExpressionComponent {
-  @Input({ transform: toNumber }) coefficient!: number;
-  @Input({ transform: toNumber }) base!: number;
-  @Input({ transform: toNumber }) argument!: number;
+  readonly coefficient = input.required({ transform: toNumber });
+  readonly base = input.required({ transform: toNumber });
+  readonly argument = input.required({ transform: toNumber });
+
 }

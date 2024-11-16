@@ -1,12 +1,12 @@
 <math>
     <mrow>
-        <mn>{{left}}</mn>
+        <mn>{{left()}}</mn>
         <mo>-</mo>
-        <mn>{{right}}</mn>
-        @if (showRval) {
-        @if (displayOp) {
+        <mn>{{right()}}</mn>
+        @if (showRval()) {
+        @if (displayOp()) {
         <mo>
-            {{displayOp}}
+            {{displayOp()}}
         </mo>
         }
         @else {
@@ -14,14 +14,14 @@
             =
         </mo>
         }
-        @if (displayRval) {
+        @if (displayRval()) {
         <mn>
-            {{displayRval}}
+            {{displayRval()}}
         </mn>
         }
         @else {
         <mn>
-            {{value}}
+            {{value()}}
         </mn>
         }
         }

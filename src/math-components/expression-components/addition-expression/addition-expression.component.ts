@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import {
   BaseExpressionComponent,
   toNumber,
@@ -13,6 +13,6 @@ import {
   styleUrl: './addition-expression.component.less',
 })
 export class AdditionExpressionComponent extends BaseExpressionComponent {
-  @Input({ transform: toNumber }) left!: number;
-  @Input({ transform: toNumber }) right!: number;
+  readonly left = input.required({ transform: toNumber });
+  readonly right = input.required({ transform: toNumber });
 }

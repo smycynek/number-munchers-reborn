@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import {
   BaseExpressionComponent,
   toNumber,
@@ -13,6 +13,6 @@ import {
   styleUrl: './exponent-expression.component.less',
 })
 export class ExponentExpressionComponent extends BaseExpressionComponent {
-  @Input({ transform: toNumber }) base!: number;
-  @Input({ transform: toNumber }) power!: number;
+  readonly base = input.required({ transform: toNumber });
+  readonly power = input.required({ transform: toNumber });
 }

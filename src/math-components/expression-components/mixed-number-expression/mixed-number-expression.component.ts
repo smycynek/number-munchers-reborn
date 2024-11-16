@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import {
   BaseExpressionComponent,
   toNumber,
@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './mixed-number-expression.component.less',
 })
 export class MixedNumberExpressionComponent extends BaseExpressionComponent {
-  @Input({ transform: toNumber }) whole!: number;
-  @Input({ transform: toNumber }) numerator!: number;
-  @Input({ transform: toNumber }) denominator!: number;
+  readonly whole = input.required({ transform: toNumber });
+  readonly numerator = input.required({ transform: toNumber });
+  readonly denominator = input.required({ transform: toNumber });
 }

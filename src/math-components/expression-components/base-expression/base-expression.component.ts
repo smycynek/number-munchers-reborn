@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-base-expression',
@@ -9,12 +9,11 @@ import { Component, Input } from '@angular/core';
   styleUrl: './base-expression.component.less',
 })
 export class BaseExpressionComponent {
-  @Input({ transform: toNumber }) value!: number;
-  @Input() opType!: string;
 
-  @Input() showRval!: boolean;
-  @Input() displayOp!: string;
-  @Input() displayRval!: number;
+  readonly value = input.required({ transform: toNumber });
+  showRval = input<boolean>();
+  displayOp = input<string>();
+  displayRval = input<number>();
 }
 
 export function toNumber(value: string): number {

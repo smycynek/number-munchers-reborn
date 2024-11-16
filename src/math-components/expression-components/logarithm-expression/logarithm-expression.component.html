@@ -1,23 +1,23 @@
 <math>
     <mrow>
-        @if (coefficient !== 1) {
+        @if (coefficient() !== 1) {
         <mn>
-            {{coefficient}}
+            {{coefficient()}}
         </mn>
         }
 
         <msub>
             <mtext>log</mtext>
-            <mn>{{base}}</mn>
+            <mn>{{base()}}</mn>
         </msub>
 
         <mn>
-            {{argument}}
+            {{argument()}}
         </mn>
-        @if (showRval) {
-        @if (displayOp) {
+        @if (showRval()) {
+        @if (displayOp()) {
         <mo>
-            {{displayOp}}
+            {{displayOp()}}
         </mo>
         }
         @else {
@@ -25,14 +25,14 @@
             =
         </mo>
         }
-        @if (displayRval) {
+        @if (displayRval()) {
         <mn>
-            {{displayRval}}
+            {{displayRval()}}
         </mn>
         }
         @else {
         <mn>
-            {{value | number:'1.0-2'}}
+            {{value() | number:'1.0-2'}}
         </mn>
         }
         }
