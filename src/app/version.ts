@@ -1,1 +1,1 @@
-export const version: number = 344;
+export const version: number = 345;
