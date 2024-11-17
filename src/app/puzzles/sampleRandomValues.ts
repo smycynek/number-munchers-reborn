@@ -176,10 +176,23 @@ export function getRandomSumPairs(
 export function getRandomDifferencePairs(
   count: number,
   target: number,
+  digits: number = 2,
 ): Set<SubtractionExpressionData> {
+  let upper = dataUpperBound;
+  let lower = 10;
+  let skip1 = 5;
+  let skip2 = 6;
+
+  if (digits === 3) {
+    upper = 999;
+    skip1 = 50;
+    skip2 = 60;
+    lower = 95;
+  }
+
   const valueSet: Set<SubtractionExpressionData> = new Set();
-  for (let idx = dataUpperBound; idx > target; idx -= 5) {
-    for (let idy = dataUpperBound -1; idy > 10; idy -= 6) {
+  for (let idx = upper; idx > target; idx -= skip1)
+    for (let idy = upper - 1; idy > lower; idy -= skip2) {
       const pair =
         idx > idy
           ? new SubtractionExpressionData(idx, idy)
@@ -188,9 +201,8 @@ export function getRandomDifferencePairs(
         valueSet.add(pair);
       }
     }
-  }
 
-  const validPairs = getValidDifferencePairs(target);
+  const validPairs = getValidDifferencePairs(target, upper);
   validPairs.forEach((pair) => {
     valueSet.add(new SubtractionExpressionData(pair.left, pair.right - 1));
     valueSet.add(new SubtractionExpressionData(pair.left + 1, pair.right));

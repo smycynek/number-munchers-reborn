@@ -49,7 +49,34 @@
             ]
           },
           "configurations": {
-            "production": {
+            "prod": {
+              "fileReplacements": [
+                {
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "800kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "5kb",
+                  "maximumError": "6kb"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "beta": {
+              "fileReplacements": [
+                {
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.beta.ts"
+                }
+              ],
               "budgets": [
                 {
                   "type": "initial",
@@ -70,13 +97,16 @@
               "sourceMap": true
             }
           },
-          "defaultConfiguration": "production"
+          "defaultConfiguration": "prod"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
-            "production": {
-              "buildTarget": "number-munchers:build:production"
+            "prod": {
+              "buildTarget": "number-munchers:build:prod"
+            },
+            "beta": {
+              "buildTarget": "number-munchers:build:beta"
             },
             "development": {
               "buildTarget": "number-munchers:build:development"

@@ -24,6 +24,7 @@ export function getRandomPuzzle(puzzleTypes: Set<PuzzleType>) {
     new Addition(2),
     new Addition(3),
     new Subtraction(2),
+    new Subtraction(3),
     new Between(),
     new BetweenInclusive(),
     new OutsideExclusive(),

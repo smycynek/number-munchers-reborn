@@ -46,6 +46,7 @@ import {
 import { ImageManager } from './managers/imageManager';
 import { getRandomPuzzle } from './puzzles/PuzzleBroker';
 import { Puzzle } from './puzzles/Puzzle';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-number-munchers',
@@ -88,7 +89,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   private soundManager: SoundManager = new SoundManager();
   private positionManager: PositionManager = new PositionManager();
   public imageManager: ImageManager = new ImageManager();
-  public title: WritableSignal<string> = signal(StringResources.TITLE);
+  public title: WritableSignal<string> = signal(StringResources.TITLE + environment.titleSuffix);
 
   private settingsChanged: WritableSignal<boolean> = signal(false);
 
@@ -137,7 +138,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
         Object.keys(PuzzleType).length / 2
       ) {
         this.titleService.setTitle(
-          'Number Munchers Reborn - ' +
+          StringResources.TITLE + environment.titleSuffix + ' - ' +
             [...this.puzzleTypeManager.getPuzzleTypes().values()]
               .map((p) => PuzzleType[p])
               .join(', '),
@@ -242,7 +243,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
       }
       this.symbols.set(this.getActivePuzzleSymbols());
       this.titleService.setTitle(
-        'Number Munchers Reborn - ' +
+        StringResources.TITLE + environment.titleSuffix + ' - ' +
           [...this.puzzleTypeManager.getPuzzleTypes().values()]
             .map((p) => PuzzleType[p])
             .join(', '),

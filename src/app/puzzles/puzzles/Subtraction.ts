@@ -10,15 +10,15 @@ import {
 } from '../sampleRandomValues';
 import { getValidDifferencePairs } from '../sampleValidValues';
 import { Puzzle, PuzzleType, toggleRValue } from '../Puzzle';
+import { dataUpperBound } from '../../constants';
 
 export class Subtraction extends Puzzle {
-  private digits: number = 2;
-  public constructor(digits: number) {
+  public constructor(private digits: number = 2) {
     let lowerBound = 1;
     let upperBound = 80;
     if (digits === 3) {
-      lowerBound *= 10;
-      upperBound *= 10;
+      lowerBound = 10;
+      upperBound = 980;
     }
     super(
       PuzzleType.Subtraction,
@@ -45,9 +45,13 @@ export class Subtraction extends Puzzle {
     return [s('Sorry,'), toggleRValue(choice), s(', not'), this.target1];
   }
   public override getValidSamples(): Set<ExpressionData> {
-    return getValidDifferencePairs(this.target1.value);
+    let upperBound = dataUpperBound;
+    if (this.digits === 3) {
+      upperBound = 999;
+    }
+    return getValidDifferencePairs(this.target1.value, upperBound);
   }
   public override getRandomSamples(count: number): Set<ExpressionData> {
-    return getRandomDifferencePairs(count, this.target1.value); // TODO add digits
+    return getRandomDifferencePairs(count, this.target1.value, this.digits);
   }
 }

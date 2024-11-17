@@ -225,9 +225,10 @@ export function getValidSumPairs(target: number): Set<AdditionExpressionData> {
 
 export function getValidDifferencePairs(
   target: number,
+  upperBound: number,
 ): Set<SubtractionExpressionData> {
   const pairs: Set<SubtractionExpressionData> = new Set();
-  for (let upper = dataUpperBound; upper != target; upper--) {
+  for (let upper = upperBound; upper != target; upper--) {
     pairs.add(new SubtractionExpressionData(upper, upper - target));
   }
   return pairs;

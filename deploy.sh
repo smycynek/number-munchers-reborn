@@ -15,6 +15,8 @@ else
     exit 1
 fi
 
+CONFIG="$1"
+
 if [ ! -f "$VARS" ]; then
    echo "You must supply app environment variables in $VARS to deploy"
    exit 2
@@ -57,7 +59,8 @@ sed -i -e "s/[0-9][0-9][0-9]/$version_inc/g" "$VERSION_PATH"
 rm "$VERSION_PATH-e"
 
 # build
-npx ng build --configuration=production --base-href /"$APP"/
+
+npx ng build --configuration="$CONFIG" --base-href /"$APP"/
 
 # rename output folder
 mv dist/"$FOLDER"/browser dist/"$FOLDER"/"$APP"

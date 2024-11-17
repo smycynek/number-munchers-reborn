@@ -6,7 +6,7 @@ if ! which "npx" >/dev/null; then
 fi
 rm -rf dist
 
-npx ng build --configuration=production
+npx ng build --configuration=beta
 
 cd dist/number-munchers/browser || exit
 npx serve .

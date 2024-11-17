@@ -1,3 +1,5 @@
+import { logWithBase } from '../../app/utility';
+
 export const MixedNumberExpressionName = 'MixedNumberExpressionName';
 export const AdditionExpressionName = 'AdditionExpressionName';
 export const SubtractionExpressionName = 'SubtractionExpressionName';
@@ -158,8 +160,7 @@ export class RootExpressionData extends ExpressionData {
   }
 }
 
-const logWithBase = (argument: number, base: number) =>
-  Math.log(argument) / Math.log(base);
+
 
 export class LogarithmExpressionData extends ExpressionData {
   public constructor(
