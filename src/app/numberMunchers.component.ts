@@ -323,7 +323,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   public showPuzzleTypes(): void {
     this.btnShowPuzzleTypes.nativeElement.blur();
     this.puzzleTypeDialog.nativeElement.showModal();
-    console.log('Show puzzle types');
+    debug('Show puzzle types');
   }
 
   public toggleSound(): void {

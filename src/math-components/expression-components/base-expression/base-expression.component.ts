@@ -11,6 +11,7 @@ import { Component, input } from '@angular/core';
 export class BaseExpressionComponent {
 
   readonly value = input.required({ transform: toNumber });
+  readonly opType = input.required<string>();
   showRval = input<boolean>();
   displayOp = input<string>();
   displayRval = input<number>();
