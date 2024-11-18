@@ -47,6 +47,7 @@ import { ImageManager } from './managers/imageManager';
 import { getRandomPuzzle } from './puzzles/PuzzleBroker';
 import { Puzzle } from './puzzles/Puzzle';
 import { environment } from '../environments/environment';
+import { LocalStorageService } from '../localStorageService';
 
 @Component({
   selector: 'app-number-munchers',
@@ -115,6 +116,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     private titleService: Title,
     private location: Location,
     private configService: ConfigService,
+    private localStorageService: LocalStorageService
   ) {
     this.holiday.set(this.configService.getConfig().holiday);
     debug('HOLIDAY: ' + this.holiday());
@@ -128,10 +130,13 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
       this.reset();
       this.init();
       this.timerInit();
+      this.winStreak.set(this.localStorageService.getWinStreak());
+      this.highScore.set(this.localStorageService.getHighScore());
       this.params['p'] = params['p'];
       this.params['s'] = params['s'];
       this.params['m'] = params['m'];
-
+      this.titleService.setTitle(
+        StringResources.TITLE + environment.titleSuffix);
       this.symbols.set(this.getActivePuzzleSymbols());
       if (
         this.puzzleTypeManager.getPuzzleTypes().size !==
@@ -670,8 +675,10 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
           const jsConfetti = new JSConfetti();
           jsConfetti.addConfetti();
           this.winStreak.set(this.winStreak() + 1);
+          this.localStorageService.setWinStreak(this.winStreak());
           if (this.winStreak() > this.highScore()) {
             this.highScore.set(this.winStreak());
+            this.localStorageService.setHighScore(this.winStreak());
           }
         } else {
           this.soundManager.playWhoo();
@@ -687,6 +694,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     } else {
       this.soundManager.playYuck();
       this.winStreak.set(0);
+      this.localStorageService.setWinStreak(0);
       this.statusMessage.set(StringResources.INCORRECT);
       this.statusMessageDetail.set(
         this.activePuzzle().errorDetails(data.expressionValue.clone()),
