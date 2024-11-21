@@ -9,6 +9,7 @@ export const ExponenentExpressionName = 'ExponenentExpressionName';
 export const RootExpressionName = 'RootExpressionName';
 export const StringExpressionName = 'StringExpressionName';
 export const LogarithmExpressionName = 'LogarithmExpressionName';
+export const PercentageExpressionName = 'PercentageExpressionName';
 
 // It would be nice if we could use the type name
 // property directly, but it gets mangled by the optimizer.
@@ -23,7 +24,8 @@ export type ExpressionTypes =
   | DivisionExpressionData
   | RootExpressionData
   | ExponentExpressionData
-  | LogarithmExpressionData;
+  | LogarithmExpressionData
+  | PercentageExpressionData;
 
 export class ExpressionData {
   constructor(
@@ -69,6 +71,18 @@ export class MixedNumberExpressionData extends ExpressionData {
       (Math.abs(whole) + fraction) * (whole < 0 ? -1 : 1),
       MixedNumberExpressionName,
     );
+  }
+}
+
+export class PercentageExpressionData extends ExpressionData {
+  public constructor(
+    public percentageValue: number,
+    public showRval = false,
+    public displayOp = '',
+    public displayRval = NaN,
+  ) {
+    const value = percentageValue / 100;
+    super(value, PercentageExpressionName);
   }
 }
 
@@ -159,8 +173,6 @@ export class RootExpressionData extends ExpressionData {
     );
   }
 }
-
-
 
 export class LogarithmExpressionData extends ExpressionData {
   public constructor(

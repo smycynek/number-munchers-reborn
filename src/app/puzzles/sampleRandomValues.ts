@@ -21,6 +21,7 @@ import {
   ExponentExpressionData,
   MixedNumberExpressionData,
   MultiplicationExpressionData,
+  PercentageExpressionData,
   RootExpressionData,
   SubtractionExpressionData,
 } from '../../math-components/expression-data/expressionData';
@@ -334,10 +335,24 @@ export function getRandomFractionBase(): MixedNumberExpressionData {
   return getRandomItemFromSetAndRemove(getBaseFractions());
 }
 
+export function getRandomPercentages(count: number, base: MixedNumberExpressionData): Set<PercentageExpressionData>  {
+  const percentageDigits = getNaturalNumberSet(100);
+  const returnSet = new Set<PercentageExpressionData>();
+  for (let idx = 0; idx < count; idx++) {
+    const percent = getRandomItemFromSetAndRemove(percentageDigits);
+    if ( (percent / 100) !== base.value) {
+      returnSet.add(new PercentageExpressionData(percent));
+    } else {
+      count--;
+    }
+  }
+  return returnSet;
+}
+
 export function getRandomFractions(
   count: number,
   base: MixedNumberExpressionData,
-) {
+): Set<MixedNumberExpressionData>  {
   const valueSet: Set<MixedNumberExpressionData> = new Set();
   const returnSet: Set<MixedNumberExpressionData> = new Set();
   for (let idx = 1; idx != 21; idx++) {

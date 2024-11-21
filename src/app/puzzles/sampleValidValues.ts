@@ -6,6 +6,7 @@ import {
   ExpressionTypes,
   MixedNumberExpressionData,
   MultiplicationExpressionData,
+  PercentageExpressionData,
   RootExpressionData,
   SubtractionExpressionData,
 } from '../../math-components/expression-data/expressionData';
@@ -193,6 +194,14 @@ export function getValidFractions(target: MixedNumberExpressionData) {
     }
   }
   return valueSet;
+}
+
+export function getValidPercentages(target: MixedNumberExpressionData) {
+  const returnSet = new Set<PercentageExpressionData>();
+  const targetValMin = Math.round(target.value * 100);
+   const validPercentageDigits = getValidBetweenValues(targetValMin, 100, true);
+   validPercentageDigits.forEach((val) => returnSet.add(new PercentageExpressionData(val)));
+  return returnSet;
 }
 
 export function getValidMultiples(num: number): Set<number> {

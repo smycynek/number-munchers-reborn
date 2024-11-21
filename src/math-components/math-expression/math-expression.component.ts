@@ -17,10 +17,12 @@ import {
   LogarithmExpressionName,
   MixedNumberExpressionName,
   MultiplicationExpressionName,
+  PercentageExpressionName,
   RootExpressionName,
   StringExpressionName,
   SubtractionExpressionName,
 } from '../expression-data/expressionData';
+import { PercentageExpressionComponent } from '../expression-components/percentage-expression/percentage-expression.component';
 
 @Component({
   selector: 'app-math-expression',
@@ -54,6 +56,8 @@ export class MathExpressionComponent {
         return MixedNumberExpressionComponent;
       case LogarithmExpressionName:
         return LogarithmExpressionComponent;
+      case PercentageExpressionName:
+        return PercentageExpressionComponent;
       default:
         throw Error(`Unknown math opType ${this.mathData().opType}`);
     }

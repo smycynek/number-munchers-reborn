@@ -18,6 +18,7 @@ import { PerfectSquares } from './puzzles/PerfectSquares';
 import { Primes } from './puzzles/Primes';
 import { Roots } from './puzzles/Roots';
 import { Subtraction } from './puzzles/Subtraction';
+import { Percentages } from './puzzles/Percentages';
 
 export function getRandomPuzzle(puzzleTypes: Set<PuzzleType>) {
   const puzzles: Puzzle[] = [
@@ -36,6 +37,7 @@ export function getRandomPuzzle(puzzleTypes: Set<PuzzleType>) {
     new FractionEquivalent(),
     new FractionGreaterThanHalf(),
     new FractionLessThanHalf(),
+    new Percentages(),
     new Division(),
     new DivisibleBy(),
     new Roots(),

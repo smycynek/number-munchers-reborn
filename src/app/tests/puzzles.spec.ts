@@ -18,6 +18,10 @@ import { FractionEquivalent } from '../puzzles/puzzles/FractionEquivalent';
 import { FractionGreaterThanHalf } from '../puzzles/puzzles/FractionGreaterThanHalf';
 import { FractionLessThanHalf } from '../puzzles/puzzles/FractionLessThanHalf';
 import { Exponents } from '../puzzles/puzzles/Exponents';
+import { Percentages } from '../puzzles/puzzles/Percentages';
+import { Between } from '../puzzles/puzzles/Between';
+import { OutsideExclusive } from '../puzzles/puzzles/OutsideExclusive';
+import { BetweenInclusive } from '../puzzles/puzzles/BetweenInclusive';
 /*
 This is a little bit of overkill, but if I'm making a game
 for kids, I want to make sure output is correct.
@@ -131,8 +135,12 @@ describe('PseudoUnitTests-Puzzles', () => {
 
   it('Should accepts and reject exponent values ', () => {
     const exponentPuzzle = new Exponents();
-    const valid = exponentPuzzle.target1
-    const invalid = new MixedNumberExpressionData(exponentPuzzle.target1.value + 1, 0, 0);
+    const valid = exponentPuzzle.target1;
+    const invalid = new MixedNumberExpressionData(
+      exponentPuzzle.target1.value + 1,
+      0,
+      0,
+    );
     expect(exponentPuzzle.predicate(valid)).toBeTrue();
     expect(exponentPuzzle.predicate(invalid)).toBeFalse();
   });
@@ -163,5 +171,57 @@ describe('PseudoUnitTests-Puzzles', () => {
     const invalid = new MixedNumberExpressionData(0, 3, 5);
     expect(lteFractionsPuzzle.predicate(valid)).toBeTrue();
     expect(lteFractionsPuzzle.predicate(invalid)).toBeFalse();
+  });
+
+  it('Should accepts and reject  percentages greater than a fraction', () => {
+    const percentagesPuzzle = new Percentages();
+    const valid = new MixedNumberExpressionData(1, 1, 100);
+    const invalid = new MixedNumberExpressionData(0, 1, 100);
+    expect(percentagesPuzzle.predicate(valid)).toBeTrue();
+    expect(percentagesPuzzle.predicate(invalid)).toBeFalse();
+  });
+
+  it('Should accepts and reject between values', () => {
+    const betweenPuzzle = new Between();
+    const valid = new MixedNumberExpressionData(
+      betweenPuzzle.target1.value + 1,
+      0,
+      0,
+    );
+    const invalid = new MixedNumberExpressionData(
+      betweenPuzzle.target1.value - 1,
+      0,
+      0,
+    );
+    expect(betweenPuzzle.predicate(valid)).toBeTrue();
+    expect(betweenPuzzle.predicate(invalid)).toBeFalse();
+  });
+
+  it('Should accepts and reject outside exclusive values', () => {
+    const oePuzzle = new OutsideExclusive();
+    const valid = new MixedNumberExpressionData(
+      oePuzzle.target1.value - 1,
+      0,
+      0,
+    );
+    const invalid = new MixedNumberExpressionData(
+      oePuzzle.target1.value + 1,
+      0,
+      0,
+    );
+    expect(oePuzzle.predicate(valid)).toBeTrue();
+    expect(oePuzzle.predicate(invalid)).toBeFalse();
+  });
+
+  it('Should accepts and reject between inclusive values', () => {
+    const bePuzzle = new BetweenInclusive();
+    const valid = new MixedNumberExpressionData(bePuzzle.target1.value, 0, 0);
+    const invalid = new MixedNumberExpressionData(
+      bePuzzle.target1.value - 1,
+      0,
+      0,
+    );
+    expect(bePuzzle.predicate(valid)).toBeTrue();
+    expect(bePuzzle.predicate(invalid)).toBeFalse();
   });
 });
