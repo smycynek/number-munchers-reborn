@@ -23,7 +23,9 @@ import { Percentages } from './puzzles/Percentages';
 export function getRandomPuzzle(puzzleTypes: Set<PuzzleType>) {
   const puzzles: Puzzle[] = [
     new Addition(2),
+    new Addition(2),
     new Addition(3),
+    new Subtraction(2),
     new Subtraction(2),
     new Subtraction(3),
     new Between(),
