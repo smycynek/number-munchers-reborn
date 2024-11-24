@@ -6,7 +6,8 @@ import {
 import { greaterEqual, oneHalf } from '../../constants';
 import { getRandomFractions } from '../sampleRandomValues';
 import { getValidFractions } from '../sampleValidValues';
-import { Puzzle, PuzzleType } from '../Puzzle';
+import { Puzzle } from '../Puzzle';
+import { PuzzleType } from '../../managers/puzzleTypeManager';
 
 
 export class FractionGreaterThanHalf extends Puzzle {

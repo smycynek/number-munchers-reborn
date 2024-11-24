@@ -137,6 +137,21 @@
         </div>
 
         <div class="choice-group">
+          <input class="checkbox-wide highlighted" id="cbPercentages"
+            [disabled]="isCheckboxDisabled(puzzleTypeManager.percentages)" [(ngModel)]="puzzleTypeManager.percentages"
+            (change)="toggleType(puzzleTypeManager.percentages, puzzleType.Percentages, true)" type="checkbox" />
+          <label for="cbPercentages">Percentages</label>
+        </div>
+
+        <div class="choice-group">
+          <input class="checkbox-wide highlighted" id="cbDecimals"
+            [disabled]="isCheckboxDisabled(puzzleTypeManager.decimals)" [(ngModel)]="puzzleTypeManager.decimals"
+            (change)="toggleType(puzzleTypeManager.decimals, puzzleType.Decimals, true)" type="checkbox" />
+          <label for="cbDecimals">Decimals</label>
+        </div>
+
+
+        <div class="choice-group">
           <input class="checkbox-wide highlighted" id="cbExponents"
             [disabled]="isCheckboxDisabled(puzzleTypeManager.exponents)" [(ngModel)]="puzzleTypeManager.exponents"
             (change)="toggleType(puzzleTypeManager.exponents, puzzleType.Exponents, true)" type="checkbox" />
@@ -157,6 +172,8 @@
           <label for="cbMisc">Odds and Ends</label>
         </div>
 
+        <button (click)="clearAll()" class="button-base highlighted tiny-button">Clear All</button>
+
         <p class="detail-content">
           Puzzle type preference changes are encoded in the page's URL. Copy, text, bookmark, or post it to save a
           custom puzzle configuration.
@@ -169,7 +186,7 @@
       </div>
 
     </div>
-    <form method="dialog">
+     <form method="dialog">
       <button (click)="closeSettings()" class="button-base button-centered highlighted">OK</button>
     </form>
   </dialog>
@@ -313,6 +330,8 @@
             <p class="detail-content"> <code>m - </code>multiplication</p>
             <p class="detail-content"> <code>d - </code>division</p>
             <p class="detail-content"> <code>f - </code>fractions</p>
+            <p class="detail-content"> <code>p - </code>percentages</p>
+            <p class="detail-content"> <code>x - </code>decimals</p>
             <p class="detail-content"> <code>e - </code>exponents</p>
             <p class="detail-content"> <code>r - </code>roots</p>
             <p class="detail-content"> <code>o - </code>odds and ends / miscellaneous</p>

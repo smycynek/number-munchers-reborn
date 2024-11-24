@@ -9,8 +9,9 @@ import {
   getRandomNumberWithinRange,
   getRandomSumPairs,
 } from '../sampleRandomValues';
-import { Puzzle, PuzzleType, toggleRValue } from '../Puzzle';
+import { Puzzle, toggleRValue } from '../Puzzle';
 import { getValidSumPairs } from '../sampleValidValues';
+import { PuzzleType } from '../../managers/puzzleTypeManager';
 
 export class Addition extends Puzzle {
   public constructor(private digits: number = 2) {

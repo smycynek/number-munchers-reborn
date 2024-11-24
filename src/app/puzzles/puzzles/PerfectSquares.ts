@@ -11,7 +11,8 @@ import {
   toExpressionDataSet,
   getPerfectSquares,
 } from '../sampleValidValues';
-import { Puzzle, PuzzleType } from '../Puzzle';
+import { Puzzle } from '../Puzzle';
+import { PuzzleType } from '../../managers/puzzleTypeManager';
 
 export class PerfectSquares extends Puzzle {
   public constructor() {

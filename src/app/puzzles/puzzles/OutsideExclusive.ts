@@ -14,7 +14,8 @@ import {
   toExpressionDataSet,
   getValidOutsideExclusiveValues,
 } from '../sampleValidValues';
-import { Puzzle, PuzzleType } from '../Puzzle';
+import { Puzzle } from '../Puzzle';
+import { PuzzleType } from '../../managers/puzzleTypeManager';
 
 export class OutsideExclusive extends Puzzle {
   public constructor() {

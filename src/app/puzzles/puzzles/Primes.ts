@@ -11,7 +11,8 @@ import {
 } from '../sampleRandomValues';
 import { toExpressionDataSet, getPrimes } from '../sampleValidValues';
 import { format_and } from '../../utility';
-import { Puzzle, PuzzleType } from '../Puzzle';
+import { Puzzle } from '../Puzzle';
+import { PuzzleType } from '../../managers/puzzleTypeManager';
 
 export class Primes extends Puzzle {
   public constructor() {

@@ -8,22 +8,11 @@ import { DataCell } from '../dataCell';
 import { getRandomItemFromSetAndRemove } from './sampleRandomValues';
 import { expressionDataSetHas } from './sampleValidValues';
 import { debug } from '../utility';
+import { PuzzleType } from '../managers/puzzleTypeManager';
 
 export function toggleRValue(cellValue: ExpressionTypes): ExpressionTypes {
   cellValue.showRval = !cellValue.showRval;
   return cellValue;
-}
-
-export enum PuzzleType {
-  Miscellaneous,
-  Multiplication,
-  Fractions,
-  Division,
-  Greater_or_less_than,
-  Addition,
-  Subtraction,
-  Exponents,
-  Roots,
 }
 
 export abstract class Puzzle {
@@ -76,7 +65,8 @@ export abstract class Puzzle {
     count: number,
     addValidValues: boolean = true,
   ): Set<ExpressionData> {
-    const curatedValues = this.getRandomSamples(count);
+    const randomValues = this.getRandomSamples(count);
+
     if (addValidValues) {
       const validSamples = this.getValidSamples();
       let replacements = maxReplacements;
@@ -96,21 +86,21 @@ export abstract class Puzzle {
       debug(`Substituting in ${replacements} correct answers.`);
       for (let idx = 0; idx != replacementCount; idx++) {
         const validValue = getRandomItemFromSetAndRemove(validSamples);
-        if (expressionDataSetHas(validValue, curatedValues)) {
+        if (expressionDataSetHas(validValue, randomValues)) {
           debug(`Value exists: ${validValue}`);
           continue;
         } else {
-          const valueToRemove = getRandomItemFromSetAndRemove(curatedValues);
+          const valueToRemove = getRandomItemFromSetAndRemove(randomValues);
           debug('Value to remove: ' + valueToRemove);
-          curatedValues.add(validValue);
+          randomValues.add(validValue);
           debug('Adding valid value: ' + validValue);
         }
       }
     }
 
     debug(
-      `Curated final values: ${[...curatedValues]} : ${curatedValues.size}`,
+      `Curated final values: ${[...randomValues]} : ${randomValues.size}`,
     );
-    return curatedValues;
+    return randomValues;
   }
 }

@@ -10,6 +10,7 @@ export const RootExpressionName = 'RootExpressionName';
 export const StringExpressionName = 'StringExpressionName';
 export const LogarithmExpressionName = 'LogarithmExpressionName';
 export const PercentageExpressionName = 'PercentageExpressionName';
+export const DecimalExpressionName = 'DecimalExpressionName';
 
 // It would be nice if we could use the type name
 // property directly, but it gets mangled by the optimizer.
@@ -25,7 +26,8 @@ export type ExpressionTypes =
   | RootExpressionData
   | ExponentExpressionData
   | LogarithmExpressionData
-  | PercentageExpressionData;
+  | PercentageExpressionData
+  | DecimalExpressionData;
 
 export class ExpressionData {
   constructor(
@@ -85,6 +87,20 @@ export class PercentageExpressionData extends ExpressionData {
     super(value, PercentageExpressionName);
   }
 }
+
+export class DecimalExpressionData extends ExpressionData {
+  public constructor(
+    public decimalValue: number,
+    public showRval = false,
+    public displayOp = '',
+    public displayRval = NaN,
+  ) {
+    const value = decimalValue;
+    super(value, DecimalExpressionName);
+  }
+}
+
+
 
 export class AdditionExpressionData extends ExpressionData {
   public constructor(

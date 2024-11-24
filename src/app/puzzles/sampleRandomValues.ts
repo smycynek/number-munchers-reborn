@@ -10,13 +10,16 @@ import {
 import {
   expressionDataSetHas,
   getBaseFractions,
+  getLowerBaseFractions,
   getNaturalNumberSet,
+  getValidBetweenValues,
   getValidDifferencePairs,
   getValidDivisionPairs,
   getValidSumPairs,
 } from './sampleValidValues';
 import {
   AdditionExpressionData,
+  DecimalExpressionData,
   DivisionExpressionData,
   ExponentExpressionData,
   MixedNumberExpressionData,
@@ -25,6 +28,7 @@ import {
   RootExpressionData,
   SubtractionExpressionData,
 } from '../../math-components/expression-data/expressionData';
+import { round3 } from '../utility';
 
 export function getRandomItemFromSetAndRemove<T>(itemSet: Set<T>): T {
   const items = [...itemSet];
@@ -335,16 +339,32 @@ export function getRandomFractionBase(): MixedNumberExpressionData {
   return getRandomItemFromSetAndRemove(getBaseFractions());
 }
 
-export function getRandomPercentages(count: number, base: MixedNumberExpressionData): Set<PercentageExpressionData>  {
+export function getRandomFractionLowerBase(): MixedNumberExpressionData {
+  return getRandomItemFromSetAndRemove(getLowerBaseFractions());
+}
+
+export function getRandomPercentages(
+  count: number,
+): Set<PercentageExpressionData> {
   const percentageDigits = getNaturalNumberSet(100);
   const returnSet = new Set<PercentageExpressionData>();
   for (let idx = 0; idx < count; idx++) {
     const percent = getRandomItemFromSetAndRemove(percentageDigits);
-    if ( (percent / 100) !== base.value) {
-      returnSet.add(new PercentageExpressionData(percent));
-    } else {
-      count--;
-    }
+    returnSet.add(new PercentageExpressionData(percent));
+  }
+  return returnSet;
+}
+
+export function getRandomDecimals(count: number): Set<DecimalExpressionData> {
+  const decimals = new Set<DecimalExpressionData>();
+  const validPercentageDigits = getValidBetweenValues(1, 99, true);
+  validPercentageDigits.forEach((val) => {
+    const decimal = round3(val / 100);
+    decimals.add(new DecimalExpressionData(decimal));
+  });
+  const returnSet = new Set<DecimalExpressionData>();
+  for (let idx: number = 0; idx < count; idx++) {
+    returnSet.add(getRandomItemFromSetAndRemove(decimals));
   }
   return returnSet;
 }
@@ -352,7 +372,7 @@ export function getRandomPercentages(count: number, base: MixedNumberExpressionD
 export function getRandomFractions(
   count: number,
   base: MixedNumberExpressionData,
-): Set<MixedNumberExpressionData>  {
+): Set<MixedNumberExpressionData> {
   const valueSet: Set<MixedNumberExpressionData> = new Set();
   const returnSet: Set<MixedNumberExpressionData> = new Set();
   for (let idx = 1; idx != 21; idx++) {

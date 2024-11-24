@@ -6,7 +6,8 @@ import {
 } from '../../../math-components/expression-data/expressionData';
 import { getRandomRootPairs } from '../sampleRandomValues';
 import { getRootTargets, getValidRootPairs } from '../sampleValidValues';
-import { Puzzle, PuzzleType, toggleRValue } from '../Puzzle';
+import { Puzzle, toggleRValue } from '../Puzzle';
+import { PuzzleType } from '../../managers/puzzleTypeManager';
 
 export class Roots extends Puzzle {
   private rootTargets: number[];

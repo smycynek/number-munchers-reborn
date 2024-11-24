@@ -9,8 +9,9 @@ import {
   getRandomDifferencePairs,
 } from '../sampleRandomValues';
 import { getValidDifferencePairs } from '../sampleValidValues';
-import { Puzzle, PuzzleType, toggleRValue } from '../Puzzle';
+import { Puzzle, toggleRValue } from '../Puzzle';
 import { dataUpperBound } from '../../constants';
+import { PuzzleType } from '../../managers/puzzleTypeManager';
 
 export class Subtraction extends Puzzle {
   public constructor(private digits: number = 2) {

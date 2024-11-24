@@ -11,6 +11,7 @@ import { AdditionExpressionComponent } from '../expression-components/addition-e
 import { RootExpressionComponent } from '../expression-components/root-expression/root-expression.component';
 import {
   AdditionExpressionName,
+  DecimalExpressionName,
   DivisionExpressionName,
   ExponenentExpressionName,
   ExpressionData,
@@ -23,6 +24,7 @@ import {
   SubtractionExpressionName,
 } from '../expression-data/expressionData';
 import { PercentageExpressionComponent } from '../expression-components/percentage-expression/percentage-expression.component';
+import { DecimalExpressionComponent } from '../expression-components/decimal-expression/decimal-expression.component';
 
 @Component({
   selector: 'app-math-expression',
@@ -58,6 +60,8 @@ export class MathExpressionComponent {
         return LogarithmExpressionComponent;
       case PercentageExpressionName:
         return PercentageExpressionComponent;
+        case DecimalExpressionName:
+          return DecimalExpressionComponent;
       default:
         throw Error(`Unknown math opType ${this.mathData().opType}`);
     }

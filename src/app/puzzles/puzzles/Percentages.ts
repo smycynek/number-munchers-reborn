@@ -5,16 +5,17 @@ import {
   s,
 } from '../../../math-components/expression-data/expressionData';
 import {
-  getRandomFractionBase,
+  getRandomFractionLowerBase,
   getRandomPercentages,
 } from '../sampleRandomValues';
 import { getValidPercentages } from '../sampleValidValues';
-import { Puzzle, PuzzleType } from '../Puzzle';
+import { Puzzle } from '../Puzzle';
 import { round3 } from '../../utility';
+import { PuzzleType } from '../../managers/puzzleTypeManager';
 
 export class Percentages extends Puzzle {
   public constructor() {
-    super(PuzzleType.Fractions, 'Percentages', true, getRandomFractionBase());
+    super(PuzzleType.Percentages, 'Percentages', true, getRandomFractionLowerBase());
   }
 
   public override predicate(choice: ExpressionData): boolean {
@@ -40,6 +41,6 @@ export class Percentages extends Puzzle {
     return getValidPercentages(this.target1);
   }
   public override getRandomSamples(count: number): Set<ExpressionData> {
-    return getRandomPercentages(count, this.target1);
+    return getRandomPercentages(count);
   }
 }

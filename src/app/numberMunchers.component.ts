@@ -11,7 +11,13 @@ import { CommonModule, Location } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChangeDetectorRef } from '@angular/core';
 import { DataCell } from './dataCell';
-import { debug, getRandomItemFromSetAndRemove, hasTouch, parseId, toggleLog } from './utility';
+import {
+  debug,
+  getRandomItemFromSetAndRemove,
+  hasTouch,
+  parseId,
+  toggleLog,
+} from './utility';
 
 import { HostListener } from '@angular/core';
 import { SoundManager } from './managers/soundManager';
@@ -90,7 +96,9 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   private soundManager: SoundManager = new SoundManager();
   private positionManager: PositionManager = new PositionManager();
   public imageManager: ImageManager = new ImageManager();
-  public title: WritableSignal<string> = signal(StringResources.TITLE + environment.titleSuffix);
+  public title: WritableSignal<string> = signal(
+    StringResources.TITLE + environment.titleSuffix,
+  );
 
   private settingsChanged: WritableSignal<boolean> = signal(false);
 
@@ -116,7 +124,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     private titleService: Title,
     private location: Location,
     private configService: ConfigService,
-    private localStorageService: LocalStorageService
+    private localStorageService: LocalStorageService,
   ) {
     this.holiday.set(this.configService.getConfig().holiday);
     debug('HOLIDAY: ' + this.holiday());
@@ -136,14 +144,17 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
       this.params['s'] = params['s'];
       this.params['m'] = params['m'];
       this.titleService.setTitle(
-        StringResources.TITLE + environment.titleSuffix);
+        StringResources.TITLE + environment.titleSuffix,
+      );
       this.symbols.set(this.getActivePuzzleSymbols());
       if (
         this.puzzleTypeManager.getPuzzleTypes().size !==
         Object.keys(PuzzleType).length / 2
       ) {
         this.titleService.setTitle(
-          StringResources.TITLE + environment.titleSuffix + ' - ' +
+          StringResources.TITLE +
+            environment.titleSuffix +
+            ' - ' +
             [...this.puzzleTypeManager.getPuzzleTypes().values()]
               .map((p) => PuzzleType[p])
               .join(', '),
@@ -248,7 +259,9 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
       }
       this.symbols.set(this.getActivePuzzleSymbols());
       this.titleService.setTitle(
-        StringResources.TITLE + environment.titleSuffix + ' - ' +
+        StringResources.TITLE +
+          environment.titleSuffix +
+          ' - ' +
           [...this.puzzleTypeManager.getPuzzleTypes().values()]
             .map((p) => PuzzleType[p])
             .join(', '),
@@ -308,7 +321,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     const puzzleStringLc = puzzleString?.toLowerCase();
     if (
       !puzzleStringLc ||
-      puzzleStringLc.search('/|m|a|s|d|e|f|o|g|r|/') === -1
+      puzzleStringLc.search('/|m|a|s|d|e|f|o|g|r|p|x|/') === -1
     ) {
       return;
     }
@@ -324,6 +337,8 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
       PuzzleType.Greater_or_less_than,
     );
     this.toggleType(puzzleStringLc.includes('r'), PuzzleType.Roots);
+    this.toggleType(puzzleStringLc.includes('p'), PuzzleType.Percentages);
+    this.toggleType(puzzleStringLc.includes('x'), PuzzleType.Decimals);
   }
 
   public showPuzzleTypes(): void {
@@ -363,8 +378,23 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   public closeSettings() {
     if (this.settingsChanged()) {
       this.newGame();
-      this.settingsChanged.set(false);
+      this.settingsChanged.set(true);
     }
+  }
+
+  public clearAll() {
+    this.toggleType(true, PuzzleType.Greater_or_less_than, true);
+    this.toggleType(false, PuzzleType.Addition, true);
+    this.toggleType(false, PuzzleType.Subtraction, true);
+    this.toggleType(false, PuzzleType.Multiplication, true);
+    this.toggleType(false, PuzzleType.Division, true);
+    this.toggleType(false, PuzzleType.Fractions, true);
+    this.toggleType(false, PuzzleType.Decimals, true);
+    this.toggleType(false, PuzzleType.Percentages, true);
+    this.toggleType(false, PuzzleType.Miscellaneous, true);
+    this.toggleType(false, PuzzleType.Roots, true);
+    this.toggleType(false, PuzzleType.Exponents, true);
+    this.settingsChanged.set(true);
   }
 
   public newGame() {
@@ -450,7 +480,8 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
       (this.isActive(idxr, idxc) && this.hasMertin(idxr, idxc)) ||
       this.activePuzzle().type === PuzzleType.Addition ||
       this.activePuzzle().type === PuzzleType.Subtraction ||
-      this.activePuzzle().type === PuzzleType.Roots
+      this.activePuzzle().type === PuzzleType.Roots ||
+      this.activePuzzle().type === PuzzleType.Decimals
     ) {
       return 'double';
     }

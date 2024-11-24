@@ -17,6 +17,8 @@ export enum PuzzleType {
   Subtraction,
   Exponents,
   Roots,
+  Percentages,
+  Decimals
 }
 
 export const allPuzzles = new Set<PuzzleType>([
@@ -29,6 +31,8 @@ export const allPuzzles = new Set<PuzzleType>([
   PuzzleType.Subtraction,
   PuzzleType.Exponents,
   PuzzleType.Roots,
+  PuzzleType.Percentages,
+  PuzzleType.Decimals
 ]);
 
 export const puzzleCodes: Map<PuzzleType, string> = new Map([
@@ -41,6 +45,8 @@ export const puzzleCodes: Map<PuzzleType, string> = new Map([
   [PuzzleType.Subtraction, 's'],
   [PuzzleType.Greater_or_less_than, 'g'],
   [PuzzleType.Roots, 'r'],
+  [PuzzleType.Percentages, 'p'],
+  [PuzzleType.Decimals, 'x'],
 ]);
 
 export const puzzleSymbols: Map<PuzzleType, string> = new Map([
@@ -53,6 +59,8 @@ export const puzzleSymbols: Map<PuzzleType, string> = new Map([
   [PuzzleType.Subtraction, '-'],
   [PuzzleType.Greater_or_less_than, greaterEqual],
   [PuzzleType.Roots, rootSymbol],
+  [PuzzleType.Percentages, '%'],
+  [PuzzleType.Decimals, '.'],
 ]);
 
 export class PuzzleTypeManager {
@@ -150,4 +158,23 @@ export class PuzzleTypeManager {
       ? this.puzzleTypes.add(PuzzleType.Roots)
       : this.puzzleTypes.delete(PuzzleType.Roots);
   }
+
+  public get percentages(): boolean {
+    return this.puzzleTypes.has(PuzzleType.Percentages);
+  }
+  public set percentages(val: boolean) {
+    val
+      ? this.puzzleTypes.add(PuzzleType.Percentages)
+      : this.puzzleTypes.delete(PuzzleType.Percentages);
+  }
+
+  public get decimals(): boolean {
+    return this.puzzleTypes.has(PuzzleType.Decimals);
+  }
+  public set decimals(val: boolean) {
+    val
+      ? this.puzzleTypes.add(PuzzleType.Decimals)
+      : this.puzzleTypes.delete(PuzzleType.Decimals);
+  }
+
 }

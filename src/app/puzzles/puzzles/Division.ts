@@ -9,7 +9,8 @@ import {
   getRandomNumberWithinRange,
 } from '../sampleRandomValues';
 import { getValidDivisionPairs } from '../sampleValidValues';
-import { Puzzle, PuzzleType, toggleRValue } from '../Puzzle';
+import { Puzzle, toggleRValue } from '../Puzzle';
+import { PuzzleType } from '../../managers/puzzleTypeManager';
 
 export class Division extends Puzzle {
   public constructor() {

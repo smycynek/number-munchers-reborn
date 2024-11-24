@@ -19,6 +19,7 @@ import { Primes } from './puzzles/Primes';
 import { Roots } from './puzzles/Roots';
 import { Subtraction } from './puzzles/Subtraction';
 import { Percentages } from './puzzles/Percentages';
+import { Decimals } from './puzzles/Decimals';
 
 export function getRandomPuzzle(puzzleTypes: Set<PuzzleType>) {
   const puzzles: Puzzle[] = [
@@ -40,6 +41,7 @@ export function getRandomPuzzle(puzzleTypes: Set<PuzzleType>) {
     new FractionGreaterThanHalf(),
     new FractionLessThanHalf(),
     new Percentages(),
+    new Decimals(),
     new Division(),
     new DivisibleBy(),
     new Roots(),
