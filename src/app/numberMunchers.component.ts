@@ -223,9 +223,20 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   }
 
   /* Options */
-  public isCheckboxDisabled(val: boolean) {
-    if (val && this.puzzleTypeManager.getPuzzleTypes().size <= 1) return true;
-    else return false;
+
+/* eslint-disable @typescript-eslint/no-unused-vars */
+  public isCheckboxDisabled(_val: boolean) {
+    return false;
+  //   if (val && this.puzzleTypeManager.getPuzzleTypes().size <= 1) return true;
+  //  else return false;
+  }
+
+  public validPuzzleSetSelected(): boolean {
+    return this.puzzleTypeManager.getPuzzleTypes().size !== 0;
+  }
+
+  public getPuzzleTypeMessage(): string {
+    return this.puzzleTypeManager.getPuzzleTypes().size === 0 ? 'Select at least one puzzle type' : 'OK';
   }
 
   private getActivePuzzleSymbols(): string {
@@ -343,6 +354,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
 
   public showPuzzleTypes(): void {
     this.btnShowPuzzleTypes.nativeElement.blur();
+    this.ensureValidPuzzleSelection();
     this.puzzleTypeDialog.nativeElement.showModal();
     debug('Show puzzle types');
   }
@@ -382,8 +394,15 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     }
   }
 
+  private ensureValidPuzzleSelection(): void {
+    if (this.puzzleTypeManager.getPuzzleTypes().size === 0) {
+      debug('No puzzles selected, defaulting to addition');
+      this.toggleType(true, PuzzleType.Addition, true);
+      this.settingsChanged.set(true);
+    }
+  }
   public clearAll() {
-    this.toggleType(true, PuzzleType.Greater_or_less_than, true);
+    this.toggleType(false, PuzzleType.Greater_or_less_than, true);
     this.toggleType(false, PuzzleType.Addition, true);
     this.toggleType(false, PuzzleType.Subtraction, true);
     this.toggleType(false, PuzzleType.Multiplication, true);
@@ -400,6 +419,8 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   public newGame() {
     debug('New game');
     this.reset();
+
+    this.ensureValidPuzzleSelection();
     this.init();
     this.timerInit();
     this.btnNewGame.nativeElement.blur();

@@ -41,11 +41,11 @@ export function getRandomPuzzle(puzzleTypes: Set<PuzzleType>) {
     new FractionGreaterThanHalf(),
     new FractionLessThanHalf(),
     new Percentages(),
-    new Decimals(),
     new Division(),
     new DivisibleBy(),
     new Roots(),
     new Exponents(),
+    new Decimals(),
   ];
   const puzzlesFiltered = puzzles.filter(
     (p) => puzzleTypes.has(p.type) && p.include,

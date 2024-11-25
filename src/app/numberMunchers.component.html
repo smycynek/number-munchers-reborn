@@ -187,7 +187,7 @@
 
     </div>
      <form method="dialog">
-      <button (click)="closeSettings()" class="button-base button-centered highlighted">OK</button>
+      <button [disabled]="!validPuzzleSetSelected()" (click)="closeSettings()" class="button-base button-centered highlighted">{{getPuzzleTypeMessage()}}</button>
     </form>
   </dialog>
 
