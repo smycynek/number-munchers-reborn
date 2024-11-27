@@ -4,19 +4,19 @@ export class ImageManager {
     happy.src = this.getMunchyHappyImage(holiday);
 
     const sad = new Image();
-    sad.src = this.getMunchyNeutralImage();
+    sad.src = this.getMunchyNeutralImage(holiday);
 
     const neutral = new Image();
-    neutral.src = this.getMunchySadImage();
+    neutral.src = this.getMunchySadImage(holiday);
 
     const mertin = new Image();
     mertin.src = this.getMertinImage(holiday);
   }
 
-  public getMunchyImage(holiday: string): string {
-    return `assets/munchy${holiday}-happy.svg`;
-  }
   public getMertinImage(holiday: string): string {
+    if (holiday === '-af') {  // af = april fool's day = avatars switched
+      return 'assets/munchy-happy.svg';
+    }
     return `assets/mertin${holiday}.svg`;
   }
 
@@ -32,14 +32,23 @@ export class ImageManager {
   }
 
   public getMunchyHappyImage(holiday: string): string {
+    if (holiday === '-af') {
+      return 'assets/mertin.svg';
+    }
     return `assets/munchy${holiday}-happy.svg`;
   }
 
-  public getMunchySadImage(): string {
+  public getMunchySadImage(holiday: string): string {
+    if (holiday === '-af') { // af = april fool's day = avatars switched
+      return 'assets/mertin-sad.svg';
+    }
     return 'assets/munchy-sad.svg';
   }
 
-  public getMunchyNeutralImage(): string {
+  public getMunchyNeutralImage(holiday: string): string {
+    if (holiday === '-af') {
+      return 'assets/mertin-neutral.svg';
+    }
     return 'assets/munchy-neutral.svg';
   }
 }

@@ -552,9 +552,9 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     if (data.valid && data.discovered)
       return this.imageManager.getMunchyHappyImage(this.holiday());
     else if (!data.valid && data.discovered) {
-      return this.imageManager.getMunchySadImage();
+      return this.imageManager.getMunchySadImage(this.holiday());
     } else {
-      return this.imageManager.getMunchyNeutralImage();
+      return this.imageManager.getMunchyNeutralImage(this.holiday());
     }
   }
 
