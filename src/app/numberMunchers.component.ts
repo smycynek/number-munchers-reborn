@@ -3,6 +3,7 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  OnInit,
   ViewChild,
   WritableSignal,
   signal,
@@ -70,7 +71,7 @@ import { LocalStorageService } from '../localStorageService';
   templateUrl: './numberMunchers.component.html',
   styleUrl: './less/numberMunchers.component.less',
 })
-export class AppComponent implements AfterViewChecked, AfterViewInit {
+export class AppComponent implements AfterViewChecked, AfterViewInit, OnInit {
   @ViewChild('welcomeDialog') welcomeDialog!: ElementRef;
   @ViewChild('helpDialog') helpDialog!: ElementRef;
   @ViewChild('puzzleTypeDialog') puzzleTypeDialog!: ElementRef;
@@ -125,7 +126,8 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     public imageService: ImageService,
     public soundService: SoundService,
     public puzzleTypeService: PuzzleTypeService,
-  ) {
+  ) {}
+  ngOnInit(): void {
     this.holiday.set(this.configService.getConfig().holiday);
     debug('HOLIDAY: ' + this.holiday());
     this.imageService.preload(this.holiday());
