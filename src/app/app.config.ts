@@ -6,18 +6,19 @@ import { provideHttpClient } from '@angular/common/http';
 
 export function appConfigInit(appConfigService: ConfigService) {
   return () => {
-    return appConfigService.loadConfig()
+    return appConfigService.loadConfig();
   };
 }
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes),
+  providers: [
+    provideRouter(routes),
     provideHttpClient(),
     {
       provide: APP_INITIALIZER,
       useFactory: appConfigInit,
       multi: true,
-      deps: [ConfigService]
+      deps: [ConfigService],
     },
-  ]
+  ],
 };

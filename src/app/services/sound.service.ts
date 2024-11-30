@@ -1,4 +1,9 @@
-export class SoundManager {
+import { Injectable } from '@angular/core';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class SoundService {
   constructor() {
     this.yum.src = './assets/yum.mp3';
     this.yum.preload = 'auto';
@@ -23,7 +28,7 @@ export class SoundManager {
   private perfectScore = new Audio();
   private sound: boolean = true;
 
-  public playCackle() {
+  public playCackle(): void {
     if (this.sound) {
       this.cackle.play();
       const cacklec = this.cackle.cloneNode() as HTMLAudioElement;

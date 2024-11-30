@@ -4,14 +4,14 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class LocalStorageService {
-  private winStreakKey= 'nm:winStreak';
+  private winStreakKey = 'nm:winStreak';
   private highScoreKey = 'nm:highScore';
 
-  setWinStreak(winStreak: number) {
+  setWinStreak(winStreak: number): void {
     localStorage.setItem(this.winStreakKey, JSON.stringify(winStreak));
   }
 
-  setHighScore(highScore: number) {
+  setHighScore(highScore: number): void {
     localStorage.setItem(this.highScoreKey, JSON.stringify(highScore));
   }
 

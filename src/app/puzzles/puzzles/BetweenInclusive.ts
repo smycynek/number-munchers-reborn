@@ -15,7 +15,7 @@ import {
   getValidBetweenValues,
 } from '../sampleValidValues';
 import { Puzzle } from '../Puzzle';
-import { PuzzleType } from '../../managers/puzzleTypeManager';
+import { PuzzleType } from '../../services/puzzleType.service';
 
 export class BetweenInclusive extends Puzzle {
   public constructor() {
@@ -37,7 +37,12 @@ export class BetweenInclusive extends Puzzle {
     ];
   }
   public override predicate(choice: ExpressionData): boolean {
-    return isBetween(choice.value, this.target1.value, this.target2.value, true);
+    return isBetween(
+      choice.value,
+      this.target1.value,
+      this.target2.value,
+      true,
+    );
   }
   public override successDetails(choice: ExpressionTypes): ExpressionTypes[] {
     return [
@@ -63,6 +68,8 @@ export class BetweenInclusive extends Puzzle {
     );
   }
   public override getRandomSamples(count: number): Set<ExpressionData> {
-    return toExpressionDataSet(getRandomNaturalNumberSet(dataUpperBound, count));
+    return toExpressionDataSet(
+      getRandomNaturalNumberSet(dataUpperBound, count),
+    );
   }
 }

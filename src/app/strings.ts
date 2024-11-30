@@ -7,7 +7,7 @@ export class StringResources {
     'Use arrow keys and the space bar (or click or tap) to select correct answers. ';
   public static readonly NEW_GAME = 'New game';
   public static readonly TRY_AGAIN = 'Try again!';
-  public static readonly N_KEY = '(or hit \'N\' key)';
+  public static readonly N_KEY = '(or hit "N" key)';
   public static readonly FOUND_ALL = 'You found all the correct answers!';
   public static readonly PERFECT_SCORE = 'Perfect score!';
   public static readonly CORRECT = 'Correct!';

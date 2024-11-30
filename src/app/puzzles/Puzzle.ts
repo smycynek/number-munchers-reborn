@@ -8,7 +8,7 @@ import { DataCell } from '../dataCell';
 import { getRandomItemFromSetAndRemove } from './sampleRandomValues';
 import { expressionDataSetHas } from './sampleValidValues';
 import { debug } from '../utility';
-import { PuzzleType } from '../managers/puzzleTypeManager';
+import { PuzzleType } from '../services/puzzleType.service';
 
 export function toggleRValue(cellValue: ExpressionTypes): ExpressionTypes {
   cellValue.showRval = !cellValue.showRval;
@@ -98,9 +98,7 @@ export abstract class Puzzle {
       }
     }
 
-    debug(
-      `Curated final values: ${[...randomValues]} : ${randomValues.size}`,
-    );
+    debug(`Curated final values: ${[...randomValues]} : ${randomValues.size}`);
     return randomValues;
   }
 }

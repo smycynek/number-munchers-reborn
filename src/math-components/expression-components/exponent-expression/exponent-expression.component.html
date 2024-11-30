@@ -1,30 +1,26 @@
 <math>
-    <mrow>
-        <msup>
-            <mn>{{base()}}</mn>
-            <mn>{{power()}}</mn>
-        </msup>
-        @if (showRval()) {
-        @if (displayOp()) {
+  <mrow>
+    <msup>
+      <mn>{{ base() }}</mn>
+      <mn>{{ power() }}</mn>
+    </msup>
+    @if (showRval()) {
+      @if (displayOp()) {
         <mo>
-            {{displayOp()}}
+          {{ displayOp() }}
         </mo>
-        }
-        @else {
-        <mo>
-            =
-        </mo>
-        }
-        @if (displayRval()) {
+      } @else {
+        <mo> = </mo>
+      }
+      @if (displayRval()) {
         <mn>
-            {{displayRval()}}
+          {{ displayRval() }}
         </mn>
-        }
-        @else {
+      } @else {
         <mn>
-            {{value()}}
+          {{ value() }}
         </mn>
-        }
-        }
-    </mrow>
+      }
+    }
+  </mrow>
 </math>

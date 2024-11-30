@@ -11,7 +11,7 @@ import {
 import { getValidDifferencePairs } from '../sampleValidValues';
 import { Puzzle, toggleRValue } from '../Puzzle';
 import { dataUpperBound } from '../../constants';
-import { PuzzleType } from '../../managers/puzzleTypeManager';
+import { PuzzleType } from '../../services/puzzleType.service';
 
 export class Subtraction extends Puzzle {
   public constructor(private digits: number = 2) {

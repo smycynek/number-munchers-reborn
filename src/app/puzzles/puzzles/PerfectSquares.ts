@@ -7,12 +7,9 @@ import {
 import { dataUpperBound } from '../../constants';
 import { isPerfectSquare } from '../predicates';
 import { getRandomNaturalNumberSet } from '../sampleRandomValues';
-import {
-  toExpressionDataSet,
-  getPerfectSquares,
-} from '../sampleValidValues';
+import { toExpressionDataSet, getPerfectSquares } from '../sampleValidValues';
 import { Puzzle } from '../Puzzle';
-import { PuzzleType } from '../../managers/puzzleTypeManager';
+import { PuzzleType } from '../../services/puzzleType.service';
 
 export class PerfectSquares extends Puzzle {
   public constructor() {
@@ -38,6 +35,8 @@ export class PerfectSquares extends Puzzle {
     return toExpressionDataSet(getPerfectSquares());
   }
   public override getRandomSamples(count: number): Set<ExpressionData> {
-    return toExpressionDataSet(getRandomNaturalNumberSet(dataUpperBound, count));
+    return toExpressionDataSet(
+      getRandomNaturalNumberSet(dataUpperBound, count),
+    );
   }
 }

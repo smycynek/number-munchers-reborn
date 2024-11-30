@@ -1,197 +1,398 @@
 <main id="keytarget" class="main disable-dbl-tap-zoom">
-
-  <link rel="preload" href="assets/mertin-0.svg" as="image">
-  <link rel="preload" href="assets/mertin-1.svg" as="image">
-  <link rel="preload" href="assets/mertin-2.svg" as="image">
-  <link rel="preload" href="assets/mertin-3.svg" as="image">
+  <link rel="preload" href="assets/mertin-0.svg" as="image" />
+  <link rel="preload" href="assets/mertin-1.svg" as="image" />
+  <link rel="preload" href="assets/mertin-2.svg" as="image" />
+  <link rel="preload" href="assets/mertin-3.svg" as="image" />
 
   <div class="content">
     <div class="container">
-      <h1 class="header" (click)="toggleDebug()">{{title()}}</h1>
+      <h1 class="header" (click)="toggleDebug()">{{ title() }}</h1>
       <div class="question-container">
-        <app-math-sentence [dataArray]="activePuzzle().getQuestionText()"></app-math-sentence>
+        <app-math-sentence
+          [dataArray]="activePuzzle().getQuestionText()"
+        ></app-math-sentence>
       </div>
 
-      <button id="btnNewGame" #btnNewGame title="Start a new game" class="button-base button-new-game highlighted"
-        style="margin-right:12px;" (click)="newGame()">{{getStartButtonText()}}</button>
-      <button #btnSound title="Sound Effects" (click)="toggleSound()" type="button"
-        class="btn imagebutton row-button highlighted">
-        <svg *ngIf="getSoundManager().getSoundOn()" role="img" aria-labelledby="Sound off"
-          xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-volume-up"
-          viewBox="0 0 16 16">
+      <button
+        id="btnNewGame"
+        #btnNewGame
+        title="Start a new game"
+        class="button-base button-new-game highlighted"
+        style="margin-right: 12px"
+        (click)="newGame()"
+      >
+        {{ getStartButtonText() }}
+      </button>
+      <button
+        #btnSound
+        title="Sound Effects"
+        (click)="toggleSound()"
+        type="button"
+        class="btn imagebutton row-button highlighted"
+      >
+        <svg
+          *ngIf="soundService.getSoundOn()"
+          role="img"
+          aria-labelledby="Sound off"
+          xmlns="http://www.w3.org/2000/svg"
+          width="40"
+          height="40"
+          fill="currentColor"
+          class="bi bi-volume-up"
+          viewBox="0 0 16 16"
+        >
           <path
-            d="M11.536 14.01A8.47 8.47 0 0 0 14.026 8a8.47 8.47 0 0 0-2.49-6.01l-.708.707A7.48 7.48 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303z" />
+            d="M11.536 14.01A8.47 8.47 0 0 0 14.026 8a8.47 8.47 0 0 0-2.49-6.01l-.708.707A7.48 7.48 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303z"
+          />
           <path
-            d="M10.121 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.904-4.596l-.707.707A5.48 5.48 0 0 1 11.025 8a5.48 5.48 0 0 1-1.61 3.89z" />
+            d="M10.121 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.904-4.596l-.707.707A5.48 5.48 0 0 1 11.025 8a5.48 5.48 0 0 1-1.61 3.89z"
+          />
           <path
-            d="M10.025 8a4.5 4.5 0 0 1-1.318 3.182L8 10.475A3.5 3.5 0 0 0 9.025 8c0-.966-.392-1.841-1.025-2.475l.707-.707A4.5 4.5 0 0 1 10.025 8M7 4a.5.5 0 0 0-.812-.39L3.825 5.5H1.5A.5.5 0 0 0 1 6v4a.5.5 0 0 0 .5.5h2.325l2.363 1.89A.5.5 0 0 0 7 12zM4.312 6.39 6 5.04v5.92L4.312 9.61A.5.5 0 0 0 4 9.5H2v-3h2a.5.5 0 0 0 .312-.11" />
+            d="M10.025 8a4.5 4.5 0 0 1-1.318 3.182L8 10.475A3.5 3.5 0 0 0 9.025 8c0-.966-.392-1.841-1.025-2.475l.707-.707A4.5 4.5 0 0 1 10.025 8M7 4a.5.5 0 0 0-.812-.39L3.825 5.5H1.5A.5.5 0 0 0 1 6v4a.5.5 0 0 0 .5.5h2.325l2.363 1.89A.5.5 0 0 0 7 12zM4.312 6.39 6 5.04v5.92L4.312 9.61A.5.5 0 0 0 4 9.5H2v-3h2a.5.5 0 0 0 .312-.11"
+          />
         </svg>
-        <svg *ngIf="!getSoundManager().getSoundOn()" role="img" aria-labelledby="Sound on"
-          xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-volume-mute"
-          viewBox="0 0 16 16">
+        <svg
+          *ngIf="!soundService.getSoundOn()"
+          role="img"
+          aria-labelledby="Sound on"
+          xmlns="http://www.w3.org/2000/svg"
+          width="40"
+          height="40"
+          fill="currentColor"
+          class="bi bi-volume-mute"
+          viewBox="0 0 16 16"
+        >
           <path
-            d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06M6 5.04 4.312 6.39A.5.5 0 0 1 4 6.5H2v3h2a.5.5 0 0 1 .312.11L6 10.96zm7.854.606a.5.5 0 0 1 0 .708L12.207 8l1.647 1.646a.5.5 0 0 1-.708.708L11.5 8.707l-1.646 1.647a.5.5 0 0 1-.708-.708L10.793 8 9.146 6.354a.5.5 0 1 1 .708-.708L11.5 7.293l1.646-1.647a.5.5 0 0 1 .708 0" />
+            d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06M6 5.04 4.312 6.39A.5.5 0 0 1 4 6.5H2v3h2a.5.5 0 0 1 .312.11L6 10.96zm7.854.606a.5.5 0 0 1 0 .708L12.207 8l1.647 1.646a.5.5 0 0 1-.708.708L11.5 8.707l-1.646 1.647a.5.5 0 0 1-.708-.708L10.793 8 9.146 6.354a.5.5 0 1 1 .708-.708L11.5 7.293l1.646-1.647a.5.5 0 0 1 .708 0"
+          />
         </svg>
       </button>
 
-      <button #btnMertin [disabled]="this.noRemainingSolutions()" class="btn imagebutton row-button highlighted"
-        [ngClass]="getMertinButtonClass()" (click)="toggleMertin()">
-        <img alt="Mertin avatar" title="Set Mertin-mode speed" [src]="imageManager.getMertinButtonImage(speed())"
-          width="40" width="40">
+      <button
+        #btnMertin
+        [disabled]="this.noRemainingSolutions()"
+        class="btn imagebutton row-button highlighted"
+        [ngClass]="getMertinButtonClass()"
+        (click)="toggleMertin()"
+      >
+        <img
+          alt="Mertin avatar"
+          title="Set Mertin-mode speed"
+          [src]="imageService.getMertinButtonImage(speed())"
+          width="40"
+          width="40"
+        />
       </button>
 
-      <button #btnShowPuzzleTypes title="Select puzzle types" class="btn imagebutton row-button highlighted"
-        (click)="showPuzzleTypes()">
+      <button
+        #btnShowPuzzleTypes
+        title="Select puzzle types"
+        class="btn imagebutton row-button highlighted"
+        (click)="showPuzzleTypes()"
+      >
         <img alt="puzzle-piece-icon" src="assets/puzzle-piece.svg" />
       </button>
 
-      <button #btnHelp title="Help" class="btn imagebutton row-button highlighted" (click)="showHelp()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-question-circle"
-          viewBox="0 0 16 16">
-          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+      <button
+        #btnHelp
+        title="Help"
+        class="btn imagebutton row-button highlighted"
+        (click)="showHelp()"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="40"
+          height="40"
+          fill="currentColor"
+          class="bi bi-question-circle"
+          viewBox="0 0 16 16"
+        >
           <path
-            d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286m1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94" />
+            d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"
+          />
+          <path
+            d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286m1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94"
+          />
         </svg>
       </button>
-      <p class="bold" [ngClass]="statusMessageClass()">{{statusMessage()}}</p>
+      <p class="bold" [ngClass]="statusMessageClass()">{{ statusMessage() }}</p>
       <div class="details-container">
         <p class="message-detail" [ngClass]="statusMessageClass()">
-          <app-math-sentence [dataArray]="statusMessageDetail()"></app-math-sentence>
+          <app-math-sentence
+            [dataArray]="statusMessageDetail()"
+          ></app-math-sentence>
         </p>
       </div>
-      <div *ngFor="let r of [].constructor(getPositionManager().rowCount()); index as idxr" class="row">
-        <div [ngClass]="getCellClass(idxr,idxc)" id="{{idxr}}{{idxc}}"
-          *ngFor="let r of [].constructor(getPositionManager().columnCount()); index as idxc"
-          class="col cell click-target">
-
-          <app-math-expression [mathData]="getCellData(idxr,idxc).expressionValue"></app-math-expression>
-          <img alt="muncher avatar" id="i{{idxr}}{{idxc}}" *ngIf="isActive(idxr, idxc)"
-            [ngClass]="getAvatarSizeClass(idxr, idxc)" [src]="getAvatarImage()" />
-          <img alt="mertin avatar" id="i{{idxr}}{{idxc}}m" *ngIf="hasMertin(idxr, idxc)"
-            [ngClass]="getAvatarSizeClass(idxr, idxc)" [src]="imageManager.getMertinImage(holiday())" />
+      <div
+        *ngFor="
+          let r of [].constructor(positionService.rowCount());
+          index as idxr
+        "
+        class="row"
+      >
+        <div
+          [ngClass]="getCellClass(idxr, idxc)"
+          id="{{ idxr }}{{ idxc }}"
+          *ngFor="
+            let r of [].constructor(positionService.columnCount());
+            index as idxc
+          "
+          class="col cell click-target"
+        >
+          <app-math-expression
+            [mathData]="getCellData(idxr, idxc).expressionValue"
+          ></app-math-expression>
+          <img
+            alt="muncher avatar"
+            id="i{{ idxr }}{{ idxc }}"
+            *ngIf="isActive(idxr, idxc)"
+            [ngClass]="getAvatarSizeClass(idxr, idxc)"
+            [src]="getAvatarImage()"
+          />
+          <img
+            alt="mertin avatar"
+            id="i{{ idxr }}{{ idxc }}m"
+            *ngIf="hasMertin(idxr, idxc)"
+            [ngClass]="getAvatarSizeClass(idxr, idxc)"
+            [src]="imageService.getMertinImage(holiday())"
+          />
         </div>
       </div>
       <div class="footer" (click)="toggleScore()">
         @if (showScore()) {
-        <div>
-          <span class="scoreLabel">Streak</span>
-          <app-heart value={{winStreak()}}></app-heart>
-          <span class="scoreLabel">High Score</span>
-          <app-heart value={{highScore()}}></app-heart>
-        </div>
-        <div>
-          <span>{{symbols()}}</span>
-        </div>
+          <div>
+            <span class="scoreLabel">Streak</span>
+            <app-heart value="{{ winStreak() }}"></app-heart>
+            <span class="scoreLabel">High Score</span>
+            <app-heart value="{{ highScore() }}"></app-heart>
+          </div>
+          <div>
+            <span>{{ symbols() }}</span>
+          </div>
         } @else {
-        <p class="version">||{{getVersion()}}||</p>
+          <p class="version">||{{ getVersion() }}||</p>
         }
       </div>
     </div>
   </div>
 
-  <dialog class="dialog-base dialog-general dialog-narrow" typeDialog #puzzleTypeDialog closed>
+  <dialog
+    class="dialog-base dialog-general dialog-narrow"
+    typeDialog
+    #puzzleTypeDialog
+    closed
+  >
     <div>
       <h1>Puzzle Types</h1>
 
       <div class="choice-menu">
         <div class="choice-group form-check">
-          <input class="checkbox-wide highlighted" id="cbGlt" [disabled]="isCheckboxDisabled(puzzleTypeManager.glt)"
-            [(ngModel)]="puzzleTypeManager.glt"
-            (change)="toggleType(puzzleTypeManager.glt, puzzleType.Greater_or_less_than, true)" type="checkbox" />
+          <input
+            class="checkbox-wide highlighted"
+            id="cbGlt"
+            [disabled]="isCheckboxDisabled(puzzleTypeService.glt)"
+            [(ngModel)]="puzzleTypeService.glt"
+            (change)="
+              toggleType(
+                puzzleTypeService.glt,
+                puzzleType.Greater_or_less_than,
+                true
+              )
+            "
+            type="checkbox"
+          />
           <label for="cbGlt">Greater or Less Than</label>
         </div>
 
         <div class="choice-group">
-          <input class="checkbox-wide highlighted" id="cbAddition"
-            [disabled]="isCheckboxDisabled(puzzleTypeManager.addition)" [(ngModel)]="puzzleTypeManager.addition"
-            (change)="toggleType(puzzleTypeManager.addition, puzzleType.Addition, true)" type="checkbox" />
+          <input
+            class="checkbox-wide highlighted"
+            id="cbAddition"
+            [disabled]="isCheckboxDisabled(puzzleTypeService.addition)"
+            [(ngModel)]="puzzleTypeService.addition"
+            (change)="
+              toggleType(puzzleTypeService.addition, puzzleType.Addition, true)
+            "
+            type="checkbox"
+          />
           <label for="cbAddition">Addition</label>
         </div>
 
         <div class="choice-group">
-          <input class="checkbox-wide highlighted" id="cbSubtraction"
-            [disabled]="isCheckboxDisabled(puzzleTypeManager.subtraction)" [(ngModel)]="puzzleTypeManager.subtraction"
-            (change)="toggleType(puzzleTypeManager.subtraction, puzzleType.Subtraction, true)" type="checkbox" />
+          <input
+            class="checkbox-wide highlighted"
+            id="cbSubtraction"
+            [disabled]="isCheckboxDisabled(puzzleTypeService.subtraction)"
+            [(ngModel)]="puzzleTypeService.subtraction"
+            (change)="
+              toggleType(
+                puzzleTypeService.subtraction,
+                puzzleType.Subtraction,
+                true
+              )
+            "
+            type="checkbox"
+          />
           <label for="cbSubtraction">Subtraction</label>
         </div>
 
         <div class="choice-group">
-          <input class="checkbox-wide highlighted" id="cbMult"
-            [disabled]="isCheckboxDisabled(puzzleTypeManager.multiplication)"
-            [(ngModel)]="puzzleTypeManager.multiplication"
-            (change)="toggleType(puzzleTypeManager.multiplication, puzzleType.Multiplication, true)" type="checkbox" />
+          <input
+            class="checkbox-wide highlighted"
+            id="cbMult"
+            [disabled]="isCheckboxDisabled(puzzleTypeService.multiplication)"
+            [(ngModel)]="puzzleTypeService.multiplication"
+            (change)="
+              toggleType(
+                puzzleTypeService.multiplication,
+                puzzleType.Multiplication,
+                true
+              )
+            "
+            type="checkbox"
+          />
           <label for="cbMult">Multiplication</label>
         </div>
         <div class="choice-group">
-          <input class="checkbox-wide highlighted" id="cbDiv"
-            [disabled]="isCheckboxDisabled(puzzleTypeManager.division)" [(ngModel)]="puzzleTypeManager.division"
-            (change)="toggleType(puzzleTypeManager.division, puzzleType.Division, true)" type="checkbox" />
+          <input
+            class="checkbox-wide highlighted"
+            id="cbDiv"
+            [disabled]="isCheckboxDisabled(puzzleTypeService.division)"
+            [(ngModel)]="puzzleTypeService.division"
+            (change)="
+              toggleType(puzzleTypeService.division, puzzleType.Division, true)
+            "
+            type="checkbox"
+          />
           <label for="cbDiv">Division</label>
         </div>
 
         <div class="choice-group">
-          <input class="checkbox-wide highlighted" id="cbFractions"
-            [disabled]="isCheckboxDisabled(puzzleTypeManager.fractions)" [(ngModel)]="puzzleTypeManager.fractions"
-            (change)="toggleType(puzzleTypeManager.fractions, puzzleType.Fractions, true)" type="checkbox" />
+          <input
+            class="checkbox-wide highlighted"
+            id="cbFractions"
+            [disabled]="isCheckboxDisabled(puzzleTypeService.fractions)"
+            [(ngModel)]="puzzleTypeService.fractions"
+            (change)="
+              toggleType(
+                puzzleTypeService.fractions,
+                puzzleType.Fractions,
+                true
+              )
+            "
+            type="checkbox"
+          />
           <label for="cbFractions">Fractions</label>
         </div>
 
         <div class="choice-group">
-          <input class="checkbox-wide highlighted" id="cbPercentages"
-            [disabled]="isCheckboxDisabled(puzzleTypeManager.percentages)" [(ngModel)]="puzzleTypeManager.percentages"
-            (change)="toggleType(puzzleTypeManager.percentages, puzzleType.Percentages, true)" type="checkbox" />
+          <input
+            class="checkbox-wide highlighted"
+            id="cbPercentages"
+            [disabled]="isCheckboxDisabled(puzzleTypeService.percentages)"
+            [(ngModel)]="puzzleTypeService.percentages"
+            (change)="
+              toggleType(
+                puzzleTypeService.percentages,
+                puzzleType.Percentages,
+                true
+              )
+            "
+            type="checkbox"
+          />
           <label for="cbPercentages">Percentages</label>
         </div>
 
         <div class="choice-group">
-          <input class="checkbox-wide highlighted" id="cbDecimals"
-            [disabled]="isCheckboxDisabled(puzzleTypeManager.decimals)" [(ngModel)]="puzzleTypeManager.decimals"
-            (change)="toggleType(puzzleTypeManager.decimals, puzzleType.Decimals, true)" type="checkbox" />
+          <input
+            class="checkbox-wide highlighted"
+            id="cbDecimals"
+            [disabled]="isCheckboxDisabled(puzzleTypeService.decimals)"
+            [(ngModel)]="puzzleTypeService.decimals"
+            (change)="
+              toggleType(puzzleTypeService.decimals, puzzleType.Decimals, true)
+            "
+            type="checkbox"
+          />
           <label for="cbDecimals">Decimals</label>
         </div>
 
-
         <div class="choice-group">
-          <input class="checkbox-wide highlighted" id="cbExponents"
-            [disabled]="isCheckboxDisabled(puzzleTypeManager.exponents)" [(ngModel)]="puzzleTypeManager.exponents"
-            (change)="toggleType(puzzleTypeManager.exponents, puzzleType.Exponents, true)" type="checkbox" />
+          <input
+            class="checkbox-wide highlighted"
+            id="cbExponents"
+            [disabled]="isCheckboxDisabled(puzzleTypeService.exponents)"
+            [(ngModel)]="puzzleTypeService.exponents"
+            (change)="
+              toggleType(
+                puzzleTypeService.exponents,
+                puzzleType.Exponents,
+                true
+              )
+            "
+            type="checkbox"
+          />
           <label for="cbExponents">Exponents</label>
         </div>
 
         <div class="choice-group">
-          <input class="checkbox-wide highlighted" id="cbRoots" [disabled]="isCheckboxDisabled(puzzleTypeManager.roots)"
-            [(ngModel)]="puzzleTypeManager.roots" (change)="toggleType(puzzleTypeManager.roots, puzzleType.Roots, true)"
-            type="checkbox" />
+          <input
+            class="checkbox-wide highlighted"
+            id="cbRoots"
+            [disabled]="isCheckboxDisabled(puzzleTypeService.roots)"
+            [(ngModel)]="puzzleTypeService.roots"
+            (change)="
+              toggleType(puzzleTypeService.roots, puzzleType.Roots, true)
+            "
+            type="checkbox"
+          />
           <label for="cbRoots">Roots</label>
         </div>
 
         <div class="choice-group">
-          <input class="checkbox-wide highlighted" id="cbMisc" [disabled]="isCheckboxDisabled(puzzleTypeManager.misc)"
-            [(ngModel)]="puzzleTypeManager.misc"
-            (change)="toggleType(puzzleTypeManager.misc, puzzleType.Miscellaneous, true)" type="checkbox" />
+          <input
+            class="checkbox-wide highlighted"
+            id="cbMisc"
+            [disabled]="isCheckboxDisabled(puzzleTypeService.misc)"
+            [(ngModel)]="puzzleTypeService.misc"
+            (change)="
+              toggleType(puzzleTypeService.misc, puzzleType.Miscellaneous, true)
+            "
+            type="checkbox"
+          />
           <label for="cbMisc">Odds and Ends</label>
         </div>
 
-        <button (click)="clearAll()" class="button-base highlighted tiny-button">Clear All</button>
+        <button
+          (click)="clearAll()"
+          class="button-base highlighted tiny-button"
+        >
+          Clear All
+        </button>
 
         <p class="detail-content">
-          Puzzle type preference changes are encoded in the page's URL. Copy, text, bookmark, or post it to save a
-          custom puzzle configuration.
+          Puzzle type preference changes are encoded in the page's URL. Copy,
+          text, bookmark, or post it to save a custom puzzle configuration.
         </p>
-
-
-
-
-
       </div>
-
     </div>
-     <form method="dialog">
-      <button [disabled]="!validPuzzleSetSelected()" (click)="closeSettings()" class="has-disabled button-base button-centered highlighted">{{getPuzzleTypeMessage()}}</button>
+    <form method="dialog">
+      <button
+        [disabled]="!validPuzzleSetSelected()"
+        (click)="closeSettings()"
+        class="has-disabled button-base button-centered highlighted"
+      >
+        {{ getPuzzleTypeMessage() }}
+      </button>
     </form>
   </dialog>
 
-  <dialog class="dialog-base dialog-welcome dialog-narrow" #welcomeDialog welcomeDialog closed>
+  <dialog
+    class="dialog-base dialog-welcome dialog-narrow"
+    #welcomeDialog
+    welcomeDialog
+    closed
+  >
     <form method="dialog">
       <button class="button-base button-cancel highlighted">X</button>
     </form>
@@ -199,55 +400,73 @@
       <div class="heading">
         <p class="centered strong">Welcome!</p>
       </div>
-      <p> Click or tap a square in the grid to get started with the game. Try the row of icons above the grid
-        for game settings or more information.</p>
+      <p>
+        Click or tap a square in the grid to get started with the game. Try the
+        row of icons above the grid for game settings or more information.
+      </p>
       <form method="dialog">
-        <button class="button-base button-centered highlighted">Start Playing</button>
-        <button (click)="showPuzzleTypes()" class="button-base button-centered highlighted">Select Puzzle Types</button>
+        <button class="button-base button-centered highlighted">
+          Start Playing
+        </button>
+        <button
+          (click)="showPuzzleTypes()"
+          class="button-base button-centered highlighted"
+        >
+          Select Puzzle Types
+        </button>
       </form>
     </div>
   </dialog>
 
-  <dialog class="dialog-base dialog-general dialog-wide" helpDialog #helpDialog closed>
-
+  <dialog
+    class="dialog-base dialog-general dialog-wide"
+    helpDialog
+    #helpDialog
+    closed
+  >
     <form method="dialog">
       <button class="button-base button-cancel highlighted">X</button>
-      <h1 class="centered">{{title()}}</h1>
+      <h1 class="centered">{{ title() }}</h1>
       <h2 class="centered">A math game</h2>
-      <p class="paragraph">Number Munchers Reborn is a re-imagining of the classic 90s game.</p>
-      <p class="paragraph">{{getGeneralInstructions()}}</p>
       <p class="paragraph">
-        I recommend that children try this game out with a parent. I hope that it will be a fun experience for both!
+        Number Munchers Reborn is a re-imagining of the classic 90s game.
+      </p>
+      <p class="paragraph">{{ getGeneralInstructions() }}</p>
+      <p class="paragraph">
+        I recommend that children try this game out with a parent. I hope that
+        it will be a fun experience for both!
       </p>
       <h1>Math terms</h1>
       <div class="glossary">
         <details>
           <summary>Perfect square</summary>
-          A number that can be expressed as another whole number multiplied by itself. For example, 9 is a perfect
-          square,
-          because 3&times;3 is 9.
+          A number that can be expressed as another whole number multiplied by
+          itself. For example, 9 is a perfect square, because 3&times;3 is 9.
         </details>
 
         <details>
           <summary>Multiple</summary>
-          A number equal to a base number multiplied by a whole number. For example, multiples of 3 include 6, 9, and
-          12.
+          A number equal to a base number multiplied by a whole number. For
+          example, multiples of 3 include 6, 9, and 12.
         </details>
 
         <details>
           <summary>Factor</summary>
-          A whole number that, when multiplied by another whole number, is equal to another number. For example,
-          3 is a factor of 6, since 3&times;2 is 6.
+          A whole number that, when multiplied by another whole number, is equal
+          to another number. For example, 3 is a factor of 6, since 3&times;2 is
+          6.
         </details>
 
         <details>
           <summary>Equivalent fractions</summary>
-          Fractions that have the same value. For example, <math>
+          Fractions that have the same value. For example,
+          <math>
             <mfrac>
               <mn>1</mn>
               <mn>2</mn>
             </mfrac>
-          </math> is equivalent to
+          </math>
+          is equivalent to
           <math>
             <mfrac>
               <mn>2</mn>
@@ -258,31 +477,41 @@
 
         <details>
           <summary>Equality operators</summary>
-          <p class="detail-content"> &gt; Greater than </p>
-          <p class="detail-content"> &lt; Less than </p>
-          <p class="detail-content"> &GreaterEqual; Greater than or equal to</p>
-          <p class="detail-content"> &le; Less than or equal to</p>
-          <p class="detail-content"> &NotEqual; Not equal to</p>
+          <p class="detail-content">&gt; Greater than</p>
+          <p class="detail-content">&lt; Less than</p>
+          <p class="detail-content">&GreaterEqual; Greater than or equal to</p>
+          <p class="detail-content">&le; Less than or equal to</p>
+          <p class="detail-content">&NotEqual; Not equal to</p>
         </details>
-
       </div>
       <h1>Cast of Characters</h1>
       <div class="glossary">
         <details>
           <summary>Munchy</summary>
-          <img style="display: block" alt="Number Munchers Logo" [src]="imageManager.getMunchyImageStandard()"
-            width="70" />
-          Our hero, a curious frog who loves numbers and has very specific tastes (that vary each game) for the kinds of
-          numbers he likes to eat. Note that you can select specific puzzle types to play by tapping the puzzle piece
-          icon above the grid.
+          <img
+            style="display: block"
+            alt="Number Munchers Logo"
+            [src]="imageService.getMunchyImageStandard()"
+            width="70"
+          />
+          Our hero, a curious frog who loves numbers and has very specific
+          tastes (that vary each game) for the kinds of numbers he likes to eat.
+          Note that you can select specific puzzle types to play by tapping the
+          puzzle piece icon above the grid.
         </details>
 
         <details>
           <summary>Mertin</summary>
-          <img style="display: block" alt="Mertin Logo" [src]="imageManager.getMertinImageStandard()" width="70" />
-          A mischievous gremlin who likes to reset areas of the board according to his own design.
-          Mertin-mode is off by default, with three speed levels for a challenge. Tap the "Mertin" icon above
-          the grid for him to appear.
+          <img
+            style="display: block"
+            alt="Mertin Logo"
+            [src]="imageService.getMertinImageStandard()"
+            width="70"
+          />
+          A mischievous gremlin who likes to reset areas of the board according
+          to his own design. Mertin-mode is off by default, with three speed
+          levels for a challenge. Tap the "Mertin" icon above the grid for him
+          to appear.
         </details>
       </div>
 
@@ -291,14 +520,15 @@
         <details>
           <summary>Puzzle Types</summary>
           Most of the math puzzles are suitable for elementary-school aged
-          students.
-          Select the puzzle types you want with the
-          <span style="vertical-align: top;">
-            <button #btnShowPuzzleTypes title="Select puzzle types" class="btn imagebutton row-button highlighted"
-              (click)="showPuzzleTypes()">
-
-            <img alt="puzzle-piece-icon" src="assets/puzzle-piece.svg" />
-
+          students. Select the puzzle types you want with the
+          <span style="vertical-align: top">
+            <button
+              #btnShowPuzzleTypes
+              title="Select puzzle types"
+              class="btn imagebutton row-button highlighted"
+              (click)="showPuzzleTypes()"
+            >
+              <img alt="puzzle-piece-icon" src="assets/puzzle-piece.svg" />
             </button>
           </span>
           icon.
@@ -306,48 +536,52 @@
 
         <details>
           <summary>Correct answers</summary>
-          Not all solutions are always shown. For example, for "find factors of 21," you might find 3, 7, 1, or 21, but
-          not necessarily all of them.
+          Not all solutions are always shown. For example, for "find factors of
+          21," you might find 3, 7, 1, or 21, but not necessarily all of them.
         </details>
         <details>
           <summary>Keyboard</summary>
-          You can use the mouse on desktop or tap/touch on mobile to select squares, but for that authentic
-          old-school number-munchers experience, use the arrow keys and space bar to move munchy around,
-          and "N" for a new game.
+          You can use the mouse on desktop or tap/touch on mobile to select
+          squares, but for that authentic old-school number-munchers experience,
+          use the arrow keys and space bar to move munchy around, and "N" for a
+          new game.
         </details>
         <details>
           <summary>Puzzle bookmarks</summary>
 
-          You may notice that the query string in the URL bar is updated when you manually change the active
-          puzzle types in the puzzle type dialog (the <code>?p=</code> part).
-          Find a configuration you like, and bookmark the link, text to a friend,
-          or post on social media to share your favorite puzzle types.
+          You may notice that the query string in the URL bar is updated when
+          you manually change the active puzzle types in the puzzle type dialog
+          (the <code>?p=</code> part). Find a configuration you like, and
+          bookmark the link, text to a friend, or post on social media to share
+          your favorite puzzle types.
 
           <ul>
-            <p class="detail-content"> <code>g - </code>greater or less than</p>
-            <p class="detail-content"> <code>a - </code>addition</p>
-            <p class="detail-content"> <code>s - </code>subtraction</p>
-            <p class="detail-content"> <code>m - </code>multiplication</p>
-            <p class="detail-content"> <code>d - </code>division</p>
-            <p class="detail-content"> <code>f - </code>fractions</p>
-            <p class="detail-content"> <code>p - </code>percentages</p>
-            <p class="detail-content"> <code>x - </code>decimals</p>
-            <p class="detail-content"> <code>e - </code>exponents</p>
-            <p class="detail-content"> <code>r - </code>roots</p>
-            <p class="detail-content"> <code>o - </code>odds and ends / miscellaneous</p>
+            <p class="detail-content"><code>g - </code>greater or less than</p>
+            <p class="detail-content"><code>a - </code>addition</p>
+            <p class="detail-content"><code>s - </code>subtraction</p>
+            <p class="detail-content"><code>m - </code>multiplication</p>
+            <p class="detail-content"><code>d - </code>division</p>
+            <p class="detail-content"><code>f - </code>fractions</p>
+            <p class="detail-content"><code>p - </code>percentages</p>
+            <p class="detail-content"><code>x - </code>decimals</p>
+            <p class="detail-content"><code>e - </code>exponents</p>
+            <p class="detail-content"><code>r - </code>roots</p>
+            <p class="detail-content">
+              <code>o - </code>odds and ends / miscellaneous
+            </p>
           </ul>
 
-
-          Sound and Mertin-mode options are also saved in the url as query parameters.
-
+          Sound and Mertin-mode options are also saved in the url as query
+          parameters.
         </details>
 
         <details>
           <summary>High score</summary>
-          A player's winning streak and high score (uninterrupted streak) are saved locally to their laptop or mobile
-          device, but they are saved with local browser storage, not a cookie, and nothing is stored or read by the host
-          website itself.
-          This site does not collect any personal data.
+          A player's winning streak and high score (uninterrupted streak) are
+          saved locally to their laptop or mobile device, but they are saved
+          with local browser storage, not a cookie, and nothing is stored or
+          read by the host website itself. This site does not collect any
+          personal data.
         </details>
       </div>
       <h1>FAQ</h1>
@@ -355,68 +589,84 @@
       <div class="glossary">
         <details>
           <summary>What is your philosophy?</summary>
-          <i>No ads, no logins, no cookies, no downloads -- just content.</i> I'd rather make websites that have a low
-          barrier to entry than develop an app you need to download or install. I like to avoid any complications with
-          logins or anything
-          that collects personal information, so we can both just focus on the content. Finally, I try to be mobile and
-          multi-platform friendly with most
-          modern browsers. In short, I develop content I'd want my own children to access.
+          <i>No ads, no logins, no cookies, no downloads -- just content.</i>
+          I'd rather make websites that have a low barrier to entry than develop
+          an app you need to download or install. I like to avoid any
+          complications with logins or anything that collects personal
+          information, so we can both just focus on the content. Finally, I try
+          to be mobile and multi-platform friendly with most modern browsers. In
+          short, I develop content I'd want my own children to access.
         </details>
         <details>
           <summary>How is this made? Is it an app?</summary>
-          It'a a website, not an app, so there's nothing to install. It's made mostly with
+          It'a a website, not an app, so there's nothing to install. It's made
+          mostly with
           <a href="https://angular.dev/">Angular</a>,
           <a href="https://www.typescriptlang.org/">Typescript</a>, and
           <a href="https://getbootstrap.com/">Bootstrap.</a>
           Source at:
-          <a href="https://github.com/smycynek/number-munchers-reborn/">https://github.com/smycynek/number-munchers-reborn/</a>
+          <a href="https://github.com/smycynek/number-munchers-reborn/"
+            >https://github.com/smycynek/number-munchers-reborn/</a
+          >
         </details>
 
         <details>
-          <summary>How do you generate the puzzles? Do you have a long list of math problems pre-made?</summary>
-          In general, I generate puzzle content dynamically and derive a mix of correct choices and random but plausible
-          choices
-          from a generation algorithm to give a good mix of choices in each puzzle.
-          Source at:
-          <a href="https://github.com/smycynek/number-munchers-reborn/">https://github.com/smycynek/number-munchers-reborn/</a>
+          <summary>
+            How do you generate the puzzles? Do you have a long list of math
+            problems pre-made?
+          </summary>
+          In general, I generate puzzle content dynamically and derive a mix of
+          correct choices and random but plausible choices from a generation
+          algorithm to give a good mix of choices in each puzzle. Source at:
+          <a href="https://github.com/smycynek/number-munchers-reborn/"
+            >https://github.com/smycynek/number-munchers-reborn/</a
+          >
         </details>
 
         <details>
           <summary>What's next for Number Munchers Reborn?</summary>
-          I'm not sure. Maybe advanced fractions? Decimals? Please send me your feedback on what math content you'd like
-          to see.
+          I'm not sure. Maybe advanced fractions? Decimals? Please send me your
+          feedback on what math content you'd like to see.
         </details>
         <details>
-          <summary>What do Munchy and Mertin do when they are not hopping around on the number munchers board?</summary>
-          Munchy is looking forward to appearing on the next season of "Is it Cake?" and also plays the drums. Mertin
-          enjoys going to DEF CON meetups and honing his lock picking skills and is also active in community theater.
-          His family does try to keep him away from chess tournaments, nuclear launch silos, and randomized drug trial
+          <summary>
+            What do Munchy and Mertin do when they are not hopping around on the
+            number munchers board?
+          </summary>
+          Munchy is looking forward to appearing on the next season of "Is it
+          Cake?" and also plays the drums. Mertin enjoys going to DEF CON
+          meetups and honing his lock picking skills and is also active in
+          community theater. His family does try to keep him away from chess
+          tournaments, nuclear launch silos, and randomized drug trial
           laboratories.
         </details>
         <details>
-          <summary>Where do Munchy and Mertin get all their holiday outfits?</summary>
-          Mertin's community theater troupe has a wide assortment of costumes that he and Munchy
-          wear to celebrate year-round as they munch numbers.
+          <summary>
+            Where do Munchy and Mertin get all their holiday outfits?
+          </summary>
+          Mertin's community theater troupe has a wide assortment of costumes
+          that he and Munchy wear to celebrate year-round as they munch numbers.
         </details>
       </div>
 
       <hr />
 
-
-
       <ul>
-        <li class="credits">Steven Mycynek 2024 |
-          <a href="mailto:sv@stevenvictor.net?subject=Number Munchers Reborn info">sv&#64;stevenvictor.net</a> |
-          <a href="https://github.com/smycynek/number-munchers-reborn">Source</a> |
-          v{{getVersion()}}
+        <li class="credits">
+          Steven Mycynek 2024 |
+          <a
+            href="mailto:sv@stevenvictor.net?subject=Number Munchers Reborn info"
+            >sv&#64;stevenvictor.net</a
+          >
+          |
+          <a href="https://github.com/smycynek/number-munchers-reborn"
+            >Source</a
+          >
+          | v{{ getVersion() }}
+        </li>
       </ul>
-
-
-
 
       <button class="button-base button-centered highlighted">OK</button>
     </form>
   </dialog>
-
-
 </main>

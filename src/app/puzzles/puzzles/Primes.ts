@@ -12,7 +12,7 @@ import {
 import { toExpressionDataSet, getPrimes } from '../sampleValidValues';
 import { format_and } from '../../utility';
 import { Puzzle } from '../Puzzle';
-import { PuzzleType } from '../../managers/puzzleTypeManager';
+import { PuzzleType } from '../../services/puzzleType.service';
 
 export class Primes extends Puzzle {
   public constructor() {
@@ -29,13 +29,17 @@ export class Primes extends Puzzle {
     return [choice, s('is not divisible by anything except 1 and itself')];
   }
   public override errorDetails(choice: ExpressionTypes): ExpressionTypes[] {
-    const validFactorsFormatted = format_and([...getValidFactors(choice.value)]);
+    const validFactorsFormatted = format_and([
+      ...getValidFactors(choice.value),
+    ]);
     return [choice, s(`has factors such as ${validFactorsFormatted}`)];
   }
   public override getValidSamples(): Set<ExpressionData> {
     return toExpressionDataSet(getPrimes());
   }
   public override getRandomSamples(count: number): Set<ExpressionData> {
-    return toExpressionDataSet(getRandomNaturalNumberSet(dataUpperBound, count));
+    return toExpressionDataSet(
+      getRandomNaturalNumberSet(dataUpperBound, count),
+    );
   }
 }

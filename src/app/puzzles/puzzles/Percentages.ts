@@ -11,11 +11,16 @@ import {
 import { getValidPercentages } from '../sampleValidValues';
 import { Puzzle } from '../Puzzle';
 import { round3 } from '../../utility';
-import { PuzzleType } from '../../managers/puzzleTypeManager';
+import { PuzzleType } from '../../services/puzzleType.service';
 
 export class Percentages extends Puzzle {
   public constructor() {
-    super(PuzzleType.Percentages, 'Percentages', true, getRandomFractionLowerBase());
+    super(
+      PuzzleType.Percentages,
+      'Percentages',
+      true,
+      getRandomFractionLowerBase(),
+    );
   }
 
   public override predicate(choice: ExpressionData): boolean {

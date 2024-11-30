@@ -1,3 +1,4 @@
+import { Injectable } from '@angular/core';
 import {
   multSymbol,
   divSymbol,
@@ -18,7 +19,7 @@ export enum PuzzleType {
   Exponents,
   Roots,
   Percentages,
-  Decimals
+  Decimals,
 }
 
 export const allPuzzles = new Set<PuzzleType>([
@@ -32,7 +33,7 @@ export const allPuzzles = new Set<PuzzleType>([
   PuzzleType.Exponents,
   PuzzleType.Roots,
   PuzzleType.Percentages,
-  PuzzleType.Decimals
+  PuzzleType.Decimals,
 ]);
 
 export const puzzleCodes: Map<PuzzleType, string> = new Map([
@@ -63,14 +64,17 @@ export const puzzleSymbols: Map<PuzzleType, string> = new Map([
   [PuzzleType.Decimals, '.'],
 ]);
 
-export class PuzzleTypeManager {
+@Injectable({
+  providedIn: 'root',
+})
+export class PuzzleTypeService {
   private puzzleTypes = allPuzzles;
 
-  public add(puzzleType: PuzzleType) {
+  public add(puzzleType: PuzzleType): void {
     this.puzzleTypes.add(puzzleType);
   }
 
-  public delete(puzzleType: PuzzleType) {
+  public delete(puzzleType: PuzzleType): void {
     this.puzzleTypes.delete(puzzleType);
   }
 
@@ -176,5 +180,4 @@ export class PuzzleTypeManager {
       ? this.puzzleTypes.add(PuzzleType.Decimals)
       : this.puzzleTypes.delete(PuzzleType.Decimals);
   }
-
 }

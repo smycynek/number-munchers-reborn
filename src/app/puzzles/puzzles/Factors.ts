@@ -13,7 +13,7 @@ import {
 } from '../sampleRandomValues';
 import { toExpressionDataSet } from '../sampleValidValues';
 import { Puzzle } from '../Puzzle';
-import { PuzzleType } from '../../managers/puzzleTypeManager';
+import { PuzzleType } from '../../services/puzzleType.service';
 
 export class Factors extends Puzzle {
   public constructor() {
@@ -51,6 +51,8 @@ export class Factors extends Puzzle {
     return toExpressionDataSet(getValidFactors(this.target1.value));
   }
   public override getRandomSamples(count: number): Set<ExpressionData> {
-    return toExpressionDataSet(getRandomNaturalNumberSet(dataUpperBoundLow, count));
+    return toExpressionDataSet(
+      getRandomNaturalNumberSet(dataUpperBoundLow, count),
+    );
   }
 }

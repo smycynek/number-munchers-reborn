@@ -1,4 +1,9 @@
-export class ImageManager {
+import { Injectable } from '@angular/core';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class ImageService {
   public preload(holiday: string) {
     const happy = new Image();
     happy.src = this.getMunchyHappyImage(holiday);
@@ -14,7 +19,8 @@ export class ImageManager {
   }
 
   public getMertinImage(holiday: string): string {
-    if (holiday === '-af') {  // af = april fool's day = avatars switched
+    if (holiday === '-af') {
+      // af = april fool's day = avatars switched
       return 'assets/munchy-happy.svg';
     }
     return `assets/mertin${holiday}.svg`;
@@ -39,7 +45,8 @@ export class ImageManager {
   }
 
   public getMunchySadImage(holiday: string): string {
-    if (holiday === '-af') { // af = april fool's day = avatars switched
+    if (holiday === '-af') {
+      // af = april fool's day = avatars switched
       return 'assets/mertin-sad.svg';
     }
     return 'assets/munchy-sad.svg';

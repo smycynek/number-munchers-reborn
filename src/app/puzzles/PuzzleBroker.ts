@@ -1,4 +1,4 @@
-import { PuzzleType } from '../managers/puzzleTypeManager';
+import { PuzzleType } from '../services/puzzleType.service';
 import { getRandomNumberWithinRange } from './sampleRandomValues';
 import { Puzzle } from './Puzzle';
 import { Addition } from './puzzles/Addition';

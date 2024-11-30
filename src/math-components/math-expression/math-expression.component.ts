@@ -26,6 +26,19 @@ import {
 import { PercentageExpressionComponent } from '../expression-components/percentage-expression/percentage-expression.component';
 import { DecimalExpressionComponent } from '../expression-components/decimal-expression/decimal-expression.component';
 
+type ComponentTypes =
+  | typeof StringExpressionComponent
+  | typeof AdditionExpressionComponent
+  | typeof SubtractionExpressionComponent
+  | typeof MultiplicationExpressionComponent
+  | typeof DivisionExpressionComponent
+  | typeof ExponentExpressionComponent
+  | typeof RootExpressionComponent
+  | typeof MixedNumberExpressionComponent
+  | typeof LogarithmExpressionComponent
+  | typeof PercentageExpressionComponent
+  | typeof DecimalExpressionComponent;
+
 @Component({
   selector: 'app-math-expression',
   standalone: true,
@@ -36,7 +49,7 @@ import { DecimalExpressionComponent } from '../expression-components/decimal-exp
 export class MathExpressionComponent {
   readonly mathData = input.required<ExpressionData>(); // Could also be the base class ExpressionData;
 
-  getMathComponent() {
+  getMathComponent(): ComponentTypes {
     // Could be a factory call or a type map, but this is probably fine.
 
     switch (this.mathData().opType) {
@@ -60,8 +73,8 @@ export class MathExpressionComponent {
         return LogarithmExpressionComponent;
       case PercentageExpressionName:
         return PercentageExpressionComponent;
-        case DecimalExpressionName:
-          return DecimalExpressionComponent;
+      case DecimalExpressionName:
+        return DecimalExpressionComponent;
       default:
         throw Error(`Unknown math opType ${this.mathData().opType}`);
     }

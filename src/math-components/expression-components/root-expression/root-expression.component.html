@@ -1,47 +1,43 @@
 <math>
-    <mrow>
-        @if (coefficient() !== 1) {
+  <mrow>
+    @if (coefficient() !== 1) {
+      <mn>
+        {{ coefficient() }}
+      </mn>
+    }
+    @if (index() === 2) {
+      <msqrt>
         <mn>
-            {{coefficient()}}
+          {{ radicand() }}
         </mn>
-        }
-        @if(index() === 2) {
-        <msqrt>
-            <mn>
-                {{radicand()}}
-            </mn>
-        </msqrt>
-        } @else {
-        <mroot>
-            <mn>
-                {{radicand()}}
-            </mn>
-            <mn>
-                {{index()}}
-            </mn>
-        </mroot>
-        }
-        @if (showRval()) {
-        @if (displayOp()) {
+      </msqrt>
+    } @else {
+      <mroot>
+        <mn>
+          {{ radicand() }}
+        </mn>
+        <mn>
+          {{ index() }}
+        </mn>
+      </mroot>
+    }
+    @if (showRval()) {
+      @if (displayOp()) {
         <mo>
-            {{displayOp()}}
+          {{ displayOp() }}
         </mo>
-        }
-        @else {
-        <mo>
-            =
-        </mo>
-        }
-        @if (displayRval()) {
+      } @else {
+        <mo> = </mo>
+      }
+      @if (displayRval()) {
         <mn>
-            {{displayRval()}}
+          {{ displayRval() }}
         </mn>
-        }
-        @else {
+      } @else {
         <mn>
-            {{value() | number:'1.0-2'}}
+          {{ value() | number: '1.0-2' }}
         </mn>
-        }
-        }
-    </mrow>
+      }
+    }
+  </mrow>
 </math>

@@ -7,7 +7,7 @@ import { oneHalf } from '../../constants';
 import { getRandomFractions } from '../sampleRandomValues';
 import { getValidFractions } from '../sampleValidValues';
 import { Puzzle } from '../Puzzle';
-import { PuzzleType } from '../../managers/puzzleTypeManager';
+import { PuzzleType } from '../../services/puzzleType.service';
 
 export class FractionLessThanHalf extends Puzzle {
   public constructor() {
@@ -29,12 +29,7 @@ export class FractionLessThanHalf extends Puzzle {
     return [choice, s('<'), oneHalf];
   }
   public override errorDetails(choice: ExpressionTypes): ExpressionTypes[] {
-    return [
-      s('Sorry,'),
-      choice,
-      s('is not <'),
-      oneHalf,
-    ];
+    return [s('Sorry,'), choice, s('is not <'), oneHalf];
   }
   public override getValidSamples(): Set<ExpressionData> {
     return getValidFractions(this.target1);

@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 export class StringExpressionComponent extends BaseExpressionComponent {
   readonly stringValue = input.required<string>();
 
-  public isPunctuationPhrase() {
+  public isPunctuationPhrase(): boolean {
     return (
       this.stringValue().startsWith('.') ||
       this.stringValue().startsWith(',') ||

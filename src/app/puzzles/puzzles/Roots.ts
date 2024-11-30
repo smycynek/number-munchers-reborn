@@ -7,7 +7,7 @@ import {
 import { getRandomRootPairs } from '../sampleRandomValues';
 import { getRootTargets, getValidRootPairs } from '../sampleValidValues';
 import { Puzzle, toggleRValue } from '../Puzzle';
-import { PuzzleType } from '../../managers/puzzleTypeManager';
+import { PuzzleType } from '../../services/puzzleType.service';
 
 export class Roots extends Puzzle {
   private rootTargets: number[];

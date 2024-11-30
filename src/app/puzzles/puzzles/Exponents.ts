@@ -10,7 +10,7 @@ import {
   getValidExponentPairs,
 } from '../sampleValidValues';
 import { Puzzle, toggleRValue } from '../Puzzle';
-import { PuzzleType } from '../../managers/puzzleTypeManager';
+import { PuzzleType } from '../../services/puzzleType.service';
 
 export class Exponents extends Puzzle {
   public constructor() {

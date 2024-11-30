@@ -1,29 +1,25 @@
 <math>
-    <mrow>
-        <mn>{{left()}}</mn>
-        <mo>&times;</mo>
-        <mn>{{right()}}</mn>
-        @if ((showRval())) {
-        @if (displayOp()) {
+  <mrow>
+    <mn>{{ left() }}</mn>
+    <mo>&times;</mo>
+    <mn>{{ right() }}</mn>
+    @if (showRval()) {
+      @if (displayOp()) {
         <mo>
-            {{displayOp()}}
+          {{ displayOp() }}
         </mo>
-        }
-        @else {
-        <mo>
-            =
-        </mo>
-        }
-        @if (displayRval()) {
+      } @else {
+        <mo> = </mo>
+      }
+      @if (displayRval()) {
         <mn>
-            {{displayRval()}}
+          {{ displayRval() }}
         </mn>
-        }
-        @else {
+      } @else {
         <mn>
-            {{value()}}
+          {{ value() }}
         </mn>
-        }
-        }
-    </mrow>
+      }
+    }
+  </mrow>
 </math>

@@ -10,7 +10,7 @@ import { Component, input } from '@angular/core';
 export class HeartComponent {
   value = input<string>('');
 
-  public format(val: string) {
+  public format(val: string): string {
     return val.padStart(2, '0');
   }
 }

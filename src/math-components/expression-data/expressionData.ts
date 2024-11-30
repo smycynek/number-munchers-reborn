@@ -52,7 +52,7 @@ export class StringExpressionData extends ExpressionData {
   }
 }
 
-export function s(value: string) {
+export function s(value: string): StringExpressionData {
   return new StringExpressionData(value);
 }
 
@@ -99,8 +99,6 @@ export class DecimalExpressionData extends ExpressionData {
     super(value, DecimalExpressionName);
   }
 }
-
-
 
 export class AdditionExpressionData extends ExpressionData {
   public constructor(
@@ -154,7 +152,7 @@ function fracPart(value: number): number {
   return value - Math.trunc(value);
 }
 
-function roundIf(value: number) {
+function roundIf(value: number): number {
   const fraction = fracPart(value);
   if (fraction < 0.01 || fraction > 0.99) {
     return Math.round(value);

@@ -20,11 +20,11 @@ import {
 } from './utility';
 
 import { HostListener } from '@angular/core';
-import { SoundManager } from './managers/soundManager';
-import { PositionManager } from './managers/positionManager';
+import { SoundService } from './services/sound.service';
+import { PositionService } from './services/position.service';
 import JSConfetti from 'js-confetti';
 import { StringResources } from './strings';
-import { Observable, Subscription, timer } from 'rxjs';
+import { Observable, Subscription, tap, timer } from 'rxjs';
 import { mertinDelay, mertinInterval } from './constants';
 import { ActivatedRoute, Params, RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -47,9 +47,9 @@ import {
   puzzleCodes,
   puzzleSymbols,
   PuzzleType,
-  PuzzleTypeManager,
-} from './managers/puzzleTypeManager';
-import { ImageManager } from './managers/imageManager';
+  PuzzleTypeService,
+} from './services/puzzleType.service';
+import { ImageService } from './services/image.service';
 import { getRandomPuzzle } from './puzzles/PuzzleBroker';
 import { Puzzle } from './puzzles/Puzzle';
 import { environment } from '../environments/environment';
@@ -93,9 +93,6 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     getRandomPuzzle(allPuzzles),
   );
   private params: Params = {};
-  private soundManager: SoundManager = new SoundManager();
-  private positionManager: PositionManager = new PositionManager();
-  public imageManager: ImageManager = new ImageManager();
   public title: WritableSignal<string> = signal(
     StringResources.TITLE + environment.titleSuffix,
   );
@@ -107,7 +104,6 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     mertinInterval * 1000,
   );
   public speed: WritableSignal<number> = signal(0);
-  public puzzleTypeManager: PuzzleTypeManager = new PuzzleTypeManager();
 
   public readonly highScore: WritableSignal<number> = signal(0);
   public readonly winStreak: WritableSignal<number> = signal(0);
@@ -125,13 +121,17 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     private location: Location,
     private configService: ConfigService,
     private localStorageService: LocalStorageService,
+    public positionService: PositionService,
+    public imageService: ImageService,
+    public soundService: SoundService,
+    public puzzleTypeService: PuzzleTypeService,
   ) {
     this.holiday.set(this.configService.getConfig().holiday);
     debug('HOLIDAY: ' + this.holiday());
-    this.imageManager.preload(this.holiday());
+    this.imageService.preload(this.holiday());
     this.init();
     this.timerInit();
-    this.route.queryParams.subscribe((params: Params) => {
+    this.route.queryParams.pipe().subscribe((params: Params) => {
       this.setPuzzleOptions(params['p']);
       this.setSoundOptions(params['s']);
       this.setMertinOptions(params['m']);
@@ -148,14 +148,14 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
       );
       this.symbols.set(this.getActivePuzzleSymbols());
       if (
-        this.puzzleTypeManager.getPuzzleTypes().size !==
+        this.puzzleTypeService.getPuzzleTypes().size !==
         Object.keys(PuzzleType).length / 2
       ) {
         this.titleService.setTitle(
           StringResources.TITLE +
             environment.titleSuffix +
             ' - ' +
-            [...this.puzzleTypeManager.getPuzzleTypes().values()]
+            [...this.puzzleTypeService.getPuzzleTypes().values()]
               .map((p) => PuzzleType[p])
               .join(', '),
         );
@@ -176,28 +176,29 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   private timerInit(): void {
     this.timerSubscription?.unsubscribe();
     debug('Unsubscribe');
-    this.positionManager.mertinIndex.set(-1);
-    this.timerSubscription = this.timer.subscribe((val) => {
-      debug(`Pulse: ${val}`);
-      if (this.speed() !== 0 && !this.noRemainingSolutions()) {
-        if (val % this.speed() === 0) {
-          debug(
-            `Reset square event: ${val}, Interval length: ${this.speed() * mertinInterval}`,
-          );
-          this.positionManager.mertinIndex.set(
-            this.getRandomNonOccupiedIndex(),
-          );
-          this.resetSquare(this.positionManager.mertinIndex());
+    this.positionService.mertinIndex.set(-1);
+    this.timerSubscription = this.timer
+      .pipe(tap((v) => debug(`Pulse: ${v}`)))
+      .subscribe((val: number) => {
+        if (this.speed() !== 0 && !this.noRemainingSolutions()) {
+          if (val % this.speed() === 0) {
+            debug(
+              `Reset square event: ${val}, Interval length: ${this.speed() * mertinInterval}`,
+            );
+            this.positionService.mertinIndex.set(
+              this.getRandomNonOccupiedIndex(),
+            );
+            this.resetSquare(this.positionService.mertinIndex());
+          }
         }
-      }
-    });
+      });
     debug('Subscribe');
   }
 
-  private init() {
+  private init(): void {
     if (!this.cellData().length) {
       this.activePuzzle.set(
-        getRandomPuzzle(this.puzzleTypeManager.getPuzzleTypes()),
+        getRandomPuzzle(this.puzzleTypeService.getPuzzleTypes()),
       );
       debug(
         `Puzzle: ${PuzzleType[this.activePuzzle().type]}, ${this.activePuzzle().getQuestionText()[0].stringValue}`,
@@ -205,7 +206,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
       debug('Set up puzzle data:');
       this.cellData.set([
         ...this.activePuzzle().generateCells(
-          this.positionManager.columnCount() * this.positionManager.rowCount(),
+          this.positionService.columnCount() * this.positionService.rowCount(),
         ),
       ]);
 
@@ -224,28 +225,30 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
 
   /* Options */
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   public isCheckboxDisabled(_val: boolean) {
     return false;
-  //   if (val && this.puzzleTypeManager.getPuzzleTypes().size <= 1) return true;
-  //  else return false;
+    //   if (val && this.puzzleTypeService.getPuzzleTypes().size <= 1) return true;
+    //  else return false;
   }
 
   public validPuzzleSetSelected(): boolean {
-    return this.puzzleTypeManager.getPuzzleTypes().size !== 0;
+    return this.puzzleTypeService.getPuzzleTypes().size !== 0;
   }
 
   public getPuzzleTypeMessage(): string {
-    return this.puzzleTypeManager.getPuzzleTypes().size === 0 ? 'Select at least one puzzle type' : 'OK';
+    return this.puzzleTypeService.getPuzzleTypes().size === 0
+      ? 'Select at least one puzzle type'
+      : 'OK';
   }
 
   private getActivePuzzleSymbols(): string {
-    return `(Puzzles: ${[...this.puzzleTypeManager.getPuzzleTypes().values()].map((p) => puzzleSymbols.get(p)).join('')})`;
+    return `(Puzzles: ${[...this.puzzleTypeService.getPuzzleTypes().values()].map((p) => puzzleSymbols.get(p)).join('')})`;
   }
 
   private getActivePuzzleCodes(): string {
     const codes: string[] = [
-      ...this.puzzleTypeManager.getPuzzleTypes().values(),
+      ...this.puzzleTypeService.getPuzzleTypes().values(),
     ].map((p) => puzzleCodes.get(p) ?? '');
     return codes.sort((a, b) => a.localeCompare(b)).join('');
   }
@@ -254,16 +257,16 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     this.settingsChanged.set(true);
     if (value) {
       debug(`Add: ${PuzzleType[type]}`);
-      this.puzzleTypeManager.add(type);
+      this.puzzleTypeService.add(type);
     } else {
       debug(`Remove: ${PuzzleType[type]}`);
-      this.puzzleTypeManager.delete(type);
+      this.puzzleTypeService.delete(type);
     }
 
     if (updateQuery) {
       let activeTypeCodes = this.getActivePuzzleCodes();
       if (
-        this.puzzleTypeManager.getPuzzleTypes().size ===
+        this.puzzleTypeService.getPuzzleTypes().size ===
         Object.keys(PuzzleType).length / 2
       ) {
         activeTypeCodes = '';
@@ -273,7 +276,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
         StringResources.TITLE +
           environment.titleSuffix +
           ' - ' +
-          [...this.puzzleTypeManager.getPuzzleTypes().values()]
+          [...this.puzzleTypeService.getPuzzleTypes().values()]
             .map((p) => PuzzleType[p])
             .join(', '),
       );
@@ -322,7 +325,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     }
     this.updateUrl('m', this.speed() ? this.speed().toString() : '');
     if (this.speed() === 0) {
-      this.positionManager.mertinIndex.set(-1);
+      this.positionService.mertinIndex.set(-1);
     }
     debug(`Toggle/change interval length: ${this.speed() * mertinInterval}`);
     this.btnMertin.nativeElement.blur();
@@ -360,9 +363,9 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   }
 
   public toggleSound(): void {
-    this.soundManager.toggleSound();
-    debug(`Sound: ${this.soundManager.getSoundOn()}`);
-    this.updateUrl('s', this.soundManager.getSoundOn().toString());
+    this.soundService.toggleSound();
+    debug(`Sound: ${this.soundService.getSoundOn()}`);
+    this.updateUrl('s', this.soundService.getSoundOn().toString());
     this.btnSound.nativeElement.blur();
   }
 
@@ -377,17 +380,17 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
 
   /* Game state */
 
-  private reset() {
-    this.positionManager.activeRow.set(0);
-    this.positionManager.activeColumn.set(0);
-    this.positionManager.mertinIndex.set(-1);
+  private reset(): void {
+    this.positionService.activeRow.set(0);
+    this.positionService.activeColumn.set(0);
+    this.positionService.mertinIndex.set(-1);
     this.statusMessage.set(StringResources.START);
     this.statusMessageDetail.set([s(StringResources.YOU_CAN_DO_IT)]);
     this.statusMessageClass.set('status-default');
     this.cellData.set([]);
   }
 
-  public closeSettings() {
+  public closeSettings(): void {
     if (this.settingsChanged()) {
       this.newGame();
       this.settingsChanged.set(true);
@@ -395,13 +398,13 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   }
 
   private ensureValidPuzzleSelection(): void {
-    if (this.puzzleTypeManager.getPuzzleTypes().size === 0) {
+    if (this.puzzleTypeService.getPuzzleTypes().size === 0) {
       debug('No puzzles selected, defaulting to addition');
       this.toggleType(true, PuzzleType.Addition, true);
       this.settingsChanged.set(true);
     }
   }
-  public clearAll() {
+  public clearAll(): void {
     this.toggleType(false, PuzzleType.Greater_or_less_than, true);
     this.toggleType(false, PuzzleType.Addition, true);
     this.toggleType(false, PuzzleType.Subtraction, true);
@@ -416,7 +419,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     this.settingsChanged.set(true);
   }
 
-  public newGame() {
+  public newGame(): void {
     debug('New game');
     this.reset();
 
@@ -428,14 +431,14 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
 
   private getRandomNonOccupiedIndex(): number {
     const activeIndex =
-      this.positionManager.activeRow() * this.positionManager.columnCount() +
-      this.positionManager.activeColumn();
+      this.positionService.activeRow() * this.positionService.columnCount() +
+      this.positionService.activeColumn();
     const upperBound =
-      this.positionManager.columnCount() * this.positionManager.rowCount();
+      this.positionService.columnCount() * this.positionService.rowCount();
     const base = [...[].constructor(upperBound).keys()];
     const baseSet = new Set(base);
     baseSet.delete(activeIndex);
-    baseSet.delete(this.positionManager.mertinIndex());
+    baseSet.delete(this.positionService.mertinIndex());
     return getRandomItemFromSetAndRemove(baseSet);
   }
 
@@ -447,7 +450,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
         false,
       );
     }
-    return this.cellData()[r * this.positionManager.columnCount() + c];
+    return this.cellData()[r * this.positionService.columnCount() + c];
   }
 
   public getRemainingSolutionsCount(): number {
@@ -491,8 +494,8 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
 
   public isActive(cellRow: number, cellColumn: number): boolean {
     return (
-      cellRow == this.positionManager.activeRow() &&
-      cellColumn == this.positionManager.activeColumn()
+      cellRow == this.positionService.activeRow() &&
+      cellColumn == this.positionService.activeColumn()
     );
   }
 
@@ -510,18 +513,18 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   }
 
   public hasMertin(cellRow: number, cellColumn: number): boolean {
-    const idx = cellRow * this.positionManager.columnCount() + cellColumn;
-    return idx == this.positionManager.mertinIndex();
+    const idx = cellRow * this.positionService.columnCount() + cellColumn;
+    return idx == this.positionService.mertinIndex();
   }
 
-  private resetSquare(squareIndex: number) {
+  private resetSquare(squareIndex: number): void {
     if (squareIndex < 0) {
       debug('Invalid reset index!');
       return;
     }
     // TODO, ensure new value not duplicate of existing square
 
-    this.soundManager.playCackle();
+    this.soundService.playCackle();
     const solutionsCount = this.getRemainingSolutionsCount();
     debug('--Reset Square--');
     debug(`Index to replace: ${squareIndex}`);
@@ -546,15 +549,15 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
 
   public getAvatarImage(): string {
     const data = this.getCellData(
-      this.positionManager.activeRow(),
-      this.positionManager.activeColumn(),
+      this.positionService.activeRow(),
+      this.positionService.activeColumn(),
     );
     if (data.valid && data.discovered)
-      return this.imageManager.getMunchyHappyImage(this.holiday());
+      return this.imageService.getMunchyHappyImage(this.holiday());
     else if (!data.valid && data.discovered) {
-      return this.imageManager.getMunchySadImage(this.holiday());
+      return this.imageService.getMunchySadImage(this.holiday());
     } else {
-      return this.imageManager.getMunchyNeutralImage(this.holiday());
+      return this.imageService.getMunchyNeutralImage(this.holiday());
     }
   }
 
@@ -592,8 +595,8 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
       classes = 'discovered-invalid';
     }
     if (
-      cellRow == this.positionManager.activeRow() &&
-      cellColumn == this.positionManager.activeColumn()
+      cellRow == this.positionService.activeRow() &&
+      cellColumn == this.positionService.activeColumn()
     ) {
       classes += ' cell-active';
     }
@@ -617,13 +620,13 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
     if (event.key == 'ArrowUp') {
-      this.positionManager.down();
+      this.positionService.down();
     } else if (event.key == 'ArrowDown') {
-      this.positionManager.up();
+      this.positionService.up();
     } else if (event.key === 'ArrowLeft') {
-      this.positionManager.left();
+      this.positionService.left();
     } else if (event.key === 'ArrowRight') {
-      this.positionManager.right();
+      this.positionService.right();
     } else if (event.key === ' ') {
       this.choiceAction();
     } else if (event.key.toUpperCase() === 'N') {
@@ -695,8 +698,8 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     } catch (err) {
       return;
     }
-    this.positionManager.activeRow.set(rowColumn[0]);
-    this.positionManager.activeColumn.set(rowColumn[1]);
+    this.positionService.activeRow.set(rowColumn[0]);
+    this.positionService.activeColumn.set(rowColumn[1]);
     this.choiceAction();
   }
 
@@ -705,10 +708,10 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     if (this.noRemainingSolutions()) {
       return;
     }
-    debug(`Choice: ${this.positionManager.getPosition()}`);
+    debug(`Choice: ${this.positionService.getPosition()}`);
     const data = this.getCellData(
-      this.positionManager.activeRow(),
-      this.positionManager.activeColumn(),
+      this.positionService.activeRow(),
+      this.positionService.activeColumn(),
     );
     data.discovered = true;
 
@@ -721,7 +724,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
           this.activePuzzle().successDetails(data.expressionValue.clone()),
         );
         if (this.perfectScore()) {
-          this.soundManager.playWhooAndPerfectScore();
+          this.soundService.playWhooAndPerfectScore();
           this.statusMessage.set(StringResources.PERFECT_SCORE);
           debug(StringResources.PERFECT_SCORE);
           const jsConfetti = new JSConfetti();
@@ -733,18 +736,18 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
             this.localStorageService.setHighScore(this.winStreak());
           }
         } else {
-          this.soundManager.playWhoo();
+          this.soundService.playWhoo();
         }
         return;
       }
-      this.soundManager.playYum();
+      this.soundService.playYum();
       this.statusMessage.set(StringResources.CORRECT);
       this.statusMessageDetail.set(
         this.activePuzzle().successDetails(data.expressionValue.clone()),
       );
       this.statusMessageClass.set('status-success');
     } else {
-      this.soundManager.playYuck();
+      this.soundService.playYuck();
       this.winStreak.set(0);
       this.localStorageService.setWinStreak(0);
       this.statusMessage.set(StringResources.INCORRECT);
@@ -757,20 +760,11 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
     debug(`Correct? ${data.valid}, ${data.expressionValue.toString()}`);
   }
 
-  /* Position */
-  public getPositionManager(): PositionManager {
-    return this.positionManager;
-  }
-
   /* Sound */
   private setSoundOptions(soundOptionsString: string) {
     if (soundOptionsString?.toLowerCase() === 'false') {
-      this.soundManager.toggleSound();
+      this.soundService.toggleSound();
     }
-  }
-
-  public getSoundManager(): SoundManager {
-    return this.soundManager;
   }
 
   /* Other */

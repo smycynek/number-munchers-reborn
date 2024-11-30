@@ -13,7 +13,10 @@ import { ExpressionData } from '../expression-data/expressionData';
 export class MathSentenceComponent {
   public isPunctuationPhrase(value: string) {
     return (
-      value.startsWith('.') || value.startsWith(',') || value.startsWith('?') || value.startsWith(')')
+      value.startsWith('.') ||
+      value.startsWith(',') ||
+      value.startsWith('?') ||
+      value.startsWith(')')
     );
   }
   readonly dataArray = input.required<ExpressionData[]>();

@@ -9,7 +9,7 @@ import {
 } from '../sampleRandomValues';
 import { getValidFractions } from '../sampleValidValues';
 import { Puzzle } from '../Puzzle';
-import { PuzzleType } from '../../managers/puzzleTypeManager';
+import { PuzzleType } from '../../services/puzzleType.service';
 
 export class FractionEquivalent extends Puzzle {
   public constructor() {

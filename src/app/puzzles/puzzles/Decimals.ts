@@ -5,17 +5,22 @@ import {
   s,
 } from '../../../math-components/expression-data/expressionData';
 import {
-    getRandomDecimals,
+  getRandomDecimals,
   getRandomFractionLowerBase,
 } from '../sampleRandomValues';
 import { getValidDecimals } from '../sampleValidValues';
 import { Puzzle } from '../Puzzle';
 import { round3 } from '../../utility';
-import { PuzzleType } from '../../managers/puzzleTypeManager';
+import { PuzzleType } from '../../services/puzzleType.service';
 
 export class Decimals extends Puzzle {
   public constructor() {
-    super(PuzzleType.Decimals, 'Percentages', true, getRandomFractionLowerBase());
+    super(
+      PuzzleType.Decimals,
+      'Percentages',
+      true,
+      getRandomFractionLowerBase(),
+    );
   }
 
   public override predicate(choice: ExpressionData): boolean {

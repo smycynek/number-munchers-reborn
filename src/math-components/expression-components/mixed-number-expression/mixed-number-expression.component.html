@@ -1,33 +1,32 @@
 <math>
-    <mrow>
-        <mn *ngIf="(whole() !== 0)">
-            {{whole() | number}}
-        </mn>
-        <mfrac *ngIf="numerator() !==0 && denominator() !==0" [ngClass]="{'mfrac-large': (whole() === 0)}">
-            <mn>{{numerator()}}</mn>
-            <mn>{{denominator()}}</mn>
-        </mfrac>
-        @if (showRval()) {
-        @if (displayOp()) {
+  <mrow>
+    <mn *ngIf="whole() !== 0">
+      {{ whole() | number }}
+    </mn>
+    <mfrac
+      *ngIf="numerator() !== 0 && denominator() !== 0"
+      [ngClass]="{ 'mfrac-large': whole() === 0 }"
+    >
+      <mn>{{ numerator() }}</mn>
+      <mn>{{ denominator() }}</mn>
+    </mfrac>
+    @if (showRval()) {
+      @if (displayOp()) {
         <mo>
-            {{displayOp()}}
+          {{ displayOp() }}
         </mo>
-        }
-        @else {
-        <mo>
-            =
-        </mo>
-        }
-        @if (displayRval()) {
+      } @else {
+        <mo> = </mo>
+      }
+      @if (displayRval()) {
         <mn>
-            {{displayRval()}}
+          {{ displayRval() }}
         </mn>
-        }
-        @else {
+      } @else {
         <mn>
-            {{value()}}
+          {{ value() }}
         </mn>
-        }
-        }
-    </mrow>
+      }
+    }
+  </mrow>
 </math>

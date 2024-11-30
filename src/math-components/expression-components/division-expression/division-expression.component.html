@@ -1,32 +1,26 @@
 <math>
-    <mrow>
-        <mn>{{left()}}</mn>
-        <mo>&divide;</mo>
-        <mn>{{right()}}</mn>
-        @if (showRval()) {
-        @if (displayOp()) {
+  <mrow>
+    <mn>{{ left() }}</mn>
+    <mo>&divide;</mo>
+    <mn>{{ right() }}</mn>
+    @if (showRval()) {
+      @if (displayOp()) {
         <mo>
-            {{displayOp()}}
+          {{ displayOp() }}
         </mo>
-        }
-        @else {
-        <mo>
-            =
-        </mo>
-        }
+      } @else {
+        <mo> = </mo>
+      }
 
-
-        @if (displayRval()) {
+      @if (displayRval()) {
         <mn>
-            {{displayRval()}}
+          {{ displayRval() }}
         </mn>
-        }
-        @else {
+      } @else {
         <mn>
-            {{value() | number:'1.0-2'}}
+          {{ value() | number: '1.0-2' }}
         </mn>
-        }
-        }
-    </mrow>
-
+      }
+    }
+  </mrow>
 </math>

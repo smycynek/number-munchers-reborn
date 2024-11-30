@@ -7,8 +7,7 @@ import { greaterEqual, oneHalf } from '../../constants';
 import { getRandomFractions } from '../sampleRandomValues';
 import { getValidFractions } from '../sampleValidValues';
 import { Puzzle } from '../Puzzle';
-import { PuzzleType } from '../../managers/puzzleTypeManager';
-
+import { PuzzleType } from '../../services/puzzleType.service';
 
 export class FractionGreaterThanHalf extends Puzzle {
   public constructor() {
@@ -24,21 +23,13 @@ export class FractionGreaterThanHalf extends Puzzle {
     return choice.value >= 0.5;
   }
   public override getQuestionText(): ExpressionTypes[] {
-    return [
-      s(`Find fractions ${greaterEqual}`),
-      oneHalf,
-    ];
+    return [s(`Find fractions ${greaterEqual}`), oneHalf];
   }
   public override successDetails(choice: ExpressionTypes): ExpressionTypes[] {
     return [choice, s(greaterEqual), oneHalf];
   }
   public override errorDetails(choice: ExpressionTypes): ExpressionTypes[] {
-    return [
-      s('Sorry,'),
-      choice,
-      s(`is not ${greaterEqual}`),
-      oneHalf,
-    ];
+    return [s('Sorry,'), choice, s(`is not ${greaterEqual}`), oneHalf];
   }
   public override getValidSamples(): Set<ExpressionData> {
     return getValidFractions(this.target1);

@@ -1,8 +1,11 @@
-import { Signal, WritableSignal, signal } from '@angular/core';
+import { Signal, WritableSignal, Injectable, signal } from '@angular/core';
 import { puzzleRows, puzzleColumns } from '../constants';
 import { wrapUp, debug, wrapDown } from '../utility';
 
-export class PositionManager {
+@Injectable({
+  providedIn: 'root',
+})
+export class PositionService {
   public readonly rowCount: Signal<number> = signal(puzzleRows);
   public readonly columnCount: Signal<number> = signal(puzzleColumns);
   public readonly activeRow: WritableSignal<number> = signal(0);

@@ -1,3 +1,8 @@
-<span [ngClass]="{'math-text-short': isPunctuationPhrase(),  'math-text': !isPunctuationPhrase()}">
-    {{stringValue()}}
+<span
+  [ngClass]="{
+    'math-text-short': isPunctuationPhrase(),
+    'math-text': !isPunctuationPhrase(),
+  }"
+>
+  {{ stringValue() }}
 </span>

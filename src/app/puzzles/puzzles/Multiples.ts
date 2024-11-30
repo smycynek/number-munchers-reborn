@@ -10,12 +10,9 @@ import {
   getRandomMultipleBase,
   getRandomNaturalNumberSet,
 } from '../sampleRandomValues';
-import {
-  getValidMultiples,
-  toExpressionDataSet,
-} from '../sampleValidValues';
+import { getValidMultiples, toExpressionDataSet } from '../sampleValidValues';
 import { Puzzle } from '../Puzzle';
-import { PuzzleType } from '../../managers/puzzleTypeManager';
+import { PuzzleType } from '../../services/puzzleType.service';
 
 export class Multiples extends Puzzle {
   public constructor() {
@@ -48,6 +45,8 @@ export class Multiples extends Puzzle {
     return toExpressionDataSet(getValidMultiples(this.target1.value));
   }
   public override getRandomSamples(count: number): Set<ExpressionData> {
-    return toExpressionDataSet(getRandomNaturalNumberSet(dataUpperBound, count));
+    return toExpressionDataSet(
+      getRandomNaturalNumberSet(dataUpperBound, count),
+    );
   }
 }

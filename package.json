@@ -8,7 +8,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "testj": "jest",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "pretty": "prettier --write \"./**/*.{ts,html,less}\""
   },
   "private": true,
   "dependencies": {
