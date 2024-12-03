@@ -135,3 +135,7 @@ dist
 sitevars.sh
 sitevars_beta.sh
 gh_deploy.sh
+# Playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/

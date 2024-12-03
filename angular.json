@@ -45,15 +45,14 @@
               "src/styles.less",
               "node_modules/bootstrap/scss/bootstrap.scss"
             ],
-            "scripts": [
-            ]
+            "scripts": []
           },
           "configurations": {
             "prod": {
               "fileReplacements": [
                 {
-                "replace": "src/environments/environment.ts",
-                "with": "src/environments/environment.prod.ts"
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
                 }
               ],
               "budgets": [
@@ -73,8 +72,8 @@
             "beta": {
               "fileReplacements": [
                 {
-                "replace": "src/environments/environment.ts",
-                "with": "src/environments/environment.beta.ts"
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.beta.ts"
                 }
               ],
               "budgets": [
@@ -146,6 +145,17 @@
               "src/**/*.ts",
               "src/**/*.html"
             ]
+          }
+        },
+        "e2e": {
+          "builder": "playwright-ng-schematics:playwright",
+          "options": {
+            "devServerTarget": "number-munchers:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "number-munchers:serve:production"
+            }
           }
         }
       }
