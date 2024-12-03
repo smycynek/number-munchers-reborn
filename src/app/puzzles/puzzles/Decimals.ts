@@ -10,7 +10,6 @@ import {
 } from '../sampleRandomValues';
 import { getValidDecimals } from '../sampleValidValues';
 import { Puzzle } from '../Puzzle';
-import { round3 } from '../../utility';
 import { PuzzleType } from '../../services/puzzleType.service';
 
 export class Decimals extends Puzzle {
@@ -38,7 +37,7 @@ export class Decimals extends Puzzle {
       s('is not greater than'),
       this.target1,
       s('(or'),
-      new DecimalExpressionData(round3(this.target1.value)),
+      new DecimalExpressionData(this.target1.value),
       s(')'),
     ];
   }

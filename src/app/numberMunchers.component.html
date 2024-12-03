@@ -7,12 +7,9 @@
   <div class="content">
     <div class="container">
       <h1 class="header" (click)="toggleDebug()">{{ title() }}</h1>
-      <div class="question-container">
-        <app-math-sentence
-          [dataArray]="activePuzzle().getQuestionText()"
-        ></app-math-sentence>
-      </div>
 
+      <!-- Toolbars -->
+       <div class="header">
       <button
         id="btnNewGame"
         #btnNewGame
@@ -115,6 +112,14 @@
           />
         </svg>
       </button>
+    </div>
+      <!-- Question and feedback -->
+      <div class="question-container">
+        <app-math-sentence
+          [dataArray]="activePuzzle().getQuestionText()"
+        ></app-math-sentence>
+      </div>
+
       <p class="bold" [ngClass]="statusMessageClass()">{{ statusMessage() }}</p>
       <div class="details-container">
         <p class="message-detail" [ngClass]="statusMessageClass()">
@@ -123,6 +128,7 @@
           ></app-math-sentence>
         </p>
       </div>
+      <!-- Puzzle grid -->
       <div
         *ngFor="
           let r of [].constructor(positionService.rowCount());
@@ -176,6 +182,41 @@
     </div>
   </div>
 
+  <!-- Dialogs-->
+
+  <!-- Welcome dialog-->
+  <dialog
+    class="dialog-base dialog-welcome dialog-narrow"
+    #welcomeDialog
+    welcomeDialog
+    closed
+  >
+    <form method="dialog">
+      <button class="button-base button-cancel highlighted">X</button>
+    </form>
+    <div class="welcome-text">
+      <div class="heading">
+        <p class="centered strong">Welcome!</p>
+      </div>
+      <p>
+        Click or tap a square in the grid to get started with the game. Try the
+        row of icons above the grid for game settings or more information.
+      </p>
+      <form method="dialog">
+        <button class="button-base button-centered highlighted">
+          Start Playing
+        </button>
+        <button
+          (click)="showPuzzleTypes()"
+          class="button-base button-centered highlighted"
+        >
+          Select Puzzle Types
+        </button>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- Puzzle type dialog-->
   <dialog
     class="dialog-base dialog-general dialog-narrow"
     typeDialog
@@ -387,37 +428,7 @@
     </form>
   </dialog>
 
-  <dialog
-    class="dialog-base dialog-welcome dialog-narrow"
-    #welcomeDialog
-    welcomeDialog
-    closed
-  >
-    <form method="dialog">
-      <button class="button-base button-cancel highlighted">X</button>
-    </form>
-    <div class="welcome-text">
-      <div class="heading">
-        <p class="centered strong">Welcome!</p>
-      </div>
-      <p>
-        Click or tap a square in the grid to get started with the game. Try the
-        row of icons above the grid for game settings or more information.
-      </p>
-      <form method="dialog">
-        <button class="button-base button-centered highlighted">
-          Start Playing
-        </button>
-        <button
-          (click)="showPuzzleTypes()"
-          class="button-base button-centered highlighted"
-        >
-          Select Puzzle Types
-        </button>
-      </form>
-    </div>
-  </dialog>
-
+  <!-- Help/About dialog-->
   <dialog
     class="dialog-base dialog-general dialog-wide"
     helpDialog

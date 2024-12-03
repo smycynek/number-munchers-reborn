@@ -28,7 +28,6 @@ import {
   RootExpressionData,
   SubtractionExpressionData,
 } from '../../math-components/expression-data/expressionData';
-import { round3 } from '../utility';
 
 export function getRandomItemFromSetAndRemove<T>(itemSet: Set<T>): T {
   const items = [...itemSet];
@@ -359,7 +358,7 @@ export function getRandomDecimals(count: number): Set<DecimalExpressionData> {
   const decimals = new Set<DecimalExpressionData>();
   const validPercentageDigits = getValidBetweenValues(1, 99, true);
   validPercentageDigits.forEach((val) => {
-    const decimal = round3(val / 100);
+    const decimal = val / 100;
     decimals.add(new DecimalExpressionData(decimal));
   });
   const returnSet = new Set<DecimalExpressionData>();

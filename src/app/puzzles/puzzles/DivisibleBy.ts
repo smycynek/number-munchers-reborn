@@ -1,4 +1,5 @@
 import {
+  DecimalExpressionData,
   ExpressionData,
   ExpressionTypes,
   MixedNumberExpressionData,
@@ -11,7 +12,6 @@ import {
   getRandomNaturalNumberSet,
 } from '../sampleRandomValues';
 import { getValidMultiples, toExpressionDataSet } from '../sampleValidValues';
-import { round3 } from '../../utility';
 import { Puzzle } from '../Puzzle';
 import { PuzzleType } from '../../services/puzzleType.service';
 
@@ -37,7 +37,7 @@ export class DivisibleBy extends Puzzle {
       s('divided by'),
       this.target1,
       s('equals'),
-      s(`${choice.value / this.target1.value}`),
+      new DecimalExpressionData(choice.value / this.target1.value),
     ];
   }
   public override errorDetails(choice: ExpressionTypes): ExpressionTypes[] {
@@ -46,7 +46,7 @@ export class DivisibleBy extends Puzzle {
       s('divided by'),
       this.target1,
       s('is'),
-      s(`${round3(choice.value / this.target1.value)}`),
+      new DecimalExpressionData(choice.value / this.target1.value),
       s(', not a whole number'),
     ];
   }

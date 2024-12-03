@@ -8,9 +8,10 @@ import { Component, input } from '@angular/core';
   styleUrl: './heart.component.less',
 })
 export class HeartComponent {
-  value = input<string>('');
+  value = input.required<string>();
 
   public format(val: string): string {
+    // TODO: replace with pipe ?
     return val.padStart(2, '0');
   }
 }

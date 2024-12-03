@@ -1,6 +1,6 @@
 <math>
   <mrow>
-    <mn>{{ percentageValue() }}%</mn>
+    <mn>{{ percentageValue() | number: '1.0-3' }}%</mn>
     @if (showRval()) {
       @if (displayOp()) {
         <mo>
@@ -11,11 +11,11 @@
       }
       @if (displayRval()) {
         <mn>
-          {{ displayRval() }}
+          {{ displayRval() | number: '1.0-3' }}
         </mn>
       } @else {
         <mn>
-          {{ value() }}
+          {{ value() | number: '1.0-3' }}
         </mn>
       }
     }

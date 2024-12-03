@@ -20,7 +20,7 @@ import {
   getAllRootPairs,
   getValidFactors,
 } from './sampleRandomValues';
-import { debug, getRandomItemFromSetAndRemove, round3 } from '../utility';
+import { debug, getRandomItemFromSetAndRemove } from '../utility';
 
 const perfectSquares = new Set<number>(
   [...getNaturalNumberSet(dataUpperBound)].filter((n) => isPerfectSquare(n)),
@@ -84,7 +84,7 @@ export function getValidDecimals(
   const validPercentageDigits = getValidBetweenValues(targetValMin, 100, true);
 
   validPercentageDigits.forEach((val) => {
-    const decimal = round3(val / 100);
+    const decimal = val / 100;
     returnSet.add(new DecimalExpressionData(decimal));
   });
   return returnSet;

@@ -3,6 +3,7 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  OnDestroy,
   OnInit,
   ViewChild,
   WritableSignal,
@@ -25,7 +26,7 @@ import { SoundService } from './services/sound.service';
 import { PositionService } from './services/position.service';
 import JSConfetti from 'js-confetti';
 import { StringResources } from './strings';
-import { Observable, Subscription, tap, timer } from 'rxjs';
+import { Observable, Subject, Subscription, takeUntil, tap, timer } from 'rxjs';
 import { mertinDelay, mertinInterval } from './constants';
 import { ActivatedRoute, Params, RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -71,7 +72,9 @@ import { LocalStorageService } from '../localStorageService';
   templateUrl: './numberMunchers.component.html',
   styleUrl: './less/numberMunchers.component.less',
 })
-export class AppComponent implements AfterViewChecked, AfterViewInit, OnInit {
+export class AppComponent
+  implements AfterViewChecked, AfterViewInit, OnInit, OnDestroy
+{
   @ViewChild('welcomeDialog') welcomeDialog!: ElementRef;
   @ViewChild('helpDialog') helpDialog!: ElementRef;
   @ViewChild('puzzleTypeDialog') puzzleTypeDialog!: ElementRef;
@@ -80,6 +83,9 @@ export class AppComponent implements AfterViewChecked, AfterViewInit, OnInit {
   @ViewChild('btnMertin') btnMertin!: ElementRef;
   @ViewChild('btnShowPuzzleTypes') btnShowPuzzleTypes!: ElementRef;
   @ViewChild('btnHelp') btnHelp!: ElementRef;
+
+  private destroyed: Subject<void> = new Subject();
+
   public holiday: WritableSignal<string> = signal('');
   public symbols: WritableSignal<string> = signal('');
 
@@ -127,42 +133,49 @@ export class AppComponent implements AfterViewChecked, AfterViewInit, OnInit {
     public soundService: SoundService,
     public puzzleTypeService: PuzzleTypeService,
   ) {}
+
+  ngOnDestroy(): void {
+    this.destroyed.next();
+    this.destroyed.complete();
+  }
   ngOnInit(): void {
     this.holiday.set(this.configService.getConfig().holiday);
     debug('HOLIDAY: ' + this.holiday());
     this.imageService.preload(this.holiday());
     this.init();
     this.timerInit();
-    this.route.queryParams.pipe().subscribe((params: Params) => {
-      this.setPuzzleOptions(params['p']);
-      this.setSoundOptions(params['s']);
-      this.setMertinOptions(params['m']);
-      this.reset();
-      this.init();
-      this.timerInit();
-      this.winStreak.set(this.localStorageService.getWinStreak());
-      this.highScore.set(this.localStorageService.getHighScore());
-      this.params['p'] = params['p'];
-      this.params['s'] = params['s'];
-      this.params['m'] = params['m'];
-      this.titleService.setTitle(
-        StringResources.TITLE + environment.titleSuffix,
-      );
-      this.symbols.set(this.getActivePuzzleSymbols());
-      if (
-        this.puzzleTypeService.getPuzzleTypes().size !==
-        Object.keys(PuzzleType).length / 2
-      ) {
+    this.route.queryParams
+      .pipe(takeUntil(this.destroyed))
+      .subscribe((params: Params) => {
+        this.setPuzzleOptions(params['p']);
+        this.setSoundOptions(params['s']);
+        this.setMertinOptions(params['m']);
+        this.reset();
+        this.init();
+        this.timerInit();
+        this.winStreak.set(this.localStorageService.getWinStreak());
+        this.highScore.set(this.localStorageService.getHighScore());
+        this.params['p'] = params['p'];
+        this.params['s'] = params['s'];
+        this.params['m'] = params['m'];
         this.titleService.setTitle(
-          StringResources.TITLE +
-            environment.titleSuffix +
-            ' - ' +
-            [...this.puzzleTypeService.getPuzzleTypes().values()]
-              .map((p) => PuzzleType[p])
-              .join(', '),
+          StringResources.TITLE + environment.titleSuffix,
         );
-      }
-    });
+        this.symbols.set(this.getActivePuzzleSymbols());
+        if (
+          this.puzzleTypeService.getPuzzleTypes().size !==
+          Object.keys(PuzzleType).length / 2
+        ) {
+          this.titleService.setTitle(
+            StringResources.TITLE +
+              environment.titleSuffix +
+              ' - ' +
+              [...this.puzzleTypeService.getPuzzleTypes().values()]
+                .map((p) => PuzzleType[p])
+                .join(', '),
+          );
+        }
+      });
   }
 
   /* Init */
@@ -180,7 +193,10 @@ export class AppComponent implements AfterViewChecked, AfterViewInit, OnInit {
     debug('Unsubscribe');
     this.positionService.mertinIndex.set(-1);
     this.timerSubscription = this.timer
-      .pipe(tap((v) => debug(`Pulse: ${v}`)))
+      .pipe(
+        takeUntil(this.destroyed),
+        tap((v) => debug(`Pulse: ${v}`)),
+      )
       .subscribe((val: number) => {
         if (this.speed() !== 0 && !this.noRemainingSolutions()) {
           if (val % this.speed() === 0) {
@@ -706,7 +722,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit, OnInit {
   }
 
   /* Action */
-  private choiceAction(): void {
+  public choiceAction(): void {
     if (this.noRemainingSolutions()) {
       return;
     }

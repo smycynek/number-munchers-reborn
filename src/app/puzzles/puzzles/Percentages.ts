@@ -10,7 +10,6 @@ import {
 } from '../sampleRandomValues';
 import { getValidPercentages } from '../sampleValidValues';
 import { Puzzle } from '../Puzzle';
-import { round3 } from '../../utility';
 import { PuzzleType } from '../../services/puzzleType.service';
 
 export class Percentages extends Puzzle {
@@ -38,7 +37,7 @@ export class Percentages extends Puzzle {
       s('is not greater than'),
       this.target1,
       s('(or'),
-      new PercentageExpressionData(round3(this.target1.value * 100)),
+      new PercentageExpressionData(this.target1.value * 100),
       s(')'),
     ];
   }
