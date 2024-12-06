@@ -67,6 +67,7 @@
 
         <button
           #btnMertin
+          title="Mertin Mode"
           [disabled]="this.noRemainingSolutions()"
           class="btn imagebutton row-button highlighted"
           [ngClass]="getMertinButtonClass()"
@@ -92,7 +93,7 @@
 
         <button
           #btnHelp
-          title="Help"
+          title="Help Button"
           class="btn imagebutton row-button highlighted"
           (click)="showHelp()"
         >
@@ -114,7 +115,7 @@
         </button>
       </div>
       <!-- Question and feedback -->
-      <div class="question-container">
+      <div title="Question text" class="question-container">
         <app-math-sentence
           [dataArray]="activePuzzle().getQuestionText()"
         ></app-math-sentence>
@@ -209,7 +210,10 @@
         row of icons above the grid for game settings or more information.
       </p>
       <form method="dialog">
-        <button class="button-base button-centered highlighted">
+        <button
+          title="Start Playing"
+          class="button-base button-centered highlighted"
+        >
           Start Playing
         </button>
         <button
@@ -255,6 +259,7 @@
           <input
             class="checkbox-wide highlighted"
             id="cbAddition"
+            title="Addition"
             [disabled]="isCheckboxDisabled(puzzleTypeService.addition)"
             [(ngModel)]="puzzleTypeService.addition"
             (change)="
@@ -269,6 +274,7 @@
           <input
             class="checkbox-wide highlighted"
             id="cbSubtraction"
+            title="Subtraction"
             [disabled]="isCheckboxDisabled(puzzleTypeService.subtraction)"
             [(ngModel)]="puzzleTypeService.subtraction"
             (change)="
@@ -425,6 +431,7 @@
     </div>
     <form method="dialog">
       <button
+        title="Settings OK"
         [disabled]="!validPuzzleSetSelected()"
         (click)="closeSettings()"
         class="has-disabled button-base button-centered highlighted"
@@ -442,10 +449,12 @@
     closed
   >
     <form method="dialog">
-      <button class="button-base button-cancel highlighted">X</button>
+      <button title="Help X" class="button-base button-cancel highlighted">
+        X
+      </button>
       <h1 class="centered">{{ title() }}</h1>
       <h2 class="centered">A math game</h2>
-      <p class="paragraph">
+      <p title="helpSummary" class="paragraph">
         Number Munchers Reborn is a re-imagining of the classic 90s game.
       </p>
       <p class="paragraph">{{ getGeneralInstructions() }}</p>
@@ -541,7 +550,6 @@
           <span style="vertical-align: top">
             <button
               #btnShowPuzzleTypes
-              title="Select puzzle types"
               class="btn imagebutton row-button highlighted"
               (click)="showPuzzleTypes()"
             >
@@ -683,7 +691,9 @@
         </li>
       </ul>
 
-      <button class="button-base button-centered highlighted">OK</button>
+      <button title="Help OK" class="button-base button-centered highlighted">
+        OK
+      </button>
     </form>
   </dialog>
 </main>

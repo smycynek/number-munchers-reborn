@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HeartComponent } from '../../heart/heart.component';
 import { ComponentRef } from '@angular/core';
+import { HeartComponent } from './heart.component';
 
 describe('HeartComponent', () => {
   let component: HeartComponent;
