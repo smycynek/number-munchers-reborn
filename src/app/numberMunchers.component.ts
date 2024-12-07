@@ -40,7 +40,6 @@ import {
   MultiplicationExpressionName,
   s,
 } from '../math-components/expression-data/expressionData';
-import { version } from './version';
 import { Title } from '@angular/platform-browser';
 import { HeartComponent } from '../heart/heart.component';
 import { ConfigService } from '../configService';
@@ -56,6 +55,9 @@ import { getRandomPuzzle } from './puzzles/PuzzleBroker';
 import { Puzzle } from './puzzles/Puzzle';
 import { environment } from '../environments/environment';
 import { LocalStorageService } from '../localStorageService';
+import { AboutDialogComponent } from '../about-dialog/about-dialog.component';
+import { GameInfoService } from './services/game-info.service';
+import { WelcomeDialogComponent } from '../welcome-dialog/welcome-dialog.component';
 
 @Component({
   selector: 'app-number-munchers',
@@ -68,6 +70,8 @@ import { LocalStorageService } from '../localStorageService';
     MathExpressionComponent,
     MathSentenceComponent,
     HeartComponent,
+    AboutDialogComponent,
+    WelcomeDialogComponent,
   ],
   templateUrl: './numberMunchers.component.html',
   styleUrl: './less/numberMunchers.component.less',
@@ -100,9 +104,6 @@ export class AppComponent
     getRandomPuzzle(allPuzzles),
   );
   private params: Params = {};
-  public title: WritableSignal<string> = signal(
-    StringResources.TITLE + environment.titleSuffix,
-  );
 
   private settingsChanged: WritableSignal<boolean> = signal(false);
 
@@ -132,6 +133,7 @@ export class AppComponent
     public imageService: ImageService,
     public soundService: SoundService,
     public puzzleTypeService: PuzzleTypeService,
+    public gameInfoService: GameInfoService,
   ) {}
 
   ngOnDestroy(): void {
@@ -244,11 +246,6 @@ export class AppComponent
   /* Options */
 
   /* eslint-disable @typescript-eslint/no-unused-vars */
-  public isCheckboxDisabled(_val: boolean) {
-    return false;
-    //   if (val && this.puzzleTypeService.getPuzzleTypes().size <= 1) return true;
-    //  else return false;
-  }
 
   public validPuzzleSetSelected(): boolean {
     return this.puzzleTypeService.getPuzzleTypes().size !== 0;
@@ -786,9 +783,6 @@ export class AppComponent
   }
 
   /* Other */
-  public getVersion(): number {
-    return version;
-  }
 
   public showHelp(): void {
     this.btnHelp.nativeElement.blur();
