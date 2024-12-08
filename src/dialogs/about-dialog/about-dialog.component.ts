@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { ImageService } from '../app/services/image.service';
-import { GameInfoService } from '../app/services/game-info.service';
+import { ImageService } from '../../app/services/image.service';
+import { GameInfoService } from '../../app/services/game-info.service';
 
 @Component({
   selector: 'app-about-dialog',
   standalone: true,
   imports: [],
   templateUrl: './about-dialog.component.html',
-  styleUrl: '../app/less/numberMunchers.component.less',
+  styleUrl: '../../app/less/numberMunchers.component.less',
 })
 export class AboutDialogComponent {
   public constructor(

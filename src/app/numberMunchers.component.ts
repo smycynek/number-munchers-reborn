@@ -53,10 +53,10 @@ import { getRandomPuzzle } from './puzzles/PuzzleBroker';
 import { Puzzle } from './puzzles/Puzzle';
 import { environment } from '../environments/environment';
 import { LocalStorageService } from '../localStorageService';
-import { AboutDialogComponent } from '../about-dialog/about-dialog.component';
+import { AboutDialogComponent } from '../dialogs/about-dialog/about-dialog.component';
 import { GameInfoService } from './services/game-info.service';
-import { WelcomeDialogComponent } from '../welcome-dialog/welcome-dialog.component';
-import { PuzzleTypeDialogComponent } from '../puzzle-type-dialog/puzzle-type-dialog.component';
+import { WelcomeDialogComponent } from '../dialogs/welcome-dialog/welcome-dialog.component';
+import { PuzzleTypeDialogComponent } from '../dialogs/puzzle-type-dialog/puzzle-type-dialog.component';
 
 @Component({
   selector: 'app-number-munchers',

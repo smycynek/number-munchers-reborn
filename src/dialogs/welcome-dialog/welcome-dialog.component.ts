@@ -5,7 +5,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './welcome-dialog.component.html',
-  styleUrl: '../app/less/numberMunchers.component.less',
+  styleUrl: '../../app/less/numberMunchers.component.less',
 })
 export class WelcomeDialogComponent {
   @Output() puzzleTypesClicked = new EventEmitter<void>();

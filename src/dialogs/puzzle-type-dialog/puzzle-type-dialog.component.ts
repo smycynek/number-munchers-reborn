@@ -2,7 +2,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import {
   PuzzleType,
   PuzzleTypeService,
-} from '../app/services/puzzleType.service';
+} from '../../app/services/puzzleType.service';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [FormsModule],
   templateUrl: './puzzle-type-dialog.component.html',
-  styleUrl: '../app/less/numberMunchers.component.less',
+  styleUrl: '../../app/less/numberMunchers.component.less',
 })
 export class PuzzleTypeDialogComponent {
   constructor(protected puzzleTypeService: PuzzleTypeService) {}
