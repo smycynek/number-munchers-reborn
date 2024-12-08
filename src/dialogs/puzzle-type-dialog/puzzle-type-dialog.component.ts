@@ -29,6 +29,11 @@ export class PuzzleTypeDialogComponent {
     this.urlChanged.emit(puzzleCodes);
   }
 
+  protected clearAll(): void {
+    this.puzzleTypeService.clearAll();
+    this.urlChanged.emit('');
+  }
+
   protected closeDialog(): void {
     if (this.puzzleTypeService.settingsChanged()) {
       this.settingChanged.emit();

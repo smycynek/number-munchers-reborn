@@ -8,7 +8,7 @@ import { Component, output } from '@angular/core';
   styleUrl: '../../app/less/numberMunchers.component.less',
 })
 export class WelcomeDialogComponent {
- puzzleTypesClicked = output();
+  puzzleTypesClicked = output();
   public test() {
     this.puzzleTypesClicked.emit();
   }

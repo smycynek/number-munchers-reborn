@@ -259,7 +259,11 @@ export class AppComponent
     if (!this.params['m']) {
       delete this.params['m'];
     }
-    if (!this.params['p']) {
+    if (
+      !this.params['p'] ||
+      this.puzzleTypeService.getActivePuzzleCodes().length ===
+        Object.keys(PuzzleType).length / 2
+    ) {
       delete this.params['p'];
     }
     return new URLSearchParams(this.params).toString();
@@ -293,6 +297,7 @@ export class AppComponent
   public showPuzzleTypes(): void {
     this.btnShowPuzzleTypes.nativeElement.blur();
     this.puzzleTypeService.ensureValidPuzzleSelection();
+    this.updateUrl('p', this.puzzleTypeService.getActivePuzzleCodes());
     this.puzzleTypeDialog.nativeElement.showModal();
     debug('Show puzzle types');
   }

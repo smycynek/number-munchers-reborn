@@ -241,7 +241,7 @@ export class PuzzleTypeService {
     return `(Puzzles: ${[...this.getPuzzleTypes().values()].map((p) => puzzleSymbols.get(p)).join('')})`;
   }
 
-  private getActivePuzzleCodes(): string {
+  public getActivePuzzleCodes(): string {
     const codes: string[] = [...this.getPuzzleTypes().values()].map(
       (p) => puzzleCodes.get(p) ?? '',
     );
