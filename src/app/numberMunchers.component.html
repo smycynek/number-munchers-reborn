@@ -182,7 +182,9 @@
             <app-heart value="{{ highScore() }}"></app-heart>
           </div>
           <div>
-            <span title="puzzle-symbols">{{ symbols() }}</span>
+            <span title="puzzle-symbols">{{
+              puzzleTypeService.symbols()
+            }}</span>
           </div>
         } @else {
           <p class="version">||{{ gameInfoService.getVersion() }}||</p>
@@ -200,7 +202,7 @@
     welcomeDialog
     closed
   >
-    <app-welcome-dialog (onPuzzleTypesClicked)="this.showPuzzleTypes()" />
+    <app-welcome-dialog (puzzleTypesClicked)="showPuzzleTypes()" />
   </dialog>
 
   <!-- Puzzle type dialog-->
@@ -210,199 +212,10 @@
     #puzzleTypeDialog
     closed
   >
-    <div>
-      <h1>Puzzle Types</h1>
-
-      <div class="choice-menu">
-        <div class="choice-group form-check">
-          <input
-            class="checkbox-wide highlighted"
-            id="cbGlt"
-            [(ngModel)]="puzzleTypeService.glt"
-            (change)="
-              toggleType(
-                puzzleTypeService.glt,
-                puzzleType.Greater_or_less_than,
-                true
-              )
-            "
-            type="checkbox"
-          />
-          <label for="cbGlt">Greater or Less Than</label>
-        </div>
-
-        <div class="choice-group">
-          <input
-            class="checkbox-wide highlighted"
-            id="cbAddition"
-            title="Addition"
-            [(ngModel)]="puzzleTypeService.addition"
-            (change)="
-              toggleType(puzzleTypeService.addition, puzzleType.Addition, true)
-            "
-            type="checkbox"
-          />
-          <label for="cbAddition">Addition</label>
-        </div>
-
-        <div class="choice-group">
-          <input
-            class="checkbox-wide highlighted"
-            id="cbSubtraction"
-            title="Subtraction"
-            [(ngModel)]="puzzleTypeService.subtraction"
-            (change)="
-              toggleType(
-                puzzleTypeService.subtraction,
-                puzzleType.Subtraction,
-                true
-              )
-            "
-            type="checkbox"
-          />
-          <label for="cbSubtraction">Subtraction</label>
-        </div>
-
-        <div class="choice-group">
-          <input
-            class="checkbox-wide highlighted"
-            id="cbMult"
-            [(ngModel)]="puzzleTypeService.multiplication"
-            (change)="
-              toggleType(
-                puzzleTypeService.multiplication,
-                puzzleType.Multiplication,
-                true
-              )
-            "
-            type="checkbox"
-          />
-          <label for="cbMult">Multiplication</label>
-        </div>
-        <div class="choice-group">
-          <input
-            class="checkbox-wide highlighted"
-            id="cbDiv"
-            (change)="
-              toggleType(puzzleTypeService.division, puzzleType.Division, true)
-            "
-            type="checkbox"
-          />
-          <label for="cbDiv">Division</label>
-        </div>
-
-        <div class="choice-group">
-          <input
-            class="checkbox-wide highlighted"
-            id="cbFractions"
-            (change)="
-              toggleType(
-                puzzleTypeService.fractions,
-                puzzleType.Fractions,
-                true
-              )
-            "
-            type="checkbox"
-          />
-          <label for="cbFractions">Fractions</label>
-        </div>
-
-        <div class="choice-group">
-          <input
-            class="checkbox-wide highlighted"
-            id="cbPercentages"
-            [(ngModel)]="puzzleTypeService.percentages"
-            (change)="
-              toggleType(
-                puzzleTypeService.percentages,
-                puzzleType.Percentages,
-                true
-              )
-            "
-            type="checkbox"
-          />
-          <label for="cbPercentages">Percentages</label>
-        </div>
-
-        <div class="choice-group">
-          <input
-            class="checkbox-wide highlighted"
-            id="cbDecimals"
-            [(ngModel)]="puzzleTypeService.decimals"
-            (change)="
-              toggleType(puzzleTypeService.decimals, puzzleType.Decimals, true)
-            "
-            type="checkbox"
-          />
-          <label for="cbDecimals">Decimals</label>
-        </div>
-
-        <div class="choice-group">
-          <input
-            class="checkbox-wide highlighted"
-            id="cbExponents"
-            [(ngModel)]="puzzleTypeService.exponents"
-            (change)="
-              toggleType(
-                puzzleTypeService.exponents,
-                puzzleType.Exponents,
-                true
-              )
-            "
-            type="checkbox"
-          />
-          <label for="cbExponents">Exponents</label>
-        </div>
-
-        <div class="choice-group">
-          <input
-            class="checkbox-wide highlighted"
-            id="cbRoots"
-            [(ngModel)]="puzzleTypeService.roots"
-            (change)="
-              toggleType(puzzleTypeService.roots, puzzleType.Roots, true)
-            "
-            type="checkbox"
-          />
-          <label for="cbRoots">Roots</label>
-        </div>
-
-        <div class="choice-group">
-          <input
-            class="checkbox-wide highlighted"
-            id="cbMisc"
-            [(ngModel)]="puzzleTypeService.misc"
-            (change)="
-              toggleType(puzzleTypeService.misc, puzzleType.Miscellaneous, true)
-            "
-            type="checkbox"
-          />
-          <label for="cbMisc">Odds and Ends</label>
-        </div>
-
-        <button
-          (click)="clearAll()"
-          class="button-base highlighted tiny-button"
-        >
-          Clear All
-        </button>
-
-        <p class="detail-content">
-          Puzzle type preference changes are encoded in the page's URL. Copy,
-          text, bookmark, or post it to save a custom puzzle configuration.
-        </p>
-      </div>
-    </div>
-    <form method="dialog">
-      <button
-        title="Settings OK"
-        [disabled]="!validPuzzleSetSelected()"
-        (click)="closeSettings()"
-        class="has-disabled button-base button-centered highlighted"
-      >
-        {{ getPuzzleTypeMessage() }}
-      </button>
-    </form>
+    <app-puzzle-type-dialog
+      (settingChanged)="newGame()"
+      (urlChanged)="updateUrl('p', $event)"
+    />
   </dialog>
 
   <!-- Help/About dialog-->
@@ -412,6 +225,6 @@
     #helpDialog
     closed
   >
-    <app-about-dialog (onPuzzleTypesClicked)="this.showPuzzleTypes()" />
+    <app-about-dialog (puzzleTypesClicked)="this.showPuzzleTypes()" />
   </dialog>
 </main>

@@ -9,4 +9,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 })
 export class WelcomeDialogComponent {
   @Output() puzzleTypesClicked = new EventEmitter<void>();
+  public test() {
+    this.puzzleTypesClicked.emit();
+  }
 }

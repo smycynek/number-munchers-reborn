@@ -45,8 +45,6 @@ import { HeartComponent } from '../heart/heart.component';
 import { ConfigService } from '../configService';
 import {
   allPuzzles,
-  puzzleCodes,
-  puzzleSymbols,
   PuzzleType,
   PuzzleTypeService,
 } from './services/puzzleType.service';
@@ -58,6 +56,7 @@ import { LocalStorageService } from '../localStorageService';
 import { AboutDialogComponent } from '../about-dialog/about-dialog.component';
 import { GameInfoService } from './services/game-info.service';
 import { WelcomeDialogComponent } from '../welcome-dialog/welcome-dialog.component';
+import { PuzzleTypeDialogComponent } from '../puzzle-type-dialog/puzzle-type-dialog.component';
 
 @Component({
   selector: 'app-number-munchers',
@@ -72,6 +71,7 @@ import { WelcomeDialogComponent } from '../welcome-dialog/welcome-dialog.compone
     HeartComponent,
     AboutDialogComponent,
     WelcomeDialogComponent,
+    PuzzleTypeDialogComponent,
   ],
   templateUrl: './numberMunchers.component.html',
   styleUrl: './less/numberMunchers.component.less',
@@ -91,7 +91,6 @@ export class AppComponent
   private destroyed: Subject<void> = new Subject();
 
   public holiday: WritableSignal<string> = signal('');
-  public symbols: WritableSignal<string> = signal('');
 
   public readonly cellData: WritableSignal<DataCell[]> = signal([]);
   public readonly statusMessage: WritableSignal<string> = signal(
@@ -105,8 +104,6 @@ export class AppComponent
   );
   private params: Params = {};
 
-  private settingsChanged: WritableSignal<boolean> = signal(false);
-
   private timer: Observable<number> = timer(
     mertinDelay * 1000,
     mertinInterval * 1000,
@@ -118,9 +115,6 @@ export class AppComponent
   public readonly showScore: WritableSignal<boolean> = signal(true);
 
   private timerSubscription: Subscription | undefined;
-  public get puzzleType(): typeof PuzzleType {
-    return PuzzleType;
-  }
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -149,7 +143,7 @@ export class AppComponent
     this.route.queryParams
       .pipe(takeUntil(this.destroyed))
       .subscribe((params: Params) => {
-        this.setPuzzleOptions(params['p']);
+        this.puzzleTypeService.setPuzzleOptions(params['p']);
         this.setSoundOptions(params['s']);
         this.setMertinOptions(params['m']);
         this.reset();
@@ -163,7 +157,9 @@ export class AppComponent
         this.titleService.setTitle(
           StringResources.TITLE + environment.titleSuffix,
         );
-        this.symbols.set(this.getActivePuzzleSymbols());
+        this.puzzleTypeService.symbols.set(
+          this.puzzleTypeService.getActivePuzzleSymbols(),
+        );
         if (
           this.puzzleTypeService.getPuzzleTypes().size !==
           Object.keys(PuzzleType).length / 2
@@ -247,59 +243,7 @@ export class AppComponent
 
   /* eslint-disable @typescript-eslint/no-unused-vars */
 
-  public validPuzzleSetSelected(): boolean {
-    return this.puzzleTypeService.getPuzzleTypes().size !== 0;
-  }
-
-  public getPuzzleTypeMessage(): string {
-    return this.puzzleTypeService.getPuzzleTypes().size === 0
-      ? 'Select at least one puzzle type'
-      : 'OK';
-  }
-
-  private getActivePuzzleSymbols(): string {
-    return `(Puzzles: ${[...this.puzzleTypeService.getPuzzleTypes().values()].map((p) => puzzleSymbols.get(p)).join('')})`;
-  }
-
-  private getActivePuzzleCodes(): string {
-    const codes: string[] = [
-      ...this.puzzleTypeService.getPuzzleTypes().values(),
-    ].map((p) => puzzleCodes.get(p) ?? '');
-    return codes.sort((a, b) => a.localeCompare(b)).join('');
-  }
-
-  public toggleType(value: boolean, type: PuzzleType, updateQuery?: boolean) {
-    this.settingsChanged.set(true);
-    if (value) {
-      debug(`Add: ${PuzzleType[type]}`);
-      this.puzzleTypeService.add(type);
-    } else {
-      debug(`Remove: ${PuzzleType[type]}`);
-      this.puzzleTypeService.delete(type);
-    }
-
-    if (updateQuery) {
-      let activeTypeCodes = this.getActivePuzzleCodes();
-      if (
-        this.puzzleTypeService.getPuzzleTypes().size ===
-        Object.keys(PuzzleType).length / 2
-      ) {
-        activeTypeCodes = '';
-      }
-      this.symbols.set(this.getActivePuzzleSymbols());
-      this.titleService.setTitle(
-        StringResources.TITLE +
-          environment.titleSuffix +
-          ' - ' +
-          [...this.puzzleTypeService.getPuzzleTypes().values()]
-            .map((p) => PuzzleType[p])
-            .join(', '),
-      );
-      this.updateUrl('p', activeTypeCodes);
-    }
-  }
-
-  private updateUrl(param: string, value: string): void {
+  public updateUrl(param: string, value: string): void {
     this.location.replaceState('/', this.updateQueryString(param, value));
   }
 
@@ -346,33 +290,9 @@ export class AppComponent
     this.btnMertin.nativeElement.blur();
   }
 
-  private setPuzzleOptions(puzzleString: string) {
-    const puzzleStringLc = puzzleString?.toLowerCase();
-    if (
-      !puzzleStringLc ||
-      puzzleStringLc.search('/|m|a|s|d|e|f|o|g|r|p|x|/') === -1
-    ) {
-      return;
-    }
-    this.toggleType(puzzleStringLc.includes('m'), PuzzleType.Multiplication);
-    this.toggleType(puzzleStringLc.includes('a'), PuzzleType.Addition);
-    this.toggleType(puzzleStringLc.includes('s'), PuzzleType.Subtraction);
-    this.toggleType(puzzleStringLc.includes('d'), PuzzleType.Division);
-    this.toggleType(puzzleStringLc.includes('e'), PuzzleType.Exponents);
-    this.toggleType(puzzleStringLc.includes('f'), PuzzleType.Fractions);
-    this.toggleType(puzzleStringLc.includes('o'), PuzzleType.Miscellaneous);
-    this.toggleType(
-      puzzleStringLc.includes('g'),
-      PuzzleType.Greater_or_less_than,
-    );
-    this.toggleType(puzzleStringLc.includes('r'), PuzzleType.Roots);
-    this.toggleType(puzzleStringLc.includes('p'), PuzzleType.Percentages);
-    this.toggleType(puzzleStringLc.includes('x'), PuzzleType.Decimals);
-  }
-
   public showPuzzleTypes(): void {
     this.btnShowPuzzleTypes.nativeElement.blur();
-    this.ensureValidPuzzleSelection();
+    this.puzzleTypeService.ensureValidPuzzleSelection();
     this.puzzleTypeDialog.nativeElement.showModal();
     debug('Show puzzle types');
   }
@@ -405,40 +325,11 @@ export class AppComponent
     this.cellData.set([]);
   }
 
-  public closeSettings(): void {
-    if (this.settingsChanged()) {
-      this.newGame();
-      this.settingsChanged.set(true);
-    }
-  }
-
-  private ensureValidPuzzleSelection(): void {
-    if (this.puzzleTypeService.getPuzzleTypes().size === 0) {
-      debug('No puzzles selected, defaulting to addition');
-      this.toggleType(true, PuzzleType.Addition, true);
-      this.settingsChanged.set(true);
-    }
-  }
-  public clearAll(): void {
-    this.toggleType(false, PuzzleType.Greater_or_less_than, true);
-    this.toggleType(false, PuzzleType.Addition, true);
-    this.toggleType(false, PuzzleType.Subtraction, true);
-    this.toggleType(false, PuzzleType.Multiplication, true);
-    this.toggleType(false, PuzzleType.Division, true);
-    this.toggleType(false, PuzzleType.Fractions, true);
-    this.toggleType(false, PuzzleType.Decimals, true);
-    this.toggleType(false, PuzzleType.Percentages, true);
-    this.toggleType(false, PuzzleType.Miscellaneous, true);
-    this.toggleType(false, PuzzleType.Roots, true);
-    this.toggleType(false, PuzzleType.Exponents, true);
-    this.settingsChanged.set(true);
-  }
-
   public newGame(): void {
     debug('New game');
     this.reset();
 
-    this.ensureValidPuzzleSelection();
+    this.puzzleTypeService.ensureValidPuzzleSelection();
     this.init();
     this.timerInit();
     this.btnNewGame.nativeElement.blur();
