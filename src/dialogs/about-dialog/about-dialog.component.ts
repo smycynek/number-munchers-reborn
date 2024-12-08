@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, output } from '@angular/core';
 import { ImageService } from '../../app/services/image.service';
 import { GameInfoService } from '../../app/services/game-info.service';
 
@@ -14,5 +14,5 @@ export class AboutDialogComponent {
     protected imageService: ImageService,
     protected gameInfoService: GameInfoService,
   ) {}
-  @Output() puzzleTypesClicked = new EventEmitter<void>();
+  puzzleTypesClicked = output<void>();
 }

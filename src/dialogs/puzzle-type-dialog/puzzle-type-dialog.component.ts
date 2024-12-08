@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, output } from '@angular/core';
 import {
   PuzzleType,
   PuzzleTypeService,
@@ -14,9 +14,8 @@ import { FormsModule } from '@angular/forms';
 })
 export class PuzzleTypeDialogComponent {
   constructor(protected puzzleTypeService: PuzzleTypeService) {}
-  @Output() settingChanged = new EventEmitter<void>();
-  @Output() urlChanged = new EventEmitter<string>();
-
+  urlChanged = output<string>();
+  settingChanged = output<void>();
   protected toggleType(
     value: boolean,
     puzzleType: PuzzleType,

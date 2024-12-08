@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, output } from '@angular/core';
 
 @Component({
   selector: 'app-welcome-dialog',
@@ -8,7 +8,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
   styleUrl: '../../app/less/numberMunchers.component.less',
 })
 export class WelcomeDialogComponent {
-  @Output() puzzleTypesClicked = new EventEmitter<void>();
+ puzzleTypesClicked = output();
   public test() {
     this.puzzleTypesClicked.emit();
   }
