@@ -7,7 +7,7 @@ import { GameInfoService } from '../../app/services/game-info.service';
   standalone: true,
   imports: [],
   templateUrl: './about-dialog.component.html',
-  styleUrl: '../../app/less/numberMunchers.component.less',
+  styleUrl: '../../app/less/number-munchers.component.less',
 })
 export class AboutDialogComponent {
   public constructor(

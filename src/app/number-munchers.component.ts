@@ -47,7 +47,7 @@ import {
   allPuzzles,
   PuzzleType,
   PuzzleTypeService,
-} from './services/puzzleType.service';
+} from './services/puzzle-type.service';
 import { ImageService } from './services/image.service';
 import { getRandomPuzzle } from './puzzles/PuzzleBroker';
 import { Puzzle } from './puzzles/Puzzle';
@@ -73,8 +73,8 @@ import { PuzzleTypeDialogComponent } from '../dialogs/puzzle-type-dialog/puzzle-
     WelcomeDialogComponent,
     PuzzleTypeDialogComponent,
   ],
-  templateUrl: './numberMunchers.component.html',
-  styleUrl: './less/numberMunchers.component.less',
+  templateUrl: './number-munchers.component.html',
+  styleUrl: './less/number-munchers.component.less',
 })
 export class AppComponent
   implements AfterViewChecked, AfterViewInit, OnInit, OnDestroy

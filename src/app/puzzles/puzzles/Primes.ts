@@ -12,7 +12,7 @@ import {
 import { toExpressionDataSet, getPrimes } from '../sampleValidValues';
 import { format_and } from '../../utility';
 import { Puzzle } from '../Puzzle';
-import { PuzzleType } from '../../services/puzzleType.service';
+import { PuzzleType } from '../../services/puzzle-type.service';
 
 export class Primes extends Puzzle {
   public constructor() {

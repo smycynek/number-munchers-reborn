@@ -8,7 +8,7 @@ import { DataCell } from '../dataCell';
 import { getRandomItemFromSetAndRemove } from './sampleRandomValues';
 import { expressionDataSetHas } from './sampleValidValues';
 import { debug } from '../utility';
-import { PuzzleType } from '../services/puzzleType.service';
+import { PuzzleType } from '../services/puzzle-type.service';
 
 export function toggleRValue(cellValue: ExpressionTypes): ExpressionTypes {
   cellValue.showRval = !cellValue.showRval;

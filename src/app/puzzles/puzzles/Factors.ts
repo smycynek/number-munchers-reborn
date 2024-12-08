@@ -13,7 +13,7 @@ import {
 } from '../sampleRandomValues';
 import { toExpressionDataSet } from '../sampleValidValues';
 import { Puzzle } from '../Puzzle';
-import { PuzzleType } from '../../services/puzzleType.service';
+import { PuzzleType } from '../../services/puzzle-type.service';
 
 export class Factors extends Puzzle {
   public constructor() {

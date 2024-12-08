@@ -9,7 +9,7 @@ import { isPerfectSquare } from '../predicates';
 import { getRandomNaturalNumberSet } from '../sampleRandomValues';
 import { toExpressionDataSet, getPerfectSquares } from '../sampleValidValues';
 import { Puzzle } from '../Puzzle';
-import { PuzzleType } from '../../services/puzzleType.service';
+import { PuzzleType } from '../../services/puzzle-type.service';
 
 export class PerfectSquares extends Puzzle {
   public constructor() {

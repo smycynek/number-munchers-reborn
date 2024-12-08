@@ -12,7 +12,7 @@ import {
 } from '../sampleRandomValues';
 import { getValidMultiples, toExpressionDataSet } from '../sampleValidValues';
 import { Puzzle } from '../Puzzle';
-import { PuzzleType } from '../../services/puzzleType.service';
+import { PuzzleType } from '../../services/puzzle-type.service';
 
 export class Multiples extends Puzzle {
   public constructor() {
