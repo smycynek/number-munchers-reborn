@@ -11,7 +11,7 @@ import {
 } from '../sampleRandomValues';
 import { Puzzle, toggleRValue } from '../Puzzle';
 import { getValidSumPairs } from '../sampleValidValues';
-import { PuzzleType } from '../../services/puzzleType.service';
+import { PuzzleType } from '../../services/puzzle-type.service';
 
 export class Addition extends Puzzle {
   public constructor(private digits: number = 2) {

@@ -10,7 +10,7 @@ import {
 } from '../sampleRandomValues';
 import { getValidMultiplicationPairs } from '../sampleValidValues';
 import { Puzzle, toggleRValue } from '../Puzzle';
-import { PuzzleType } from '../../services/puzzleType.service';
+import { PuzzleType } from '../../services/puzzle-type.service';
 
 export class Multiplication extends Puzzle {
   public constructor() {

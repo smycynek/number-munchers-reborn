@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal, WritableSignal } from '@angular/core';
 import {
   multSymbol,
   divSymbol,
@@ -7,6 +7,10 @@ import {
   greaterEqual,
   rootSymbol,
 } from '../constants';
+import { environment } from '../../environments/environment';
+import { StringResources } from '../strings';
+import { debug } from '../utility';
+import { Title } from '@angular/platform-browser';
 
 export enum PuzzleType {
   Miscellaneous,
@@ -68,6 +72,7 @@ export const puzzleSymbols: Map<PuzzleType, string> = new Map([
   providedIn: 'root',
 })
 export class PuzzleTypeService {
+  public constructor(protected titleService: Title) {}
   private puzzleTypes = allPuzzles;
 
   public add(puzzleType: PuzzleType): void {
@@ -179,5 +184,113 @@ export class PuzzleTypeService {
     val
       ? this.puzzleTypes.add(PuzzleType.Decimals)
       : this.puzzleTypes.delete(PuzzleType.Decimals);
+  }
+
+  public get puzzleType(): typeof PuzzleType {
+    return PuzzleType;
+  }
+
+  public validPuzzleSetSelected(): boolean {
+    return this.getPuzzleTypes().size !== 0;
+  }
+
+  public getPuzzleTypeMessage(): string {
+    return this.getPuzzleTypes().size === 0
+      ? 'Select at least one puzzle type'
+      : 'OK';
+  }
+
+  public settingsChanged: WritableSignal<boolean> = signal(false);
+
+  public toggleType(
+    value: boolean,
+    type: PuzzleType,
+    updateQuery?: boolean,
+  ): string {
+    this.settingsChanged.set(true);
+    if (value) {
+      debug(`Add: ${PuzzleType[type]}`);
+      this.add(type);
+    } else {
+      debug(`Remove: ${PuzzleType[type]}`);
+      this.delete(type);
+    }
+
+    if (updateQuery) {
+      let activeTypeCodes = this.getActivePuzzleCodes();
+      if (this.getPuzzleTypes().size === Object.keys(PuzzleType).length / 2) {
+        activeTypeCodes = '';
+      }
+      this.symbols.set(this.getActivePuzzleSymbols());
+      this.titleService.setTitle(
+        StringResources.TITLE +
+          environment.titleSuffix +
+          ' - ' +
+          [...this.getPuzzleTypes().values()]
+            .map((p) => PuzzleType[p])
+            .join(', '),
+      );
+      return activeTypeCodes;
+    }
+    return '';
+  }
+
+  public symbols: WritableSignal<string> = signal('');
+
+  public getActivePuzzleSymbols(): string {
+    return `(Puzzles: ${[...this.getPuzzleTypes().values()].map((p) => puzzleSymbols.get(p)).join('')})`;
+  }
+
+  public getActivePuzzleCodes(): string {
+    const codes: string[] = [...this.getPuzzleTypes().values()].map(
+      (p) => puzzleCodes.get(p) ?? '',
+    );
+    return codes.sort((a, b) => a.localeCompare(b)).join('');
+  }
+  public clearAll(): void {
+    this.toggleType(false, PuzzleType.Greater_or_less_than, true);
+    this.toggleType(false, PuzzleType.Addition, true);
+    this.toggleType(false, PuzzleType.Subtraction, true);
+    this.toggleType(false, PuzzleType.Multiplication, true);
+    this.toggleType(false, PuzzleType.Division, true);
+    this.toggleType(false, PuzzleType.Fractions, true);
+    this.toggleType(false, PuzzleType.Decimals, true);
+    this.toggleType(false, PuzzleType.Percentages, true);
+    this.toggleType(false, PuzzleType.Miscellaneous, true);
+    this.toggleType(false, PuzzleType.Roots, true);
+    this.toggleType(false, PuzzleType.Exponents, true);
+    this.settingsChanged.set(true);
+  }
+
+  public ensureValidPuzzleSelection(): void {
+    if (this.getPuzzleTypes().size === 0) {
+      debug('No puzzles selected, defaulting to addition');
+      this.toggleType(true, PuzzleType.Addition, true);
+      this.settingsChanged.set(true);
+    }
+  }
+
+  public setPuzzleOptions(puzzleString: string) {
+    const puzzleStringLc = puzzleString?.toLowerCase();
+    if (
+      !puzzleStringLc ||
+      puzzleStringLc.search('/|m|a|s|d|e|f|o|g|r|p|x|/') === -1
+    ) {
+      return;
+    }
+    this.toggleType(puzzleStringLc.includes('m'), PuzzleType.Multiplication);
+    this.toggleType(puzzleStringLc.includes('a'), PuzzleType.Addition);
+    this.toggleType(puzzleStringLc.includes('s'), PuzzleType.Subtraction);
+    this.toggleType(puzzleStringLc.includes('d'), PuzzleType.Division);
+    this.toggleType(puzzleStringLc.includes('e'), PuzzleType.Exponents);
+    this.toggleType(puzzleStringLc.includes('f'), PuzzleType.Fractions);
+    this.toggleType(puzzleStringLc.includes('o'), PuzzleType.Miscellaneous);
+    this.toggleType(
+      puzzleStringLc.includes('g'),
+      PuzzleType.Greater_or_less_than,
+    );
+    this.toggleType(puzzleStringLc.includes('r'), PuzzleType.Roots);
+    this.toggleType(puzzleStringLc.includes('p'), PuzzleType.Percentages);
+    this.toggleType(puzzleStringLc.includes('x'), PuzzleType.Decimals);
   }
 }

@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AppComponent } from '../numberMunchers.component';
+import { AppComponent } from '../number-munchers.component';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { PuzzleType } from '../services/puzzleType.service';
+import { PuzzleType } from '../services/puzzle-type.service';
 import { SoundService } from '../services/sound.service';
 
 describe('NumberMuncherComponent', () => {

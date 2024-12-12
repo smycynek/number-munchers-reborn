@@ -5,9 +5,9 @@ import {
   ElementRef,
   OnDestroy,
   OnInit,
-  ViewChild,
   WritableSignal,
   signal,
+  viewChild,
 } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -40,22 +40,23 @@ import {
   MultiplicationExpressionName,
   s,
 } from '../math-components/expression-data/expressionData';
-import { version } from './version';
 import { Title } from '@angular/platform-browser';
 import { HeartComponent } from '../heart/heart.component';
 import { ConfigService } from '../configService';
 import {
   allPuzzles,
-  puzzleCodes,
-  puzzleSymbols,
   PuzzleType,
   PuzzleTypeService,
-} from './services/puzzleType.service';
+} from './services/puzzle-type.service';
 import { ImageService } from './services/image.service';
 import { getRandomPuzzle } from './puzzles/PuzzleBroker';
 import { Puzzle } from './puzzles/Puzzle';
 import { environment } from '../environments/environment';
 import { LocalStorageService } from '../localStorageService';
+import { AboutDialogComponent } from '../dialogs/about-dialog/about-dialog.component';
+import { GameInfoService } from './services/game-info.service';
+import { WelcomeDialogComponent } from '../dialogs/welcome-dialog/welcome-dialog.component';
+import { PuzzleTypeDialogComponent } from '../dialogs/puzzle-type-dialog/puzzle-type-dialog.component';
 
 @Component({
   selector: 'app-number-munchers',
@@ -68,26 +69,28 @@ import { LocalStorageService } from '../localStorageService';
     MathExpressionComponent,
     MathSentenceComponent,
     HeartComponent,
+    AboutDialogComponent,
+    WelcomeDialogComponent,
+    PuzzleTypeDialogComponent,
   ],
-  templateUrl: './numberMunchers.component.html',
-  styleUrl: './less/numberMunchers.component.less',
+  templateUrl: './number-munchers.component.html',
+  styleUrl: './less/number-munchers.component.less',
 })
 export class AppComponent
   implements AfterViewChecked, AfterViewInit, OnInit, OnDestroy
 {
-  @ViewChild('welcomeDialog') welcomeDialog!: ElementRef;
-  @ViewChild('helpDialog') helpDialog!: ElementRef;
-  @ViewChild('puzzleTypeDialog') puzzleTypeDialog!: ElementRef;
-  @ViewChild('btnNewGame') btnNewGame!: ElementRef;
-  @ViewChild('btnSound') btnSound!: ElementRef;
-  @ViewChild('btnMertin') btnMertin!: ElementRef;
-  @ViewChild('btnShowPuzzleTypes') btnShowPuzzleTypes!: ElementRef;
-  @ViewChild('btnHelp') btnHelp!: ElementRef;
+  welcomeDialog = viewChild.required<ElementRef>('welcomeDialog'); // welcomeDialog!: ElementRef;
+  helpDialog = viewChild.required<ElementRef>('helpDialog');
+  puzzleTypeDialog = viewChild.required<ElementRef>('puzzleTypeDialog');
+  btnNewGame = viewChild.required<ElementRef>('btnNewGame');
+  btnSound = viewChild.required<ElementRef>('btnSound');
+  btnMertin = viewChild.required<ElementRef>('btnMertin');
+  btnShowPuzzleTypes = viewChild.required<ElementRef>('btnShowPuzzleTypes');
+  btnHelp = viewChild.required<ElementRef>('btnHelp');
 
   private destroyed: Subject<void> = new Subject();
 
   public holiday: WritableSignal<string> = signal('');
-  public symbols: WritableSignal<string> = signal('');
 
   public readonly cellData: WritableSignal<DataCell[]> = signal([]);
   public readonly statusMessage: WritableSignal<string> = signal(
@@ -100,11 +103,6 @@ export class AppComponent
     getRandomPuzzle(allPuzzles),
   );
   private params: Params = {};
-  public title: WritableSignal<string> = signal(
-    StringResources.TITLE + environment.titleSuffix,
-  );
-
-  private settingsChanged: WritableSignal<boolean> = signal(false);
 
   private timer: Observable<number> = timer(
     mertinDelay * 1000,
@@ -117,9 +115,6 @@ export class AppComponent
   public readonly showScore: WritableSignal<boolean> = signal(true);
 
   private timerSubscription: Subscription | undefined;
-  public get puzzleType(): typeof PuzzleType {
-    return PuzzleType;
-  }
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -132,6 +127,7 @@ export class AppComponent
     public imageService: ImageService,
     public soundService: SoundService,
     public puzzleTypeService: PuzzleTypeService,
+    public gameInfoService: GameInfoService,
   ) {}
 
   ngOnDestroy(): void {
@@ -147,7 +143,7 @@ export class AppComponent
     this.route.queryParams
       .pipe(takeUntil(this.destroyed))
       .subscribe((params: Params) => {
-        this.setPuzzleOptions(params['p']);
+        this.puzzleTypeService.setPuzzleOptions(params['p']);
         this.setSoundOptions(params['s']);
         this.setMertinOptions(params['m']);
         this.reset();
@@ -161,7 +157,9 @@ export class AppComponent
         this.titleService.setTitle(
           StringResources.TITLE + environment.titleSuffix,
         );
-        this.symbols.set(this.getActivePuzzleSymbols());
+        this.puzzleTypeService.symbols.set(
+          this.puzzleTypeService.getActivePuzzleSymbols(),
+        );
         if (
           this.puzzleTypeService.getPuzzleTypes().size !==
           Object.keys(PuzzleType).length / 2
@@ -184,8 +182,8 @@ export class AppComponent
   }
 
   ngAfterViewInit() {
-    this.welcomeDialog.nativeElement.showModal();
-    setInterval(() => this.welcomeDialog.nativeElement.close(), 15000);
+    this.welcomeDialog().nativeElement.showModal();
+    setInterval(() => this.welcomeDialog().nativeElement.close(), 15000);
   }
 
   private timerInit(): void {
@@ -244,65 +242,8 @@ export class AppComponent
   /* Options */
 
   /* eslint-disable @typescript-eslint/no-unused-vars */
-  public isCheckboxDisabled(_val: boolean) {
-    return false;
-    //   if (val && this.puzzleTypeService.getPuzzleTypes().size <= 1) return true;
-    //  else return false;
-  }
 
-  public validPuzzleSetSelected(): boolean {
-    return this.puzzleTypeService.getPuzzleTypes().size !== 0;
-  }
-
-  public getPuzzleTypeMessage(): string {
-    return this.puzzleTypeService.getPuzzleTypes().size === 0
-      ? 'Select at least one puzzle type'
-      : 'OK';
-  }
-
-  private getActivePuzzleSymbols(): string {
-    return `(Puzzles: ${[...this.puzzleTypeService.getPuzzleTypes().values()].map((p) => puzzleSymbols.get(p)).join('')})`;
-  }
-
-  private getActivePuzzleCodes(): string {
-    const codes: string[] = [
-      ...this.puzzleTypeService.getPuzzleTypes().values(),
-    ].map((p) => puzzleCodes.get(p) ?? '');
-    return codes.sort((a, b) => a.localeCompare(b)).join('');
-  }
-
-  public toggleType(value: boolean, type: PuzzleType, updateQuery?: boolean) {
-    this.settingsChanged.set(true);
-    if (value) {
-      debug(`Add: ${PuzzleType[type]}`);
-      this.puzzleTypeService.add(type);
-    } else {
-      debug(`Remove: ${PuzzleType[type]}`);
-      this.puzzleTypeService.delete(type);
-    }
-
-    if (updateQuery) {
-      let activeTypeCodes = this.getActivePuzzleCodes();
-      if (
-        this.puzzleTypeService.getPuzzleTypes().size ===
-        Object.keys(PuzzleType).length / 2
-      ) {
-        activeTypeCodes = '';
-      }
-      this.symbols.set(this.getActivePuzzleSymbols());
-      this.titleService.setTitle(
-        StringResources.TITLE +
-          environment.titleSuffix +
-          ' - ' +
-          [...this.puzzleTypeService.getPuzzleTypes().values()]
-            .map((p) => PuzzleType[p])
-            .join(', '),
-      );
-      this.updateUrl('p', activeTypeCodes);
-    }
-  }
-
-  private updateUrl(param: string, value: string): void {
+  public updateUrl(param: string, value: string): void {
     this.location.replaceState('/', this.updateQueryString(param, value));
   }
 
@@ -318,7 +259,11 @@ export class AppComponent
     if (!this.params['m']) {
       delete this.params['m'];
     }
-    if (!this.params['p']) {
+    if (
+      !this.params['p'] ||
+      this.puzzleTypeService.getActivePuzzleCodes().length ===
+        Object.keys(PuzzleType).length / 2
+    ) {
       delete this.params['p'];
     }
     return new URLSearchParams(this.params).toString();
@@ -346,37 +291,14 @@ export class AppComponent
       this.positionService.mertinIndex.set(-1);
     }
     debug(`Toggle/change interval length: ${this.speed() * mertinInterval}`);
-    this.btnMertin.nativeElement.blur();
-  }
-
-  private setPuzzleOptions(puzzleString: string) {
-    const puzzleStringLc = puzzleString?.toLowerCase();
-    if (
-      !puzzleStringLc ||
-      puzzleStringLc.search('/|m|a|s|d|e|f|o|g|r|p|x|/') === -1
-    ) {
-      return;
-    }
-    this.toggleType(puzzleStringLc.includes('m'), PuzzleType.Multiplication);
-    this.toggleType(puzzleStringLc.includes('a'), PuzzleType.Addition);
-    this.toggleType(puzzleStringLc.includes('s'), PuzzleType.Subtraction);
-    this.toggleType(puzzleStringLc.includes('d'), PuzzleType.Division);
-    this.toggleType(puzzleStringLc.includes('e'), PuzzleType.Exponents);
-    this.toggleType(puzzleStringLc.includes('f'), PuzzleType.Fractions);
-    this.toggleType(puzzleStringLc.includes('o'), PuzzleType.Miscellaneous);
-    this.toggleType(
-      puzzleStringLc.includes('g'),
-      PuzzleType.Greater_or_less_than,
-    );
-    this.toggleType(puzzleStringLc.includes('r'), PuzzleType.Roots);
-    this.toggleType(puzzleStringLc.includes('p'), PuzzleType.Percentages);
-    this.toggleType(puzzleStringLc.includes('x'), PuzzleType.Decimals);
+    this.btnMertin().nativeElement.blur();
   }
 
   public showPuzzleTypes(): void {
-    this.btnShowPuzzleTypes.nativeElement.blur();
-    this.ensureValidPuzzleSelection();
-    this.puzzleTypeDialog.nativeElement.showModal();
+    this.btnShowPuzzleTypes().nativeElement.blur();
+    this.puzzleTypeService.ensureValidPuzzleSelection();
+    this.updateUrl('p', this.puzzleTypeService.getActivePuzzleCodes());
+    this.puzzleTypeDialog().nativeElement.showModal();
     debug('Show puzzle types');
   }
 
@@ -384,7 +306,7 @@ export class AppComponent
     this.soundService.toggleSound();
     debug(`Sound: ${this.soundService.getSoundOn()}`);
     this.updateUrl('s', this.soundService.getSoundOn().toString());
-    this.btnSound.nativeElement.blur();
+    this.btnSound().nativeElement.blur();
   }
 
   public toggleDebug(): void {
@@ -408,43 +330,14 @@ export class AppComponent
     this.cellData.set([]);
   }
 
-  public closeSettings(): void {
-    if (this.settingsChanged()) {
-      this.newGame();
-      this.settingsChanged.set(true);
-    }
-  }
-
-  private ensureValidPuzzleSelection(): void {
-    if (this.puzzleTypeService.getPuzzleTypes().size === 0) {
-      debug('No puzzles selected, defaulting to addition');
-      this.toggleType(true, PuzzleType.Addition, true);
-      this.settingsChanged.set(true);
-    }
-  }
-  public clearAll(): void {
-    this.toggleType(false, PuzzleType.Greater_or_less_than, true);
-    this.toggleType(false, PuzzleType.Addition, true);
-    this.toggleType(false, PuzzleType.Subtraction, true);
-    this.toggleType(false, PuzzleType.Multiplication, true);
-    this.toggleType(false, PuzzleType.Division, true);
-    this.toggleType(false, PuzzleType.Fractions, true);
-    this.toggleType(false, PuzzleType.Decimals, true);
-    this.toggleType(false, PuzzleType.Percentages, true);
-    this.toggleType(false, PuzzleType.Miscellaneous, true);
-    this.toggleType(false, PuzzleType.Roots, true);
-    this.toggleType(false, PuzzleType.Exponents, true);
-    this.settingsChanged.set(true);
-  }
-
   public newGame(): void {
     debug('New game');
     this.reset();
 
-    this.ensureValidPuzzleSelection();
+    this.puzzleTypeService.ensureValidPuzzleSelection();
     this.init();
     this.timerInit();
-    this.btnNewGame.nativeElement.blur();
+    this.btnNewGame().nativeElement.blur();
   }
 
   private getRandomNonOccupiedIndex(): number {
@@ -786,13 +679,10 @@ export class AppComponent
   }
 
   /* Other */
-  public getVersion(): number {
-    return version;
-  }
 
   public showHelp(): void {
-    this.btnHelp.nativeElement.blur();
-    this.helpDialog.nativeElement.showModal();
+    this.btnHelp().nativeElement.blur();
+    this.helpDialog().nativeElement.showModal();
     console.log('Show help');
   }
 }
