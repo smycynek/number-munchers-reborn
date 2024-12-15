@@ -1,10 +1,11 @@
-<form method="dialog">
-  <button class="button-base button-cancel highlighted">X</button>
-</form>
+<div>
+  <form method="dialog">
+    <button class="button-base button-cancel highlighted">X</button>
+  </form>
+</div>
 <div class="welcome-text">
-  <div class="heading">
-    <p class="centered strong">Welcome!</p>
-  </div>
+  <h1 class="centered strong">Welcome!</h1>
+
   <p>
     Click or tap a square in the grid to get started with the game. Try the row
     of icons above the grid for game settings or more information.
@@ -16,7 +17,10 @@
     >
       Start Playing
     </button>
-    <button (click)="test()" class="button-base button-centered highlighted">
+    <button
+      (click)="this.puzzleTypesClicked.emit()"
+      class="button-base button-centered highlighted"
+    >
       Select Puzzle Types
     </button>
   </form>

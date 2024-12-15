@@ -26,7 +26,15 @@ import { SoundService } from './services/sound.service';
 import { PositionService } from './services/position.service';
 import JSConfetti from 'js-confetti';
 import { StringResources } from './strings';
-import { Observable, Subject, Subscription, takeUntil, tap, timer } from 'rxjs';
+import {
+  debounceTime,
+  Observable,
+  Subject,
+  Subscription,
+  takeUntil,
+  tap,
+  timer,
+} from 'rxjs';
 import { mertinDelay, mertinInterval } from './constants';
 import { ActivatedRoute, Params, RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -141,9 +149,10 @@ export class AppComponent
     this.init();
     this.timerInit();
     this.route.queryParams
-      .pipe(takeUntil(this.destroyed))
+      .pipe(debounceTime(200))
       .subscribe((params: Params) => {
         this.puzzleTypeService.setPuzzleOptions(params['p']);
+        this.puzzleTypeService.initialized.set(true);
         this.setSoundOptions(params['s']);
         this.setMertinOptions(params['m']);
         this.reset();
@@ -296,7 +305,6 @@ export class AppComponent
 
   public showPuzzleTypes(): void {
     this.btnShowPuzzleTypes().nativeElement.blur();
-    this.puzzleTypeService.ensureValidPuzzleSelection();
     this.updateUrl('p', this.puzzleTypeService.getActivePuzzleCodes());
     this.puzzleTypeDialog().nativeElement.showModal();
     debug('Show puzzle types');
@@ -330,11 +338,13 @@ export class AppComponent
     this.cellData.set([]);
   }
 
+  public settingsChanged(puzzleCodes: string): void {
+    this.updateUrl('p', puzzleCodes);
+    this.newGame();
+  }
   public newGame(): void {
     debug('New game');
     this.reset();
-
-    this.puzzleTypeService.ensureValidPuzzleSelection();
     this.init();
     this.timerInit();
     this.btnNewGame().nativeElement.blur();

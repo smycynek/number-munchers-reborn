@@ -207,15 +207,14 @@
 
   <!-- Puzzle type dialog-->
   <dialog
+    id="puzzleTypeDialog"
+    *ngIf="this.puzzleTypeService.initialized()"
     class="dialog-base dialog-general dialog-narrow"
     typeDialog
     #puzzleTypeDialog
     closed
   >
-    <app-puzzle-type-dialog
-      (settingChanged)="newGame()"
-      (urlChanged)="updateUrl('p', $event)"
-    />
+    <app-puzzle-type-dialog (submitEffects)="this.settingsChanged($event)" />
   </dialog>
 
   <!-- Help/About dialog-->

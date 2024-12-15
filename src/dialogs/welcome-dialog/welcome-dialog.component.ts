@@ -9,7 +9,4 @@ import { Component, output } from '@angular/core';
 })
 export class WelcomeDialogComponent {
   puzzleTypesClicked = output();
-  public test() {
-    this.puzzleTypesClicked.emit();
-  }
 }

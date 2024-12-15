@@ -40,6 +40,11 @@ export const allPuzzles = new Set<PuzzleType>([
   PuzzleType.Decimals,
 ]);
 
+export const puzzleTypeTitles: Map<string, string> = new Map([
+  ['Greater_or_less_than', 'Greater or less than'],
+  ['Miscellaneous', 'Odds and Ends'],
+]);
+
 export const puzzleCodes: Map<PuzzleType, string> = new Map([
   [PuzzleType.Miscellaneous, 'o'],
   [PuzzleType.Multiplication, 'm'],
@@ -72,6 +77,7 @@ export const puzzleSymbols: Map<PuzzleType, string> = new Map([
   providedIn: 'root',
 })
 export class PuzzleTypeService {
+  public initialized: WritableSignal<boolean> = signal(false);
   public constructor(protected titleService: Title) {}
   private puzzleTypes = allPuzzles;
 
@@ -87,127 +93,15 @@ export class PuzzleTypeService {
     return this.puzzleTypes;
   }
 
-  public get multiplication(): boolean {
-    return this.puzzleTypes.has(PuzzleType.Multiplication);
-  }
-  public set multiplication(val: boolean) {
-    val
-      ? this.puzzleTypes.add(PuzzleType.Multiplication)
-      : this.puzzleTypes.delete(PuzzleType.Multiplication);
-  }
-
-  public get division(): boolean {
-    return this.puzzleTypes.has(PuzzleType.Division);
-  }
-  public set division(val: boolean) {
-    val
-      ? this.puzzleTypes.add(PuzzleType.Division)
-      : this.puzzleTypes.delete(PuzzleType.Division);
-  }
-
-  public get glt(): boolean {
-    return this.puzzleTypes.has(PuzzleType.Greater_or_less_than);
-  }
-  public set glt(val: boolean) {
-    val
-      ? this.puzzleTypes.add(PuzzleType.Greater_or_less_than)
-      : this.puzzleTypes.delete(PuzzleType.Greater_or_less_than);
-  }
-
-  public get misc(): boolean {
-    return this.puzzleTypes.has(PuzzleType.Miscellaneous);
-  }
-  public set misc(val: boolean) {
-    val
-      ? this.puzzleTypes.add(PuzzleType.Miscellaneous)
-      : this.puzzleTypes.delete(PuzzleType.Miscellaneous);
-  }
-
-  public get fractions(): boolean {
-    return this.puzzleTypes.has(PuzzleType.Fractions);
-  }
-  public set fractions(val: boolean) {
-    val
-      ? this.puzzleTypes.add(PuzzleType.Fractions)
-      : this.puzzleTypes.delete(PuzzleType.Fractions);
-  }
-
-  public get addition(): boolean {
-    return this.puzzleTypes.has(PuzzleType.Addition);
-  }
-  public set addition(val: boolean) {
-    val
-      ? this.puzzleTypes.add(PuzzleType.Addition)
-      : this.puzzleTypes.delete(PuzzleType.Addition);
-  }
-
-  public get subtraction(): boolean {
-    return this.puzzleTypes.has(PuzzleType.Subtraction);
-  }
-  public set subtraction(val: boolean) {
-    val
-      ? this.puzzleTypes.add(PuzzleType.Subtraction)
-      : this.puzzleTypes.delete(PuzzleType.Subtraction);
-  }
-
-  public get exponents(): boolean {
-    return this.puzzleTypes.has(PuzzleType.Exponents);
-  }
-  public set exponents(val: boolean) {
-    val
-      ? this.puzzleTypes.add(PuzzleType.Exponents)
-      : this.puzzleTypes.delete(PuzzleType.Exponents);
-  }
-
-  public get roots(): boolean {
-    return this.puzzleTypes.has(PuzzleType.Roots);
-  }
-  public set roots(val: boolean) {
-    val
-      ? this.puzzleTypes.add(PuzzleType.Roots)
-      : this.puzzleTypes.delete(PuzzleType.Roots);
-  }
-
-  public get percentages(): boolean {
-    return this.puzzleTypes.has(PuzzleType.Percentages);
-  }
-  public set percentages(val: boolean) {
-    val
-      ? this.puzzleTypes.add(PuzzleType.Percentages)
-      : this.puzzleTypes.delete(PuzzleType.Percentages);
-  }
-
-  public get decimals(): boolean {
-    return this.puzzleTypes.has(PuzzleType.Decimals);
-  }
-  public set decimals(val: boolean) {
-    val
-      ? this.puzzleTypes.add(PuzzleType.Decimals)
-      : this.puzzleTypes.delete(PuzzleType.Decimals);
-  }
-
   public get puzzleType(): typeof PuzzleType {
     return PuzzleType;
   }
-
-  public validPuzzleSetSelected(): boolean {
-    return this.getPuzzleTypes().size !== 0;
-  }
-
-  public getPuzzleTypeMessage(): string {
-    return this.getPuzzleTypes().size === 0
-      ? 'Select at least one puzzle type'
-      : 'OK';
-  }
-
-  public settingsChanged: WritableSignal<boolean> = signal(false);
 
   public toggleType(
     value: boolean,
     type: PuzzleType,
     updateQuery?: boolean,
   ): string {
-    this.settingsChanged.set(true);
     if (value) {
       debug(`Add: ${PuzzleType[type]}`);
       this.add(type);
@@ -246,28 +140,6 @@ export class PuzzleTypeService {
       (p) => puzzleCodes.get(p) ?? '',
     );
     return codes.sort((a, b) => a.localeCompare(b)).join('');
-  }
-  public clearAll(): void {
-    this.toggleType(false, PuzzleType.Greater_or_less_than, true);
-    this.toggleType(false, PuzzleType.Addition, true);
-    this.toggleType(false, PuzzleType.Subtraction, true);
-    this.toggleType(false, PuzzleType.Multiplication, true);
-    this.toggleType(false, PuzzleType.Division, true);
-    this.toggleType(false, PuzzleType.Fractions, true);
-    this.toggleType(false, PuzzleType.Decimals, true);
-    this.toggleType(false, PuzzleType.Percentages, true);
-    this.toggleType(false, PuzzleType.Miscellaneous, true);
-    this.toggleType(false, PuzzleType.Roots, true);
-    this.toggleType(false, PuzzleType.Exponents, true);
-    this.settingsChanged.set(true);
-  }
-
-  public ensureValidPuzzleSelection(): void {
-    if (this.getPuzzleTypes().size === 0) {
-      debug('No puzzles selected, defaulting to addition');
-      this.toggleType(true, PuzzleType.Addition, true);
-      this.settingsChanged.set(true);
-    }
   }
 
   public setPuzzleOptions(puzzleString: string) {

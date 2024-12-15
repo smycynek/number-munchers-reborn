@@ -1,212 +1,55 @@
 <div>
-  <h1>Puzzle Types</h1>
-
-  <div class="choice-menu">
-    <div class="choice-group form-check">
-      <input
-        class="checkbox-wide highlighted"
-        id="cbGlt"
-        [(ngModel)]="puzzleTypeService.glt"
-        (change)="
-          toggleType(
-            puzzleTypeService.glt,
-            puzzleTypeService.puzzleType.Greater_or_less_than,
-            true
-          )
-        "
-        type="checkbox"
-      />
-      <label for="cbGlt">Greater or Less Than</label>
-    </div>
-
-    <div class="choice-group">
-      <input
-        class="checkbox-wide highlighted"
-        id="cbAddition"
-        title="Addition"
-        [(ngModel)]="puzzleTypeService.addition"
-        (change)="
-          toggleType(
-            puzzleTypeService.addition,
-            puzzleTypeService.puzzleType.Addition,
-            true
-          )
-        "
-        type="checkbox"
-      />
-      <label for="cbAddition">Addition</label>
-    </div>
-
-    <div class="choice-group">
-      <input
-        class="checkbox-wide highlighted"
-        id="cbSubtraction"
-        title="Subtraction"
-        [(ngModel)]="puzzleTypeService.subtraction"
-        (change)="
-          toggleType(
-            puzzleTypeService.subtraction,
-            puzzleTypeService.puzzleType.Subtraction,
-            true
-          )
-        "
-        type="checkbox"
-      />
-      <label for="cbSubtraction">Subtraction</label>
-    </div>
-
-    <div class="choice-group">
-      <input
-        class="checkbox-wide highlighted"
-        id="cbMult"
-        [(ngModel)]="puzzleTypeService.multiplication"
-        (change)="
-          toggleType(
-            puzzleTypeService.multiplication,
-            puzzleTypeService.puzzleType.Multiplication,
-            true
-          )
-        "
-        type="checkbox"
-      />
-      <label for="cbMult">Multiplication</label>
-    </div>
-    <div class="choice-group">
-      <input
-        class="checkbox-wide highlighted"
-        id="cbDiv"
-        [(ngModel)]="puzzleTypeService.division"
-        (change)="
-          toggleType(
-            puzzleTypeService.division,
-            puzzleTypeService.puzzleType.Division,
-            true
-          )
-        "
-        type="checkbox"
-      />
-      <label for="cbDiv">Division</label>
-    </div>
-
-    <div class="choice-group">
-      <input
-        class="checkbox-wide highlighted"
-        id="cbFractions"
-        [(ngModel)]="puzzleTypeService.fractions"
-        (change)="
-          toggleType(
-            puzzleTypeService.fractions,
-            puzzleTypeService.puzzleType.Fractions,
-            true
-          )
-        "
-        type="checkbox"
-      />
-      <label for="cbFractions">Fractions</label>
-    </div>
-
-    <div class="choice-group">
-      <input
-        class="checkbox-wide highlighted"
-        id="cbPercentages"
-        [(ngModel)]="puzzleTypeService.percentages"
-        (change)="
-          toggleType(
-            puzzleTypeService.percentages,
-            puzzleTypeService.puzzleType.Percentages,
-            true
-          )
-        "
-        type="checkbox"
-      />
-      <label for="cbPercentages">Percentages</label>
-    </div>
-
-    <div class="choice-group">
-      <input
-        class="checkbox-wide highlighted"
-        id="cbDecimals"
-        [(ngModel)]="puzzleTypeService.decimals"
-        (change)="
-          toggleType(
-            puzzleTypeService.decimals,
-            puzzleTypeService.puzzleType.Decimals,
-            true
-          )
-        "
-        type="checkbox"
-      />
-      <label for="cbDecimals">Decimals</label>
-    </div>
-
-    <div class="choice-group">
-      <input
-        class="checkbox-wide highlighted"
-        id="cbExponents"
-        [(ngModel)]="puzzleTypeService.exponents"
-        (change)="
-          toggleType(
-            puzzleTypeService.exponents,
-            puzzleTypeService.puzzleType.Exponents,
-            true
-          )
-        "
-        type="checkbox"
-      />
-      <label for="cbExponents">Exponents</label>
-    </div>
-
-    <div class="choice-group">
-      <input
-        class="checkbox-wide highlighted"
-        id="cbRoots"
-        [(ngModel)]="puzzleTypeService.roots"
-        (change)="
-          toggleType(
-            puzzleTypeService.roots,
-            puzzleTypeService.puzzleType.Roots,
-            true
-          )
-        "
-        type="checkbox"
-      />
-      <label for="cbRoots">Roots</label>
-    </div>
-
-    <div class="choice-group">
-      <input
-        class="checkbox-wide highlighted"
-        id="cbMisc"
-        [(ngModel)]="puzzleTypeService.misc"
-        (change)="
-          toggleType(
-            puzzleTypeService.misc,
-            puzzleTypeService.puzzleType.Miscellaneous,
-            true
-          )
-        "
-        type="checkbox"
-      />
-      <label for="cbMisc">Odds and Ends</label>
-    </div>
-
-    <button (click)="clearAll()" class="button-base highlighted tiny-button">
-      Clear All
-    </button>
-
-    <p class="detail-content">
-      Puzzle type preference changes are encoded in the page's URL. Copy, text,
-      bookmark, or post it to save a custom puzzle configuration.
-    </p>
-  </div>
-</div>
-<form method="dialog">
-  <button
-    title="Settings OK"
-    [disabled]="!puzzleTypeService.validPuzzleSetSelected()"
-    (click)="closeDialog()"
-    class="has-disabled button-base button-centered highlighted"
+  <form
+    (ngSubmit)="submit()"
+    method="dialog"
+    [formGroup]="puzzleTypesFormGroup"
   >
-    {{ puzzleTypeService.getPuzzleTypeMessage() }}
-  </button>
-</form>
+    <button (click)="onCancel()" class="button-base button-cancel highlighted">
+      X
+    </button>
+    <h1 class="centered strong">Puzzle Types</h1>
+    <div class="choice-menu">
+      <div class="choice-group form-check">
+        <div *ngFor="let puzzleTypeName of PuzzleTypeStrings">
+          <input
+            title="{{ puzzleTypeName }}"
+            formControlName="{{ puzzleTypeName }}"
+            name="{{ puzzleTypeName }}"
+            class="checkbox-wide highlighted"
+            id="{{ puzzleTypeName }}"
+            type="checkbox"
+          />
+          <label for="{{ puzzleTypeName }}">{{
+            getPuzzleTypeTitle(puzzleTypeName)
+          }}</label>
+        </div>
+
+        <button
+          type="button"
+          (click)="clearAll()"
+          class="button-base highlighted tiny-button"
+        >
+          Clear All
+        </button>
+
+        <p class="detail-content">
+          Puzzle type preference changes are encoded in the page's URL. Copy,
+          text, bookmark, or post it to save a custom puzzle configuration.
+        </p>
+      </div>
+    </div>
+
+    <button
+      type="submit"
+      [disabled]="!hiddenPuzzleTypeValidator.valid"
+      title="Settings OK"
+      class="has-disabled button-base button-centered highlighted"
+    >
+      {{
+        hiddenPuzzleTypeValidator.valid
+          ? 'OK'
+          : 'Select at least one puzzle'
+      }}
+    </button>
+  </form>
+</div>

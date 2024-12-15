@@ -1,43 +1,140 @@
-import { Component, output } from '@angular/core';
+import { AfterContentInit, Component, output } from '@angular/core';
 import {
   PuzzleType,
   PuzzleTypeService,
+  puzzleTypeTitles,
 } from '../../app/services/puzzle-type.service';
-import { FormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-puzzle-type-dialog',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule, ReactiveFormsModule],
   templateUrl: './puzzle-type-dialog.component.html',
   styleUrl: '../../app/less/number-munchers.component.less',
 })
-export class PuzzleTypeDialogComponent {
-  constructor(protected puzzleTypeService: PuzzleTypeService) {}
-  urlChanged = output<string>();
-  settingChanged = output<void>();
-  protected toggleType(
-    value: boolean,
-    puzzleType: PuzzleType,
-    updateQuery?: boolean,
+export class PuzzleTypeDialogComponent implements AfterContentInit {
+  constructor(
+    protected puzzleTypeService: PuzzleTypeService,
+    private fb: FormBuilder,
   ) {
-    const puzzleCodes = this.puzzleTypeService.toggleType(
-      value,
-      puzzleType,
-      updateQuery,
+    this.hiddenPuzzleTypeValidator = fb.control(true);
+    this.puzzleTypesFormGroup = fb.group({});
+
+    this.mainFormGroup = fb.group({});
+    this.mainFormGroup.addControl(
+      'hiddenPuzzleTypeValidator',
+      this.hiddenPuzzleTypeValidator,
     );
-    this.urlChanged.emit(puzzleCodes);
+    this.mainFormGroup.addControl(
+      'puzzleTypesFormGroup',
+      this.puzzleTypesFormGroup,
+    );
+
+    this.puzzleTypesFormGroup.valueChanges
+      .pipe(takeUntilDestroyed())
+      .subscribe((value) => {
+        const settings: boolean[] = Object.values(value);
+        if (settings.findIndex((f) => !!f) !== -1) {
+          this.hiddenPuzzleTypeValidator.setErrors(null);
+        } else {
+          this.hiddenPuzzleTypeValidator.setErrors({ e: 1 });
+        }
+      });
+  }
+
+  ngAfterContentInit(): void {
+    for (const puzzleTypeString of this.PuzzleTypeStrings) {
+      const puzzleTypeStringEnum =
+        PuzzleType[puzzleTypeString as keyof typeof PuzzleType];
+      const enabled = this.puzzleTypeService
+        .getPuzzleTypes()
+        .has(puzzleTypeStringEnum);
+      this.puzzleTypesFormGroup.addControl(
+        puzzleTypeString,
+        new FormControl(enabled),
+      );
+    }
+
+    const thisDialog = document.getElementById('puzzleTypeDialog');
+    if (thisDialog) {
+      thisDialog.addEventListener('cancel', () => this.onCancel());
+    }
+  }
+
+  // Used to reset dialog values if user cancels or  hits escape
+  protected onCancel() {
+    for (const puzzleTypeString of this.PuzzleTypeStrings) {
+      const puzzleTypeStringEnum =
+        PuzzleType[puzzleTypeString as keyof typeof PuzzleType];
+      const enabled = this.puzzleTypeService
+        .getPuzzleTypes()
+        .has(puzzleTypeStringEnum);
+      const control = this.puzzleTypesFormGroup.get(puzzleTypeString);
+      control?.setValue(enabled);
+    }
+  }
+  protected getPuzzleTypeTitle(puzzleType: string): string {
+    return puzzleTypeTitles.get(puzzleType) ?? puzzleType;
+  }
+
+  protected submitEffects = output<string>();
+
+  protected get puzzleTypesFormGroupNames() {
+    return Object.keys(this.puzzleTypesFormGroup.controls);
   }
 
   protected clearAll(): void {
-    this.puzzleTypeService.clearAll();
-    this.urlChanged.emit('');
+    this.PuzzleTypeStrings.forEach((name) => {
+      this.puzzleTypesFormGroup.get(name)?.setValue(false);
+    });
   }
 
-  protected closeDialog(): void {
-    if (this.puzzleTypeService.settingsChanged()) {
-      this.settingChanged.emit();
-      this.puzzleTypeService.settingsChanged.set(true);
+  protected get PuzzleType() {
+    return PuzzleType;
+  }
+
+  protected get PuzzleTypeStrings(): string[] {
+    const strings = Object.values(PuzzleType)
+      .filter((t) => isNaN(Number(t)))
+      .map((t) => t.toString());
+    console.log(strings);
+    return strings;
+  }
+
+  protected mainFormGroup: FormGroup;
+  protected puzzleTypesFormGroup: FormGroup;
+  protected hiddenPuzzleTypeValidator: FormControl;
+
+  public submit(): void {
+    if (this.puzzleTypesFormGroup.pristine) {
+      return;
     }
+
+    for (const puzzleTypeName of this.PuzzleTypeStrings) {
+      const control = this.puzzleTypesFormGroup.get(puzzleTypeName);
+      const enabled = control?.value;
+      const puzzleTypeNameEnum =
+        PuzzleType[puzzleTypeName as keyof typeof PuzzleType];
+      this.puzzleTypeService.toggleType(enabled, puzzleTypeNameEnum, true);
+    }
+
+    let activeTypeCodes = this.puzzleTypeService.getActivePuzzleCodes();
+    if (
+      this.puzzleTypeService.getPuzzleTypes().size ===
+      Object.keys(PuzzleType).length / 2
+    ) {
+      activeTypeCodes = '';
+    }
+
+    this.submitEffects.emit(activeTypeCodes);
   }
 }
