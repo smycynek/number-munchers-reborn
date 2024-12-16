@@ -66,12 +66,12 @@ export class PuzzleTypeDialogComponent implements AfterContentInit {
 
     const thisDialog = document.getElementById('puzzleTypeDialog');
     if (thisDialog) {
-      thisDialog.addEventListener('cancel', () => this.onCancel());
+      thisDialog.addEventListener('cancel', () => this.cancelAndClose());
     }
   }
 
   // Used to reset dialog values if user cancels or  hits escape
-  protected onCancel() {
+  protected cancelAndClose() {
     for (const puzzleTypeString of this.PuzzleTypeStrings) {
       const puzzleTypeStringEnum =
         PuzzleType[puzzleTypeString as keyof typeof PuzzleType];
@@ -81,6 +81,11 @@ export class PuzzleTypeDialogComponent implements AfterContentInit {
       const control = this.puzzleTypesFormGroup.get(puzzleTypeString);
       control?.setValue(enabled);
     }
+    this.puzzleTypesFormGroup.markAsPristine();
+    const thisDialog = document.getElementById(
+      'puzzleTypeDialog',
+    ) as HTMLDialogElement;
+    thisDialog.close();
   }
   protected getPuzzleTypeTitle(puzzleType: string): string {
     return puzzleTypeTitles.get(puzzleType) ?? puzzleType;
@@ -134,7 +139,7 @@ export class PuzzleTypeDialogComponent implements AfterContentInit {
     ) {
       activeTypeCodes = '';
     }
-
+    this.puzzleTypesFormGroup.markAsPristine();
     this.submitEffects.emit(activeTypeCodes);
   }
 }

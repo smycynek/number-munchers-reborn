@@ -4,7 +4,11 @@
     method="dialog"
     [formGroup]="puzzleTypesFormGroup"
   >
-    <button (click)="onCancel()" class="button-base button-cancel highlighted">
+    <button
+      type="button"
+      (click)="cancelAndClose()"
+      class="button-base button-cancel highlighted"
+    >
       X
     </button>
     <h1 class="centered strong">Puzzle Types</h1>
@@ -46,9 +50,7 @@
       class="has-disabled button-base button-centered highlighted"
     >
       {{
-        hiddenPuzzleTypeValidator.valid
-          ? 'OK'
-          : 'Select at least one puzzle'
+        hiddenPuzzleTypeValidator.valid ? 'OK' : 'Select at least one puzzle'
       }}
     </button>
   </form>
