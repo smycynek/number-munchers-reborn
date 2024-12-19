@@ -12,7 +12,7 @@ that it's fair to put an MIT license on it.
 ## Setup
 
 - `npm install`
-- `ng serve` for a development server. Navigate to `http://localhost:4210/`.
+- `ng serve` for a development server. Navigate to `http://localhost:4200/`.
 - `preplocal.sh` or `deploy.sh` to build for production
 - `config.sh` to deploy a holiday configuration
 - tests: `end2end-tests.sh` and `unit-tests.sh`
