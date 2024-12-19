@@ -8,8 +8,8 @@ This started off as a simple project to do on an airplane, but people liked the 
 something made with an HTML `<table>` and vanilla JS in two hours to a [more well-supported Angular app](https://stevenvictor.net/number-munchers/) with graphics
 and sound.  In the past year, this project has taken off, and children are playing it in schools and at home in the Boston area and beyond!
 
-I don't own the copyright to the original Number Munchers (it's an old [80-90s game](https://www.mecc.co/mac--pc-products/munchers/math-munchers-deluxe.html), 
-but all the code is original, and it's different enough, experience-wise,
+I don't own the copyright to the original Number Munchers concept (it's an old [80-90s game](https://www.mecc.co/mac--pc-products/munchers/math-munchers-deluxe.html), 
+but all the code here is my own, and it's different enough, experience-wise,
 that it's fair to put an MIT license on it.
 
 ## Setup
@@ -22,7 +22,7 @@ that it's fair to put an MIT license on it.
 - Live demo at https://stevenvictor.net/number-munchers
 
 
-[![screenshot](main_screen.png)](https://stevenvictor.net/number-munchers)
+[![screenshot](main_screen.png)](https://stevenvictor.net/number-munchers){ width=400px }
 
 
 version: 421
