@@ -2,6 +2,8 @@
 
 # A simple number-munchers-like game
 
+Steven Mycynek 2024
+
 This started off as a simple project to do on an airplane, but people liked it, so I took it from
 something made with an HTML `<table>` and vanilla JS to a more well-supported Angular app with graphics
 and sound.
