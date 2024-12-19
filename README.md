@@ -1,14 +1,15 @@
 # Number Munchers Reborn
 
-# A simple number-munchers-like game
+# A number-munchers-like game
 
 Steven Mycynek 2024
 
-This started off as a simple project to do on an airplane, but people liked it, so I took it from
-something made with an HTML `<table>` and vanilla JS to a more well-supported Angular app with graphics
-and sound.
+This started off as a simple project to do on an airplane, but people liked the [original primitive attempt](https://stevenvictor.net/numbers/), so I took it from
+something made with an HTML `<table>` and vanilla JS in two hours to a [more well-supported Angular app](https://stevenvictor.net/number-munchers/) with graphics
+and sound.  In the past year, this project has taken off, and children are playing it in schools and at home in the Boston area and beyond!
 
-I don't own the copyright to Number Munchers, but all the code is original, and it's different enough, experience-wise,
+I don't own the copyright to the original Number Munchers (it's an old [80-90s game](https://www.mecc.co/mac--pc-products/munchers/math-munchers-deluxe.html), 
+but all the code is original, and it's different enough, experience-wise,
 that it's fair to put an MIT license on it.
 
 ## Setup
