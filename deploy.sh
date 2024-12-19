@@ -57,7 +57,7 @@ echo "$version"
 version_inc=$((version + 1))
 echo "$version_inc"
 sed -i -e "s/[0-9][0-9][0-9]/$version_inc/g" "$VERSION_PATH"
-sed -i -e "s/[0-9][0-9][0-9]/$version_inc/g" "$README_PATH"
+sed -i -e "s/000[0-9][0-9][0-9]/000$version_inc/g" "$README_PATH"
 
 rm "$VERSION_PATH-e"
 rm "$README_PATH-e"

@@ -167,18 +167,14 @@
             id="i{{ idxr }}{{ idxc }}"
             *ngIf="isActive(idxr, idxc)"
             [ngClass]="getAvatarSizeClass(idxr, idxc)"
-            [ngSrc]="getAvatarImage()"
-            height="70"
-            width="70"
+            [src]="getAvatarImage()"
           />
           <img
             alt="mertin avatar"
             id="i{{ idxr }}{{ idxc }}m"
             *ngIf="hasMertin(idxr, idxc)"
             [ngClass]="getAvatarSizeClass(idxr, idxc)"
-            height="70"
-            width="70"
-            [ngSrc]="imageService.getMertinImage(holiday())"
+            [src]="imageService.getMertinImage(holiday())"
           />
         </div>
       </div>
