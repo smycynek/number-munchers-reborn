@@ -21,8 +21,7 @@ that it's fair to put an MIT license on it.
 - tests: `end2end-tests.sh` and `unit-tests.sh`
 - Live demo at https://stevenvictor.net/number-munchers
 
-
-[![screenshot](main_screen.png)](https://stevenvictor.net/number-munchers){ width=400px }
-
+<a href="https://stevenvictor.net/number-munchers"><img alt="screenshot" src="main_screen.png" width="50%">
+</a>
 
 version: 421
