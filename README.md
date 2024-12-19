@@ -16,8 +16,10 @@ that it's fair to put an MIT license on it.
 - `preplocal.sh` or `deploy.sh` to build for production
 - `config.sh` to deploy a holiday configuration
 - tests: `end2end-tests.sh` and `unit-tests.sh`
-Live demo at https://stevenvictor.net/number-munchers
+- Live demo at https://stevenvictor.net/number-munchers
 
 
-![screenshot](main_screen.png)
+[![screenshot](main_screen.png)](https://stevenvictor.net/number-munchers)
+
+
 version: 421
