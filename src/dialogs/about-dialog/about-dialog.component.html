@@ -68,8 +68,9 @@
       <img
         style="display: block"
         alt="Number Munchers Logo"
-        [src]="imageService.getMunchyImageStandard()"
+        [ngSrc]="imageService.getMunchyImageStandard()"
         width="70"
+        height="70"
       />
       Our hero, a curious frog who loves numbers and has very specific tastes
       (that vary each game) for the kinds of numbers he likes to eat. Note that
@@ -82,8 +83,9 @@
       <img
         style="display: block"
         alt="Mertin Logo"
-        [src]="imageService.getMertinImageStandard()"
+        [ngSrc]="imageService.getMertinImageStandard()"
         width="70"
+        height="70"
       />
       A mischievous gremlin who likes to reset areas of the board according to
       his own design. Mertin-mode is off by default, with three speed levels for
@@ -103,7 +105,12 @@
           class="btn imagebutton row-button highlighted"
           (click)="puzzleTypesClicked.emit()"
         >
-          <img alt="puzzle-piece-icon" src="assets/puzzle-piece.svg" />
+          <img
+            alt="puzzle-piece-icon"
+            height="40"
+            width="40"
+            ngSrc="assets/puzzle-piece.svg"
+          />
         </button>
       </span>
       icon.

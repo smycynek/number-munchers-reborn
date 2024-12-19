@@ -9,7 +9,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule, Location, NgOptimizedImage } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChangeDetectorRef } from '@angular/core';
 import { DataCell } from './dataCell';
@@ -80,6 +80,7 @@ import { PuzzleTypeDialogComponent } from '../dialogs/puzzle-type-dialog/puzzle-
     AboutDialogComponent,
     WelcomeDialogComponent,
     PuzzleTypeDialogComponent,
+    NgOptimizedImage,
   ],
   templateUrl: './number-munchers.component.html',
   styleUrl: './less/number-munchers.component.less',

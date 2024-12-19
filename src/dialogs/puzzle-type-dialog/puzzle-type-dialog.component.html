@@ -14,18 +14,23 @@
     <h1 class="centered strong">Puzzle Types</h1>
     <div class="choice-menu">
       <div class="choice-group form-check">
-        <div *ngFor="let puzzleTypeName of PuzzleTypeStrings">
-          <input
-            title="{{ puzzleTypeName }}"
-            formControlName="{{ puzzleTypeName }}"
-            name="{{ puzzleTypeName }}"
-            class="checkbox-wide highlighted"
-            id="{{ puzzleTypeName }}"
-            type="checkbox"
-          />
-          <label for="{{ puzzleTypeName }}">{{
-            getPuzzleTypeTitle(puzzleTypeName)
-          }}</label>
+        <div
+          class="highlighted"
+          *ngFor="let puzzleTypeName of PuzzleTypeStrings"
+        >
+          <div class="check-row">
+            <input
+              title="{{ puzzleTypeName }}"
+              formControlName="{{ puzzleTypeName }}"
+              name="{{ puzzleTypeName }}"
+              class="checkbox-wide big-check"
+              id="{{ puzzleTypeName }}"
+              type="checkbox"
+            />
+            <label for="{{ puzzleTypeName }}">{{
+              getPuzzleTypeTitle(puzzleTypeName)
+            }}</label>
+          </div>
         </div>
 
         <button

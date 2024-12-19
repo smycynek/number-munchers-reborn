@@ -1,9 +1,10 @@
+import { NgOptimizedImage } from '@angular/common';
 import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-heart',
   standalone: true,
-  imports: [],
+  imports: [NgOptimizedImage],
   templateUrl: './heart.component.html',
   styleUrl: './heart.component.less',
 })

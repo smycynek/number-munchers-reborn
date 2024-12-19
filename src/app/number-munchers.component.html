@@ -78,8 +78,8 @@
           <img
             alt="Mertin avatar"
             title="Set Mertin-mode speed"
-            [src]="imageService.getMertinButtonImage(speed())"
-            width="40"
+            [ngSrc]="imageService.getMertinButtonImage(speed())"
+            height="40"
             width="40"
           />
         </button>
@@ -90,7 +90,12 @@
           class="btn imagebutton row-button highlighted"
           (click)="showPuzzleTypes()"
         >
-          <img alt="puzzle-piece-icon" src="assets/puzzle-piece.svg" />
+          <img
+            alt="puzzle-piece-icon"
+            width="40"
+            height="40"
+            ngSrc="assets/puzzle-piece.svg"
+          />
         </button>
 
         <button
@@ -162,14 +167,18 @@
             id="i{{ idxr }}{{ idxc }}"
             *ngIf="isActive(idxr, idxc)"
             [ngClass]="getAvatarSizeClass(idxr, idxc)"
-            [src]="getAvatarImage()"
+            [ngSrc]="getAvatarImage()"
+            height="70"
+            width="70"
           />
           <img
             alt="mertin avatar"
             id="i{{ idxr }}{{ idxc }}m"
             *ngIf="hasMertin(idxr, idxc)"
             [ngClass]="getAvatarSizeClass(idxr, idxc)"
-            [src]="imageService.getMertinImage(holiday())"
+            height="70"
+            width="70"
+            [ngSrc]="imageService.getMertinImage(holiday())"
           />
         </div>
       </div>
@@ -206,17 +215,17 @@
   </dialog>
 
   <!-- Puzzle type dialog-->
-  <dialog
-    id="puzzleTypeDialog"
-    *ngIf="this.puzzleTypeService.initialized()"
-    class="dialog-base dialog-general dialog-narrow"
-    typeDialog
-    #puzzleTypeDialog
-    closed
-  >
-    <app-puzzle-type-dialog (submitEffects)="this.settingsChanged($event)" />
-  </dialog>
-
+  @defer (when this.puzzleTypeService.initialized()) {
+    <dialog
+      id="puzzleTypeDialog"
+      class="dialog-base dialog-general dialog-narrow"
+      typeDialog
+      #puzzleTypeDialog
+      closed
+    >
+      <app-puzzle-type-dialog (submitEffects)="this.settingsChanged($event)" />
+    </dialog>
+  }
   <!-- Help/About dialog-->
   <dialog
     class="dialog-base dialog-general dialog-wide"
