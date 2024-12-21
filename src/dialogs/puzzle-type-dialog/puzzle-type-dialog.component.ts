@@ -111,7 +111,6 @@ export class PuzzleTypeDialogComponent implements AfterContentInit {
     const strings = Object.values(PuzzleType)
       .filter((t) => isNaN(Number(t)))
       .map((t) => t.toString());
-    console.log(strings);
     return strings;
   }
 

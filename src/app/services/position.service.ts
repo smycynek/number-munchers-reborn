@@ -1,6 +1,11 @@
 import { Signal, WritableSignal, Injectable, signal } from '@angular/core';
 import { puzzleRows, puzzleColumns } from '../constants';
-import { wrapUp, debug, wrapDown } from '../utility';
+import {
+  wrapUp,
+  debug,
+  wrapDown,
+  getRandomItemFromSetAndRemove,
+} from '../utility';
 
 @Injectable({
   providedIn: 'root',
@@ -34,5 +39,16 @@ export class PositionService {
   public right() {
     this.activeColumn.set(wrapUp(this.activeColumn(), this.columnCount()));
     debug(`Right: ${this.getPosition()}`);
+  }
+
+  public getRandomNonOccupiedIndex(): number {
+    const activeIndex =
+      this.activeRow() * this.columnCount() + this.activeColumn();
+    const upperBound = this.columnCount() * this.rowCount();
+    const base = [...[].constructor(upperBound).keys()];
+    const baseSet = new Set(base);
+    baseSet.delete(activeIndex);
+    baseSet.delete(this.mertinIndex());
+    return getRandomItemFromSetAndRemove(baseSet);
   }
 }

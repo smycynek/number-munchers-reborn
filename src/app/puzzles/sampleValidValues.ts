@@ -64,6 +64,24 @@ export function getNaturalNumberSet(upperBound: number): Set<number> {
   return baseSet;
 }
 
+export function getNaturalEvenSet(upperBound: number): Set<number> {
+  const base = [...[].constructor(upperBound + 1).keys()].filter(
+    (n) => n % 2 === 0,
+  );
+  const baseSet = new Set(base);
+  baseSet.delete(0);
+  return baseSet;
+}
+
+export function getNaturalOddSet(upperBound: number): Set<number> {
+  const base = [...[].constructor(upperBound + 1).keys()].filter(
+    (n) => n % 2 === 1,
+  );
+  const baseSet = new Set(base);
+  baseSet.delete(0);
+  return baseSet;
+}
+
 export function getValidBetweenValues(
   lower: number,
   upper: number,

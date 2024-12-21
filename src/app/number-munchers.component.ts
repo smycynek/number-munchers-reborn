@@ -13,13 +13,7 @@ import { CommonModule, Location, NgOptimizedImage } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChangeDetectorRef } from '@angular/core';
 import { DataCell } from './dataCell';
-import {
-  debug,
-  getRandomItemFromSetAndRemove,
-  hasTouch,
-  parseId,
-  toggleLog,
-} from './utility';
+import { debug, hasTouch, parseId, toggleLog } from './utility';
 
 import { HostListener } from '@angular/core';
 import { SoundService } from './services/sound.service';
@@ -212,7 +206,7 @@ export class AppComponent
               `Reset square event: ${val}, Interval length: ${this.speed() * mertinInterval}`,
             );
             this.positionService.mertinIndex.set(
-              this.getRandomNonOccupiedIndex(),
+              this.positionService.getRandomNonOccupiedIndex(),
             );
             this.resetSquare(this.positionService.mertinIndex());
           }
@@ -351,19 +345,6 @@ export class AppComponent
     this.btnNewGame().nativeElement.blur();
   }
 
-  private getRandomNonOccupiedIndex(): number {
-    const activeIndex =
-      this.positionService.activeRow() * this.positionService.columnCount() +
-      this.positionService.activeColumn();
-    const upperBound =
-      this.positionService.columnCount() * this.positionService.rowCount();
-    const base = [...[].constructor(upperBound).keys()];
-    const baseSet = new Set(base);
-    baseSet.delete(activeIndex);
-    baseSet.delete(this.positionService.mertinIndex());
-    return getRandomItemFromSetAndRemove(baseSet);
-  }
-
   public getCellData(r: number, c: number): DataCell {
     if (!this.cellData().length) {
       return new DataCell(
@@ -429,9 +410,9 @@ export class AppComponent
       this.activePuzzle().type === PuzzleType.Roots ||
       this.activePuzzle().type === PuzzleType.Decimals
     ) {
-      return 'double';
+      return 'smaller';
     }
-    return 'single';
+    return 'larger';
   }
 
   public hasMertin(cellRow: number, cellColumn: number): boolean {
@@ -501,9 +482,7 @@ export class AppComponent
 
   public getCellClass(cellRow: number, cellColumn: number): string {
     let classes = '';
-
     const cell: DataCell = this.getCellData(cellRow, cellColumn);
-
     if (this.hasMertin(cellRow, cellColumn)) {
       classes = 'mertin-flip';
     }
@@ -525,11 +504,9 @@ export class AppComponent
     if (this.noRemainingSolutions()) {
       classes += ' game-over';
     }
-
-    // SVM TOOD
+    const typeToShrink = [MultiplicationExpressionName, DivisionExpressionName];
     if (
-      (cell.expressionValue.opType === MultiplicationExpressionName ||
-        cell.expressionValue.opType === DivisionExpressionName) &&
+      typeToShrink.includes(cell.expressionValue.opType) &&
       (this.hasMertin(cellRow, cellColumn) ||
         this.isActive(cellRow, cellColumn))
     ) {
@@ -585,7 +562,7 @@ export class AppComponent
     if (this.noRemainingSolutions()) {
       return;
     }
-    this.handleClockOrTouchEvent(event);
+    this.handleClickOrTouchEvent(event);
   }
 
   @HostListener('document:touchstart', ['$event'])
@@ -603,10 +580,10 @@ export class AppComponent
     if (this.noRemainingSolutions()) {
       return;
     }
-    this.handleClockOrTouchEvent(event);
+    this.handleClickOrTouchEvent(event);
   }
 
-  private handleClockOrTouchEvent(event: UIEvent) {
+  private handleClickOrTouchEvent(event: UIEvent) {
     if (this.noRemainingSolutions()) {
       return;
     }
@@ -636,50 +613,64 @@ export class AppComponent
       this.positionService.activeColumn(),
     );
     data.discovered = true;
-
     if (data.valid) {
       if (this.noRemainingSolutions()) {
-        debug('Game Over');
-        this.statusMessageClass.set('status-success');
-        this.statusMessage.set(StringResources.FOUND_ALL);
-        this.statusMessageDetail.set(
-          this.activePuzzle().successDetails(data.expressionValue.clone()),
-        );
-        if (this.perfectScore()) {
-          this.soundService.playWhooAndPerfectScore();
-          this.statusMessage.set(StringResources.PERFECT_SCORE);
-          debug(StringResources.PERFECT_SCORE);
-          const jsConfetti = new JSConfetti();
-          jsConfetti.addConfetti();
-          this.winStreak.set(this.winStreak() + 1);
-          this.localStorageService.setWinStreak(this.winStreak());
-          if (this.winStreak() > this.highScore()) {
-            this.highScore.set(this.winStreak());
-            this.localStorageService.setHighScore(this.winStreak());
-          }
-        } else {
-          this.soundService.playWhoo();
-        }
+        this.executeGameOver(data);
         return;
       }
-      this.soundService.playYum();
-      this.statusMessage.set(StringResources.CORRECT);
-      this.statusMessageDetail.set(
-        this.activePuzzle().successDetails(data.expressionValue.clone()),
-      );
-      this.statusMessageClass.set('status-success');
+      this.executeCorrect(data);
     } else {
-      this.soundService.playYuck();
-      this.winStreak.set(0);
-      this.localStorageService.setWinStreak(0);
-      this.statusMessage.set(StringResources.INCORRECT);
-      this.statusMessageDetail.set(
-        this.activePuzzle().errorDetails(data.expressionValue.clone()),
-      );
-      this.statusMessageClass.set('status-error');
+      this.executeIncorrect(data);
     }
-
     debug(`Correct? ${data.valid}, ${data.expressionValue.toString()}`);
+  }
+
+  private executeGameOver(data: DataCell): void {
+    debug('Game Over');
+    this.statusMessageClass.set('status-success');
+    this.statusMessage.set(StringResources.FOUND_ALL);
+    this.statusMessageDetail.set(
+      this.activePuzzle().successDetails(data.expressionValue.clone()),
+    );
+    if (this.perfectScore()) {
+      this.executePerfectScore();
+    } else {
+      this.soundService.playWhoo();
+    }
+  }
+
+  private executePerfectScore(): void {
+    this.soundService.playWhooAndPerfectScore();
+    this.statusMessage.set(StringResources.PERFECT_SCORE);
+    debug(StringResources.PERFECT_SCORE);
+    const jsConfetti = new JSConfetti();
+    jsConfetti.addConfetti();
+    this.winStreak.set(this.winStreak() + 1);
+    this.localStorageService.setWinStreak(this.winStreak());
+    if (this.winStreak() > this.highScore()) {
+      this.highScore.set(this.winStreak());
+      this.localStorageService.setHighScore(this.winStreak());
+    }
+  }
+
+  private executeCorrect(data: DataCell): void {
+    this.soundService.playYum();
+    this.statusMessage.set(StringResources.CORRECT);
+    this.statusMessageDetail.set(
+      this.activePuzzle().successDetails(data.expressionValue.clone()),
+    );
+    this.statusMessageClass.set('status-success');
+  }
+
+  private executeIncorrect(data: DataCell): void {
+    this.soundService.playYuck();
+    this.winStreak.set(0);
+    this.localStorageService.setWinStreak(0);
+    this.statusMessage.set(StringResources.INCORRECT);
+    this.statusMessageDetail.set(
+      this.activePuzzle().errorDetails(data.expressionValue.clone()),
+    );
+    this.statusMessageClass.set('status-error');
   }
 
   /* Sound */

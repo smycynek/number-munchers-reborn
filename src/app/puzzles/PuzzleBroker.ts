@@ -14,12 +14,14 @@ import { FractionLessThanHalf } from './puzzles/FractionLessThanHalf';
 import { Multiples } from './puzzles/Multiples';
 import { Multiplication } from './puzzles/Multiplication';
 import { OutsideExclusive } from './puzzles/OutsideExclusive';
+import { Odds } from './puzzles/Odds';
 import { PerfectSquares } from './puzzles/PerfectSquares';
 import { Primes } from './puzzles/Primes';
 import { Roots } from './puzzles/Roots';
 import { Subtraction } from './puzzles/Subtraction';
 import { Percentages } from './puzzles/Percentages';
 import { Decimals } from './puzzles/Decimals';
+import { Evens } from './puzzles/Evens';
 
 export function getRandomPuzzle(puzzleTypes: Set<PuzzleType>) {
   const puzzles: Puzzle[] = [
@@ -46,6 +48,8 @@ export function getRandomPuzzle(puzzleTypes: Set<PuzzleType>) {
     new Roots(),
     new Exponents(),
     new Decimals(),
+    new Odds(),
+    new Evens(),
   ];
   const puzzlesFiltered = puzzles.filter(
     (p) => puzzleTypes.has(p.type) && p.include,
