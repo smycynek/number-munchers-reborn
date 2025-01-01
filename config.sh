@@ -1,8 +1,8 @@
 #! /bin/bash
 # Set holiday theme
-# (halloween, thanksgiving, christmas, st. patrick's, independence day, valentine's, easter, april 1)
+# (halloween, thanksgiving, christmas, st. patrick's, independence day, valentine's, easter, april 1, none)
 
-USAGE="config [prod | beta] [hw | tg | cx | sp | id | va | ea | af]"
+USAGE="config [prod | beta] [hw | tg | cx | sp | id | va | ea | af | no]"
 
 if [ -z "$1" ] || [ -z "$2" ]; then
     echo "$USAGE"
