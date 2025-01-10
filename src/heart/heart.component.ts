@@ -1,12 +1,12 @@
 import { NgOptimizedImage } from '@angular/common';
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-heart',
-  standalone: true,
   imports: [NgOptimizedImage],
   templateUrl: './heart.component.html',
   styleUrl: './heart.component.less',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeartComponent {
   value = input.required<string>();

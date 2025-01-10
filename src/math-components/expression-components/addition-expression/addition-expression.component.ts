@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import {
   BaseExpressionComponent,
   toNumber,
@@ -7,10 +7,10 @@ import {
 
 @Component({
   selector: 'app-addition-expression',
-  standalone: true,
   imports: [CommonModule],
   templateUrl: './addition-expression.component.html',
   styleUrl: './addition-expression.component.less',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdditionExpressionComponent extends BaseExpressionComponent {
   readonly left = input.required({ transform: toNumber });

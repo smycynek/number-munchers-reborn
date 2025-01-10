@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import {
   BaseExpressionComponent,
   toNumber,
@@ -7,10 +7,10 @@ import {
 
 @Component({
   selector: 'app-root-expression',
-  standalone: true,
   imports: [CommonModule],
   templateUrl: './root-expression.component.html',
   styleUrl: './root-expression.component.less',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RootExpressionComponent extends BaseExpressionComponent {
   readonly coefficient = input.required({ transform: toNumber });

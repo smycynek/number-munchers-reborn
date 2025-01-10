@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import {
   BaseExpressionComponent,
   toNumber,
@@ -7,10 +7,10 @@ import {
 
 @Component({
   selector: 'app-percentage-expression',
-  standalone: true,
   imports: [CommonModule],
   templateUrl: './percentage-expression.component.html',
   styleUrl: './percentage-expression.component.less',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PercentageExpressionComponent extends BaseExpressionComponent {
   readonly percentageValue = input.required({ transform: toNumber });

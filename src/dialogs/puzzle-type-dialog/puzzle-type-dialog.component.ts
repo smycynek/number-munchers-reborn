@@ -16,7 +16,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-puzzle-type-dialog',
-  standalone: true,
   imports: [FormsModule, CommonModule, ReactiveFormsModule],
   templateUrl: './puzzle-type-dialog.component.html',
   styleUrl: '../../app/less/number-munchers.component.less',

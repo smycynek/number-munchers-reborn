@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-base-expression',
-  standalone: true,
   imports: [CommonModule],
   templateUrl: './base-expression.component.html',
   styleUrl: './base-expression.component.less',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BaseExpressionComponent {
   readonly value = input.required({ transform: toNumber });

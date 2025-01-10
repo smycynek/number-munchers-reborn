@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import {
   BaseExpressionComponent,
   toNumber,
@@ -7,10 +7,10 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-mixed-number-expression',
-  standalone: true,
   imports: [CommonModule],
   templateUrl: './mixed-number-expression.component.html',
   styleUrl: './mixed-number-expression.component.less',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MixedNumberExpressionComponent extends BaseExpressionComponent {
   readonly whole = input.required({ transform: toNumber });

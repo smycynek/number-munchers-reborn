@@ -1,6 +1,7 @@
 import {
   AfterViewChecked,
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   OnDestroy,
@@ -30,7 +31,7 @@ import {
   timer,
 } from 'rxjs';
 import { mertinDelay, mertinInterval } from './constants';
-import { ActivatedRoute, Params, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MathExpressionComponent } from '../math-components/math-expression/math-expression.component';
 import { MathSentenceComponent } from '../math-components/math-sentence/math-sentence.component';
@@ -62,11 +63,9 @@ import { PuzzleTypeDialogComponent } from '../dialogs/puzzle-type-dialog/puzzle-
 
 @Component({
   selector: 'app-number-munchers',
-  standalone: true,
   imports: [
     CommonModule,
     NgbModule,
-    RouterOutlet,
     FormsModule,
     MathExpressionComponent,
     MathSentenceComponent,
@@ -78,6 +77,7 @@ import { PuzzleTypeDialogComponent } from '../dialogs/puzzle-type-dialog/puzzle-
   ],
   templateUrl: './number-munchers.component.html',
   styleUrl: './less/number-munchers.component.less',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent
   implements AfterViewChecked, AfterViewInit, OnInit, OnDestroy

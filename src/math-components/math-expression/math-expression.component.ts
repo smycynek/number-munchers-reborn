@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { CommonModule, NgComponentOutlet } from '@angular/common';
 import { LogarithmExpressionComponent } from '../expression-components/logarithm-expression/logarithm-expression.component';
 import { MixedNumberExpressionComponent } from '../expression-components/mixed-number-expression/mixed-number-expression.component';
@@ -41,10 +41,10 @@ type ComponentTypes =
 
 @Component({
   selector: 'app-math-expression',
-  standalone: true,
   imports: [CommonModule, NgComponentOutlet],
   templateUrl: './math-expression.component.html',
   styleUrl: './math-expression.component.less',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MathExpressionComponent {
   readonly mathData = input.required<ExpressionData>(); // Could also be the base class ExpressionData;

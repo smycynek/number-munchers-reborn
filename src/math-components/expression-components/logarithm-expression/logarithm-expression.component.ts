@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import {
   BaseExpressionComponent,
   toNumber,
@@ -7,10 +7,10 @@ import {
 
 @Component({
   selector: 'app-logarithm-expression',
-  standalone: true,
   imports: [CommonModule],
   templateUrl: './logarithm-expression.component.html',
   styleUrl: './logarithm-expression.component.less',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LogarithmExpressionComponent extends BaseExpressionComponent {
   readonly coefficient = input.required({ transform: toNumber });
