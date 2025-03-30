@@ -1,12 +1,9 @@
-import { Injectable, signal, WritableSignal } from '@angular/core';
+import { signal, WritableSignal } from '@angular/core';
 import { StringResources } from '../strings';
 import { hasTouch } from '../utility';
 import { environment } from '../../environments/environment';
 import { version } from '../version';
 
-@Injectable({
-  providedIn: 'root',
-})
 export class GameInfoService {
   public getGeneralInstructions(): string {
     if (hasTouch()) {

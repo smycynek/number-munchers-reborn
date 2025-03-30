@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 
@@ -11,7 +11,8 @@ export interface MuncherConfig {
 })
 export class ConfigService {
   private config: MuncherConfig = { holiday: '' };
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
+  constructor() {}
   async loadConfig() {
     const result = this.http.get('config/config.json', {
       headers: {

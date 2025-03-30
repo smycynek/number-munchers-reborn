@@ -7,11 +7,11 @@ import {
   OnDestroy,
   OnInit,
   WritableSignal,
+  inject,
   signal,
   viewChild,
 } from '@angular/core';
-import { CommonModule, Location, NgOptimizedImage } from '@angular/common';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { Location, NgClass, NgOptimizedImage } from '@angular/common';
 import { ChangeDetectorRef } from '@angular/core';
 import { DataCell } from './dataCell';
 import { debug, hasTouch, parseId, toggleLog } from './utility';
@@ -32,7 +32,6 @@ import {
 } from 'rxjs';
 import { mertinDelay, mertinInterval } from './constants';
 import { ActivatedRoute, Params } from '@angular/router';
-import { FormsModule } from '@angular/forms';
 import { MathExpressionComponent } from '../math-components/math-expression/math-expression.component';
 import { MathSentenceComponent } from '../math-components/math-sentence/math-sentence.component';
 import {
@@ -64,9 +63,7 @@ import { PuzzleTypeDialogComponent } from '../dialogs/puzzle-type-dialog/puzzle-
 @Component({
   selector: 'app-number-munchers',
   imports: [
-    CommonModule,
-    NgbModule,
-    FormsModule,
+    NgClass,
     MathExpressionComponent,
     MathSentenceComponent,
     HeartComponent,
@@ -75,6 +72,7 @@ import { PuzzleTypeDialogComponent } from '../dialogs/puzzle-type-dialog/puzzle-
     PuzzleTypeDialogComponent,
     NgOptimizedImage,
   ],
+  providers: [PositionService, SoundService, PuzzleTypeService, ImageService, GameInfoService],
   templateUrl: './number-munchers.component.html',
   styleUrl: './less/number-munchers.component.less',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -82,6 +80,18 @@ import { PuzzleTypeDialogComponent } from '../dialogs/puzzle-type-dialog/puzzle-
 export class AppComponent
   implements AfterViewChecked, AfterViewInit, OnInit, OnDestroy
 {
+  public positionService = inject(PositionService);
+  public imageService = inject(ImageService);
+  public soundService = inject(SoundService);
+  public puzzleTypeService = inject(PuzzleTypeService);
+  public gameInfoService = inject(GameInfoService);
+  private cdr = inject(ChangeDetectorRef);
+  private route = inject(ActivatedRoute);
+  private titleService = inject(Title);
+  private location = inject(Location);
+  private configService = inject(ConfigService);
+  private localStorageService = inject(LocalStorageService);
+
   welcomeDialog = viewChild.required<ElementRef>('welcomeDialog'); // welcomeDialog!: ElementRef;
   helpDialog = viewChild.required<ElementRef>('helpDialog');
   puzzleTypeDialog = viewChild.required<ElementRef>('puzzleTypeDialog');
@@ -120,17 +130,7 @@ export class AppComponent
   private timerSubscription: Subscription | undefined;
 
   constructor(
-    private cdr: ChangeDetectorRef,
-    private route: ActivatedRoute,
-    private titleService: Title,
-    private location: Location,
-    private configService: ConfigService,
-    private localStorageService: LocalStorageService,
-    public positionService: PositionService,
-    public imageService: ImageService,
-    public soundService: SoundService,
-    public puzzleTypeService: PuzzleTypeService,
-    public gameInfoService: GameInfoService,
+
   ) {}
 
   ngOnDestroy(): void {
@@ -685,6 +685,6 @@ export class AppComponent
   public showHelp(): void {
     this.btnHelp().nativeElement.blur();
     this.helpDialog().nativeElement.showModal();
-    console.log('Show help');
+    debug('Show help');
   }
 }

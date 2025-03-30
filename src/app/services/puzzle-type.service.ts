@@ -1,4 +1,4 @@
-import { Injectable, signal, WritableSignal } from '@angular/core';
+import { inject, signal, WritableSignal } from '@angular/core';
 import {
   multSymbol,
   divSymbol,
@@ -73,12 +73,10 @@ export const puzzleSymbols: Map<PuzzleType, string> = new Map([
   [PuzzleType.Decimals, '.'],
 ]);
 
-@Injectable({
-  providedIn: 'root',
-})
 export class PuzzleTypeService {
   public initialized: WritableSignal<boolean> = signal(false);
-  public constructor(protected titleService: Title) {}
+  protected titleService: Title = inject(Title);
+  public constructor() {}
   private puzzleTypes = allPuzzles;
 
   public add(puzzleType: PuzzleType): void {

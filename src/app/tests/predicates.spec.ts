@@ -8,9 +8,6 @@ import {
 /*
 This is a little bit of overkill, but if I'm making a game
 for kids, I want to make sure output is correct.
-
-Eventually, I'll add standalone unit tests that doesn't
-require ng test
 */
 
 describe('PseudoUnitTests-Predicates', () => {

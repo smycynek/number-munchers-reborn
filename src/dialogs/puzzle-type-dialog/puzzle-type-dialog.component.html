@@ -14,11 +14,8 @@
     <h1 class="centered strong">Puzzle Types</h1>
     <div class="choice-menu">
       <div class="choice-group form-check">
-        <div
-          class="highlighted"
-          *ngFor="let puzzleTypeName of PuzzleTypeStrings"
-        >
-          <div class="check-row">
+        @for (puzzleTypeName of PuzzleTypeStrings; track puzzleTypeName) {
+          <div class="check-row highlighted">
             <input
               title="{{ puzzleTypeName }}"
               formControlName="{{ puzzleTypeName }}"
@@ -31,8 +28,7 @@
               getPuzzleTypeTitle(puzzleTypeName)
             }}</label>
           </div>
-        </div>
-
+        }
         <button
           type="button"
           (click)="clearAll()"

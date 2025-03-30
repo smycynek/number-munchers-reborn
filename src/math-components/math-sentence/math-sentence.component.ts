@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { MathExpressionComponent } from '../math-expression/math-expression.component';
-import { CommonModule } from '@angular/common';
 import { ExpressionData } from '../expression-data/expressionData';
 
 @Component({
   selector: 'app-math-sentence',
-  imports: [CommonModule, MathExpressionComponent],
+  imports: [MathExpressionComponent],
   templateUrl: './math-sentence.component.html',
   styleUrl: './math-sentence.component.less',
   changeDetection: ChangeDetectionStrategy.OnPush,

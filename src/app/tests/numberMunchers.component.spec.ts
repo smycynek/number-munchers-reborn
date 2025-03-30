@@ -1,30 +1,22 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppComponent } from '../number-munchers.component';
-import { RouterTestingModule } from '@angular/router/testing';
 
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { PuzzleType } from '../services/puzzle-type.service';
-import { SoundService } from '../services/sound.service';
+import { RouterModule } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('NumberMuncherComponent', () => {
   let component: AppComponent;
-  // let componentRef: ComponentRef<AppComponent>;
   let fixture: ComponentFixture<AppComponent>;
-  let soundServiceMock: jasmine.SpyObj<SoundService>;
 
   beforeEach(() => {
-    soundServiceMock = jasmine.createSpyObj('SoundService', [
-      'playYuck',
-      'playYum',
-      'playWhoo',
-      'getSoundOn',
-      'playPerfectScore',
-      'playWhooAndPerfectScore',
-    ]);
-
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule],
-      providers: [{ provide: SoundService, useValue: soundServiceMock }],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
+      imports: [RouterModule.forRoot(
+        [{path: '', component: AppComponent}, {path: 'simple', component: AppComponent}]),
+
+        ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AppComponent);
@@ -52,16 +44,10 @@ describe('NumberMuncherComponent', () => {
     component.puzzleTypeService.delete(PuzzleType.Percentages);
     component.puzzleTypeService.delete(PuzzleType.Decimals);
     component.newGame();
-    soundServiceMock.playYuck.and.returnValue();
-    soundServiceMock.playYum.and.returnValue();
-    soundServiceMock.playWhoo.and.returnValue();
-    soundServiceMock.playPerfectScore.and.returnValue();
-    soundServiceMock.playWhooAndPerfectScore.and.returnValue();
-    soundServiceMock.getSoundOn.and.returnValue(true);
     expect(component.activePuzzle().type).toEqual(PuzzleType.Addition);
     component.ngOnInit();
     component.newGame();
-
+    component.toggleSound();
     for (let c = 0; c < 5; c++) {
       for (let r = 0; r < 4; r++) {
         component.choiceAction();
@@ -70,6 +56,8 @@ describe('NumberMuncherComponent', () => {
       }
       component.positionService.up();
     }
+
     expect(component.getRemainingSolutionsCount()).toEqual(0);
   });
-});
+}
+);

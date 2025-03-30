@@ -1,9 +1,7 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-base-expression',
-  imports: [CommonModule],
   templateUrl: './base-expression.component.html',
   styleUrl: './base-expression.component.less',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import {
   BaseExpressionComponent,
@@ -7,7 +6,6 @@ import {
 
 @Component({
   selector: 'app-subtraction-expression',
-  imports: [CommonModule],
   templateUrl: './subtraction-expression.component.html',
   styleUrl: './subtraction-expression.component.less',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,8 +1,3 @@
-import { Injectable } from '@angular/core';
-
-@Injectable({
-  providedIn: 'root',
-})
 export class ImageService {
   public preload(holiday: string) {
     const happy = new Image();

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, output } from '@angular/core';
 import { ImageService } from '../../app/services/image.service';
 import { GameInfoService } from '../../app/services/game-info.service';
 import { NgOptimizedImage } from '@angular/common';
@@ -11,9 +11,9 @@ import { NgOptimizedImage } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AboutDialogComponent {
+  protected imageService = inject(ImageService);
+  protected gameInfoService = inject(GameInfoService);
   public constructor(
-    protected imageService: ImageService,
-    protected gameInfoService: GameInfoService,
   ) {}
   puzzleTypesClicked = output<void>();
 }

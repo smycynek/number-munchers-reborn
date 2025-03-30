@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, output } from '@angular/core';
+import { AfterContentInit, Component, inject, output } from '@angular/core';
 import {
   PuzzleType,
   PuzzleTypeService,
@@ -8,27 +8,25 @@ import {
   FormBuilder,
   FormControl,
   FormGroup,
-  FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-puzzle-type-dialog',
-  imports: [FormsModule, CommonModule, ReactiveFormsModule],
+  imports: [ReactiveFormsModule],
   templateUrl: './puzzle-type-dialog.component.html',
   styleUrl: '../../app/less/number-munchers.component.less',
 })
 export class PuzzleTypeDialogComponent implements AfterContentInit {
+  private fb = inject(FormBuilder);
+  protected puzzleTypeService = inject(PuzzleTypeService)
   constructor(
-    protected puzzleTypeService: PuzzleTypeService,
-    private fb: FormBuilder,
   ) {
-    this.hiddenPuzzleTypeValidator = fb.control(true);
-    this.puzzleTypesFormGroup = fb.group({});
+    this.hiddenPuzzleTypeValidator = this.fb.control(true);
+    this.puzzleTypesFormGroup = this.fb.group({});
 
-    this.mainFormGroup = fb.group({});
+    this.mainFormGroup = this.fb.group({});
     this.mainFormGroup.addControl(
       'hiddenPuzzleTypeValidator',
       this.hiddenPuzzleTypeValidator,

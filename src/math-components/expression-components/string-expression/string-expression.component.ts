@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { BaseExpressionComponent } from '../base-expression/base-expression.component';
-import { CommonModule } from '@angular/common';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-string-expression',
-  imports: [CommonModule],
   templateUrl: './string-expression.component.html',
   styleUrl: './string-expression.component.less',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [NgClass]
 })
 export class StringExpressionComponent extends BaseExpressionComponent {
   readonly stringValue = input.required<string>();

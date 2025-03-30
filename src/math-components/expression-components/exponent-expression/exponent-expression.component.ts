@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import {
   BaseExpressionComponent,
@@ -7,7 +6,6 @@ import {
 
 @Component({
   selector: 'app-exponent-expression',
-  imports: [CommonModule],
   templateUrl: './exponent-expression.component.html',
   styleUrl: './exponent-expression.component.less',
   changeDetection: ChangeDetectionStrategy.OnPush,

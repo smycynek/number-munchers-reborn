@@ -1,9 +1,15 @@
-import { Injectable } from '@angular/core';
+export interface ISoundService {
+  playYum(): void;
+  playYuck(): void;
+  playWhoo(): void;
+  playCackle(): void;
+  playPerfectScore(): void;
+  playWhooAndPerfectScore(): void;
+  getSoundOn(): boolean;
+  toggleSound(): void;
+}
 
-@Injectable({
-  providedIn: 'root',
-})
-export class SoundService {
+export class SoundService implements ISoundService {
   constructor() {
     this.yum.src = './assets/yum.mp3';
     this.yum.preload = 'auto';

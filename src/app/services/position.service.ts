@@ -1,4 +1,4 @@
-import { Signal, WritableSignal, Injectable, signal } from '@angular/core';
+import { Signal, WritableSignal, signal } from '@angular/core';
 import { puzzleRows, puzzleColumns } from '../constants';
 import {
   wrapUp,
@@ -7,9 +7,6 @@ import {
   getRandomItemFromSetAndRemove,
 } from '../utility';
 
-@Injectable({
-  providedIn: 'root',
-})
 export class PositionService {
   public readonly rowCount: Signal<number> = signal(puzzleRows);
   public readonly columnCount: Signal<number> = signal(puzzleColumns);
