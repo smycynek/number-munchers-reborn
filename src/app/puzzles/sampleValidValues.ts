@@ -20,22 +20,23 @@ import {
   getAllRootPairs,
   getValidFactors,
 } from './sampleRandomValues';
-import { debug, getRandomItemFromSetAndRemove } from '../utility';
+import { getRandomItemFromSetAndRemove } from '../utility';
 
 const perfectSquares = new Set<number>(
   [...getNaturalNumberSet(dataUpperBound)].filter((n) => isPerfectSquare(n)),
 );
-
-const primes = new Set<number>([
-  1, 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71,
-  73, 79, 83, 89, 97,
-]);
 
 export function getPerfectSquares(): Set<number> {
   return new Set<number>([...perfectSquares]);
 }
 
 export function getPrimes(): Set<number> {
+  // Must define inside function for some reason, odd scope
+  // change
+  const primes = new Set<number>([
+    1, 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71,
+    73, 79, 83, 89, 97,
+  ]);
   return new Set<number>([...primes]);
 }
 
@@ -282,8 +283,6 @@ export function getValidDivisionPairs(
 ): Set<DivisionExpressionData> {
   const pairs: Set<DivisionExpressionData> = new Set();
   const multiples = getValidMultiples(target);
-  debug;
-
   multiples.forEach((mul) => {
     const otherParam = mul / target;
     pairs.add(new DivisionExpressionData(mul, otherParam));

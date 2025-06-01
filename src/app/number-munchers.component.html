@@ -126,7 +126,7 @@
       <div title="Question text" class="question-container">
         <app-math-sentence
           [dataArray]="activePuzzle().getQuestionText()"
-        ></app-math-sentence>
+        />
       </div>
 
       <p title="message" class="bold" [ngClass]="statusMessageClass()">
@@ -140,7 +140,7 @@
         >
           <app-math-sentence
             [dataArray]="statusMessageDetail()"
-          ></app-math-sentence>
+          />
         </p>
       </div>
       <!-- Puzzle grid -->
@@ -156,7 +156,7 @@
           >
             <app-math-expression
               [mathData]="getCellData(idxr, idxc).expressionValue"
-            ></app-math-expression>
+            />
             @if(isActive(idxr, idxc)) {
             <img
               alt="muncher avatar"
@@ -181,9 +181,9 @@
         @if (showScore()) {
           <div>
             <span class="scoreLabel">Streak</span>
-            <app-heart value="{{ winStreak() }}"></app-heart>
+            <app-heart value="{{ winStreak() }}"/>
             <span class="scoreLabel">High Score</span>
-            <app-heart value="{{ highScore() }}"></app-heart>
+            <app-heart value="{{ highScore() }}"/>
           </div>
           <div>
             <span title="puzzle-symbols">{{

@@ -131,7 +131,8 @@ export class AppComponent
 
   constructor(
 
-  ) {}
+  ) {
+  }
 
   ngOnDestroy(): void {
     this.destroyed.next();
@@ -236,7 +237,7 @@ export class AppComponent
       if (this.noRemainingSolutions()) {
         // should not happen
         debug('No solutions', 1);
-        debug(this.activePuzzle.name), 1;
+        debug(this.activePuzzle.name, 1);
         this.statusMessage.set('No solutions, try a new game');
         this.statusMessageDetail.set([s('-')]);
       }

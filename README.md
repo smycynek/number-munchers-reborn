@@ -2,7 +2,7 @@
 
 # A number-munchers-like game
 
-Steven Mycynek 2024
+Steven Mycynek 2025
 
 This started off as a simple project to do on an airplane, but people liked the [original primitive attempt](https://stevenvictor.net/numbers/), so I took it from
 something made with an HTML `<table>` and vanilla JS in two hours to a [more well-supported Angular app](https://stevenvictor.net/number-munchers/) with graphics
@@ -14,7 +14,7 @@ that it's fair to put an MIT license on it.
 
 ## Setup
 
-- `npm install`
+- `npm install` (use --force to get around ng-bootstrap limitation)
 - `ng serve` for a development server.
 - `preplocal.sh` or `deploy.sh` to build for production
 - `config.sh` to deploy a holiday configuration
@@ -24,4 +24,4 @@ that it's fair to put an MIT license on it.
 <a href="https://stevenvictor.net/number-munchers"><img alt="screenshot" src="main_screen.png" width="50%">
 </a>
 
-version: 000445
+version: 000447
