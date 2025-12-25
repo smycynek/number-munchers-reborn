@@ -13,4 +13,12 @@ import {
 export class AdditionExpressionComponent extends BaseExpressionComponent {
   readonly left = input.required({ transform: toNumber });
   readonly right = input.required({ transform: toNumber });
+
+ 
+   readonly stringValue = input.required<string>();
+  
+  public isPunctuationPhrase(): boolean {
+    return false;
+  }
+  
 }

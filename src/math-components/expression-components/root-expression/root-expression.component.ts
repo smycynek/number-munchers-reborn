@@ -16,4 +16,9 @@ export class RootExpressionComponent extends BaseExpressionComponent {
   readonly coefficient = input.required({ transform: toNumber });
   readonly index = input.required({ transform: toNumber });
   readonly radicand = input.required({ transform: toNumber });
+     readonly stringValue = input.required<string>();
+  
+  public isPunctuationPhrase(): boolean {
+    return false;
+  }
 }

@@ -16,4 +16,10 @@ export class MixedNumberExpressionComponent extends BaseExpressionComponent {
   readonly whole = input.required({ transform: toNumber });
   readonly numerator = input.required({ transform: toNumber });
   readonly denominator = input.required({ transform: toNumber });
+
+     readonly stringValue = input.required<string>();
+  
+  public isPunctuationPhrase(): boolean {
+    return false;
+  }
 }

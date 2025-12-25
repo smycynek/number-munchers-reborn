@@ -16,4 +16,10 @@ export class LogarithmExpressionComponent extends BaseExpressionComponent {
   readonly coefficient = input.required({ transform: toNumber });
   readonly base = input.required({ transform: toNumber });
   readonly argument = input.required({ transform: toNumber });
+
+     readonly stringValue = input.required<string>();
+  
+  public isPunctuationPhrase(): boolean {
+    return false;
+  }
 }

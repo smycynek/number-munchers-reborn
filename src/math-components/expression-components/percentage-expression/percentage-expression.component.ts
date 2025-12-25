@@ -14,4 +14,10 @@ import { DecimalPipe } from '@angular/common';
 })
 export class PercentageExpressionComponent extends BaseExpressionComponent {
   readonly percentageValue = input.required({ transform: toNumber });
+
+   readonly stringValue = input.required<string>();
+  
+  public isPunctuationPhrase(): boolean {
+    return false;
+  }
 }

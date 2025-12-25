@@ -12,6 +12,7 @@ export class BaseExpressionComponent {
   showRval = input<boolean>();
   displayOp = input<string>();
   displayRval = input<number>();
+  
 }
 
 export function toNumber(value: string): number {

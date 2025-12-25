@@ -15,4 +15,11 @@ import { DecimalPipe } from '@angular/common';
 })
 export class DecimalExpressionComponent extends BaseExpressionComponent {
   readonly decimalValue = input.required({ transform: toNumber });
+
+     readonly stringValue = input.required<string>();
+  
+  public isPunctuationPhrase(): boolean {
+    return false;
+  }
+  
 }

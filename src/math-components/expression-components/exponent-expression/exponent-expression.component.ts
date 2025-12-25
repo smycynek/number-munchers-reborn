@@ -13,4 +13,10 @@ import {
 export class ExponentExpressionComponent extends BaseExpressionComponent {
   readonly base = input.required({ transform: toNumber });
   readonly power = input.required({ transform: toNumber });
+
+     readonly stringValue = input.required<string>();
+  
+  public isPunctuationPhrase(): boolean {
+    return false;
+  }
 }
