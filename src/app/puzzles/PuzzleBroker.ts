@@ -51,10 +51,6 @@ export function getRandomPuzzle(puzzleTypes: Set<PuzzleType>) {
     new Odds(),
     new Evens(),
   ];
-  const puzzlesFiltered = puzzles.filter(
-    (p) => puzzleTypes.has(p.type) && p.include,
-  );
-  return puzzlesFiltered[
-    getRandomNumberWithinRange(0, puzzlesFiltered.length - 1)
-  ];
+  const puzzlesFiltered = puzzles.filter((p) => puzzleTypes.has(p.type) && p.include);
+  return puzzlesFiltered[getRandomNumberWithinRange(0, puzzlesFiltered.length - 1)];
 }

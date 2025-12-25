@@ -13,9 +13,7 @@ export class GameInfoService {
     }
   }
 
-  public title: WritableSignal<string> = signal(
-    StringResources.TITLE + environment.titleSuffix,
-  );
+  public title: WritableSignal<string> = signal(StringResources.TITLE + environment.titleSuffix);
 
   public getVersion(): number {
     return version;

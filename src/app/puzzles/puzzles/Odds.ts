@@ -29,8 +29,6 @@ export class Odds extends Puzzle {
     return toExpressionDataSet(getNaturalOddSet(dataUpperBound));
   }
   public override getRandomSamples(count: number): Set<ExpressionData> {
-    return toExpressionDataSet(
-      getRandomNaturalNumberSet(dataUpperBound, count),
-    );
+    return toExpressionDataSet(getRandomNaturalNumberSet(dataUpperBound, count));
   }
 }

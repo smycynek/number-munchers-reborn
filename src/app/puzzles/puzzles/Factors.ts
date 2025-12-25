@@ -21,7 +21,7 @@ export class Factors extends Puzzle {
       PuzzleType.Multiplication,
       'Factors',
       true,
-      new MixedNumberExpressionData(getRandomFactorTarget(2), 0, 0),
+      new MixedNumberExpressionData(getRandomFactorTarget(2), 0, 0)
     );
   }
   public override predicate(choice: ExpressionData): boolean {
@@ -40,19 +40,12 @@ export class Factors extends Puzzle {
     ];
   }
   public override errorDetails(choice: ExpressionTypes): ExpressionTypes[] {
-    return [
-      s('No whole numbers multiplied by'),
-      choice,
-      s('equal'),
-      this.target1,
-    ];
+    return [s('No whole numbers multiplied by'), choice, s('equal'), this.target1];
   }
   public override getValidSamples(): Set<ExpressionData> {
     return toExpressionDataSet(getValidFactors(this.target1.value));
   }
   public override getRandomSamples(count: number): Set<ExpressionData> {
-    return toExpressionDataSet(
-      getRandomNaturalNumberSet(dataUpperBoundLow, count),
-    );
+    return toExpressionDataSet(getRandomNaturalNumberSet(dataUpperBoundLow, count));
   }
 }

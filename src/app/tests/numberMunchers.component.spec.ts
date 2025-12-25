@@ -13,10 +13,12 @@ describe('NumberMuncherComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [provideHttpClient(), provideHttpClientTesting()],
-      imports: [RouterModule.forRoot(
-        [{path: '', component: AppComponent}, {path: 'simple', component: AppComponent}]),
-
-        ],
+      imports: [
+        RouterModule.forRoot([
+          { path: '', component: AppComponent },
+          { path: 'simple', component: AppComponent },
+        ]),
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AppComponent);
@@ -59,5 +61,4 @@ describe('NumberMuncherComponent', () => {
 
     expect(component.getRemainingSolutionsCount()).toEqual(0);
   });
-}
-);
+});

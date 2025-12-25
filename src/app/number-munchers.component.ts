@@ -21,15 +21,7 @@ import { SoundService } from './services/sound.service';
 import { PositionService } from './services/position.service';
 import JSConfetti from 'js-confetti';
 import { StringResources } from './strings';
-import {
-  debounceTime,
-  Observable,
-  Subject,
-  Subscription,
-  takeUntil,
-  tap,
-  timer,
-} from 'rxjs';
+import { debounceTime, Observable, Subject, Subscription, takeUntil, tap, timer } from 'rxjs';
 import { mertinDelay, mertinInterval } from './constants';
 import { ActivatedRoute, Params } from '@angular/router';
 import { MathExpressionComponent } from '../math-components/math-expression/math-expression.component';
@@ -45,11 +37,7 @@ import {
 import { Title } from '@angular/platform-browser';
 import { HeartComponent } from '../heart/heart.component';
 import { ConfigService } from '../configService';
-import {
-  allPuzzles,
-  PuzzleType,
-  PuzzleTypeService,
-} from './services/puzzle-type.service';
+import { allPuzzles, PuzzleType, PuzzleTypeService } from './services/puzzle-type.service';
 import { ImageService } from './services/image.service';
 import { getRandomPuzzle } from './puzzles/PuzzleBroker';
 import { Puzzle } from './puzzles/Puzzle';
@@ -77,9 +65,7 @@ import { PuzzleTypeDialogComponent } from '../dialogs/puzzle-type-dialog/puzzle-
   styleUrl: './less/number-munchers.component.less',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent
-  implements AfterViewChecked, AfterViewInit, OnInit, OnDestroy
-{
+export class AppComponent implements AfterViewChecked, AfterViewInit, OnInit, OnDestroy {
   public positionService = inject(PositionService);
   public imageService = inject(ImageService);
   public soundService = inject(SoundService);
@@ -106,21 +92,13 @@ export class AppComponent
   public holiday: WritableSignal<string> = signal('');
 
   public readonly cellData: WritableSignal<DataCell[]> = signal([]);
-  public readonly statusMessage: WritableSignal<string> = signal(
-    StringResources.START,
-  );
+  public readonly statusMessage: WritableSignal<string> = signal(StringResources.START);
   public statusMessageDetail: WritableSignal<ExpressionTypes[]> = signal([]);
-  public readonly statusMessageClass: WritableSignal<string> =
-    signal('status-default');
-  public readonly activePuzzle: WritableSignal<Puzzle> = signal(
-    getRandomPuzzle(allPuzzles),
-  );
+  public readonly statusMessageClass: WritableSignal<string> = signal('status-default');
+  public readonly activePuzzle: WritableSignal<Puzzle> = signal(getRandomPuzzle(allPuzzles));
   private params: Params = {};
 
-  private timer: Observable<number> = timer(
-    mertinDelay * 1000,
-    mertinInterval * 1000,
-  );
+  private timer: Observable<number> = timer(mertinDelay * 1000, mertinInterval * 1000);
   public speed: WritableSignal<number> = signal(0);
 
   public readonly highScore: WritableSignal<number> = signal(0);
@@ -129,10 +107,7 @@ export class AppComponent
 
   private timerSubscription: Subscription | undefined;
 
-  constructor(
-
-  ) {
-  }
+  constructor() {}
 
   ngOnDestroy(): void {
     this.destroyed.next();
@@ -144,41 +119,32 @@ export class AppComponent
     this.imageService.preload(this.holiday());
     this.init();
     this.timerInit();
-    this.route.queryParams
-      .pipe(debounceTime(200))
-      .subscribe((params: Params) => {
-        this.puzzleTypeService.setPuzzleOptions(params['p']);
-        this.puzzleTypeService.initialized.set(true);
-        this.setSoundOptions(params['s']);
-        this.setMertinOptions(params['m']);
-        this.reset();
-        this.init();
-        this.timerInit();
-        this.winStreak.set(this.localStorageService.getWinStreak());
-        this.highScore.set(this.localStorageService.getHighScore());
-        this.params['p'] = params['p'];
-        this.params['s'] = params['s'];
-        this.params['m'] = params['m'];
+    this.route.queryParams.pipe(debounceTime(200)).subscribe((params: Params) => {
+      this.puzzleTypeService.setPuzzleOptions(params['p']);
+      this.puzzleTypeService.initialized.set(true);
+      this.setSoundOptions(params['s']);
+      this.setMertinOptions(params['m']);
+      this.reset();
+      this.init();
+      this.timerInit();
+      this.winStreak.set(this.localStorageService.getWinStreak());
+      this.highScore.set(this.localStorageService.getHighScore());
+      this.params['p'] = params['p'];
+      this.params['s'] = params['s'];
+      this.params['m'] = params['m'];
+      this.titleService.setTitle(StringResources.TITLE + environment.titleSuffix);
+      this.puzzleTypeService.symbols.set(this.puzzleTypeService.getActivePuzzleSymbols());
+      if (this.puzzleTypeService.getPuzzleTypes().size !== Object.keys(PuzzleType).length / 2) {
         this.titleService.setTitle(
-          StringResources.TITLE + environment.titleSuffix,
+          StringResources.TITLE +
+            environment.titleSuffix +
+            ' - ' +
+            [...this.puzzleTypeService.getPuzzleTypes().values()]
+              .map((p) => PuzzleType[p])
+              .join(', ')
         );
-        this.puzzleTypeService.symbols.set(
-          this.puzzleTypeService.getActivePuzzleSymbols(),
-        );
-        if (
-          this.puzzleTypeService.getPuzzleTypes().size !==
-          Object.keys(PuzzleType).length / 2
-        ) {
-          this.titleService.setTitle(
-            StringResources.TITLE +
-              environment.titleSuffix +
-              ' - ' +
-              [...this.puzzleTypeService.getPuzzleTypes().values()]
-                .map((p) => PuzzleType[p])
-                .join(', '),
-          );
-        }
-      });
+      }
+    });
   }
 
   /* Init */
@@ -198,17 +164,13 @@ export class AppComponent
     this.timerSubscription = this.timer
       .pipe(
         takeUntil(this.destroyed),
-        tap((v) => debug(`Pulse: ${v}`)),
+        tap((v) => debug(`Pulse: ${v}`))
       )
       .subscribe((val: number) => {
         if (this.speed() !== 0 && !this.noRemainingSolutions()) {
           if (val % this.speed() === 0) {
-            debug(
-              `Reset square event: ${val}, Interval length: ${this.speed() * mertinInterval}`,
-            );
-            this.positionService.mertinIndex.set(
-              this.positionService.getRandomNonOccupiedIndex(),
-            );
+            debug(`Reset square event: ${val}, Interval length: ${this.speed() * mertinInterval}`);
+            this.positionService.mertinIndex.set(this.positionService.getRandomNonOccupiedIndex());
             this.resetSquare(this.positionService.mertinIndex());
           }
         }
@@ -218,16 +180,14 @@ export class AppComponent
 
   private init(): void {
     if (!this.cellData().length) {
-      this.activePuzzle.set(
-        getRandomPuzzle(this.puzzleTypeService.getPuzzleTypes()),
-      );
+      this.activePuzzle.set(getRandomPuzzle(this.puzzleTypeService.getPuzzleTypes()));
       debug(
-        `Puzzle: ${PuzzleType[this.activePuzzle().type]}, ${this.activePuzzle().getQuestionText()[0].stringValue}`,
+        `Puzzle: ${PuzzleType[this.activePuzzle().type]}, ${this.activePuzzle().getQuestionText()[0].stringValue}`
       );
       debug('Set up puzzle data:');
       this.cellData.set([
         ...this.activePuzzle().generateCells(
-          this.positionService.columnCount() * this.positionService.rowCount(),
+          this.positionService.columnCount() * this.positionService.rowCount()
         ),
       ]);
 
@@ -266,8 +226,7 @@ export class AppComponent
     }
     if (
       !this.params['p'] ||
-      this.puzzleTypeService.getActivePuzzleCodes().length ===
-        Object.keys(PuzzleType).length / 2
+      this.puzzleTypeService.getActivePuzzleCodes().length === Object.keys(PuzzleType).length / 2
     ) {
       delete this.params['p'];
     }
@@ -348,11 +307,7 @@ export class AppComponent
 
   public getCellData(r: number, c: number): DataCell {
     if (!this.cellData().length) {
-      return new DataCell(
-        new ExpressionData(0, MixedNumberExpressionName),
-        false,
-        false,
-      );
+      return new DataCell(new ExpressionData(0, MixedNumberExpressionName), false, false);
     }
     return this.cellData()[r * this.positionService.columnCount() + c];
   }
@@ -361,8 +316,7 @@ export class AppComponent
     if (!this.cellData().length) {
       return 0;
     }
-    return this.cellData().filter((cell) => cell.valid && !cell.discovered)
-      .length;
+    return this.cellData().filter((cell) => cell.valid && !cell.discovered).length;
   }
 
   public getTotalValidSolutions(): number {
@@ -376,9 +330,7 @@ export class AppComponent
     if (!this.cellData().length) {
       return false;
     }
-    const done = this.cellData().every(
-      (cell: DataCell) => cell.discovered || !cell.valid,
-    );
+    const done = this.cellData().every((cell: DataCell) => cell.discovered || !cell.valid);
     return done;
   }
 
@@ -433,9 +385,7 @@ export class AppComponent
     debug('--Reset Square--');
     debug(`Index to replace: ${squareIndex}`);
     debug(`Remaining solutions: ${solutionsCount}`);
-    debug(
-      `Removing: ${this.cellData()[squareIndex].expressionValue.toString()}`,
-    );
+    debug(`Removing: ${this.cellData()[squareIndex].expressionValue.toString()}`);
     let newValue;
     if (solutionsCount <= 1) {
       newValue = this.activePuzzle().getValidSamples(); // insert valid choice
@@ -454,10 +404,9 @@ export class AppComponent
   public getAvatarImage(): string {
     const data = this.getCellData(
       this.positionService.activeRow(),
-      this.positionService.activeColumn(),
+      this.positionService.activeColumn()
     );
-    if (data.valid && data.discovered)
-      return this.imageService.getMunchyHappyImage(this.holiday());
+    if (data.valid && data.discovered) return this.imageService.getMunchyHappyImage(this.holiday());
     else if (!data.valid && data.discovered) {
       return this.imageService.getMunchySadImage(this.holiday());
     } else {
@@ -508,8 +457,7 @@ export class AppComponent
     const typeToShrink = [MultiplicationExpressionName, DivisionExpressionName];
     if (
       typeToShrink.includes(cell.expressionValue.opType) &&
-      (this.hasMertin(cellRow, cellColumn) ||
-        this.isActive(cellRow, cellColumn))
+      (this.hasMertin(cellRow, cellColumn) || this.isActive(cellRow, cellColumn))
     ) {
       classes += ' cell-smaller';
     }
@@ -611,7 +559,7 @@ export class AppComponent
     debug(`Choice: ${this.positionService.getPosition()}`);
     const data = this.getCellData(
       this.positionService.activeRow(),
-      this.positionService.activeColumn(),
+      this.positionService.activeColumn()
     );
     data.discovered = true;
     if (data.valid) {
@@ -630,9 +578,7 @@ export class AppComponent
     debug('Game Over');
     this.statusMessageClass.set('status-success');
     this.statusMessage.set(StringResources.FOUND_ALL);
-    this.statusMessageDetail.set(
-      this.activePuzzle().successDetails(data.expressionValue.clone()),
-    );
+    this.statusMessageDetail.set(this.activePuzzle().successDetails(data.expressionValue.clone()));
     if (this.perfectScore()) {
       this.executePerfectScore();
     } else {
@@ -657,9 +603,7 @@ export class AppComponent
   private executeCorrect(data: DataCell): void {
     this.soundService.playYum();
     this.statusMessage.set(StringResources.CORRECT);
-    this.statusMessageDetail.set(
-      this.activePuzzle().successDetails(data.expressionValue.clone()),
-    );
+    this.statusMessageDetail.set(this.activePuzzle().successDetails(data.expressionValue.clone()));
     this.statusMessageClass.set('status-success');
   }
 
@@ -668,9 +612,7 @@ export class AppComponent
     this.winStreak.set(0);
     this.localStorageService.setWinStreak(0);
     this.statusMessage.set(StringResources.INCORRECT);
-    this.statusMessageDetail.set(
-      this.activePuzzle().errorDetails(data.expressionValue.clone()),
-    );
+    this.statusMessageDetail.set(this.activePuzzle().errorDetails(data.expressionValue.clone()));
     this.statusMessageClass.set('status-error');
   }
 

@@ -8,10 +8,7 @@ import {
   MixedNumberExpressionData,
   RootExpressionData,
 } from '../../math-components/expression-data/expressionData';
-import {
-  getValidFactors,
-  getFactorTargets,
-} from '../puzzles/sampleRandomValues';
+import { getValidFactors, getFactorTargets } from '../puzzles/sampleRandomValues';
 import {
   getNaturalNumberSet,
   getValidBetweenValues,

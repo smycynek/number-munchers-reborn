@@ -1,8 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import {
-  BaseExpressionComponent,
-  toNumber,
-} from '../base-expression/base-expression.component';
+import { BaseExpressionComponent, toNumber } from '../base-expression/base-expression.component';
 
 @Component({
   selector: 'app-exponent-expression',
@@ -13,4 +10,10 @@ import {
 export class ExponentExpressionComponent extends BaseExpressionComponent {
   readonly base = input.required({ transform: toNumber });
   readonly power = input.required({ transform: toNumber });
+
+  readonly stringValue = input.required<string>();
+
+  public isPunctuationPhrase(): boolean {
+    return false;
+  }
 }

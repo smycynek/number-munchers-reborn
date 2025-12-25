@@ -4,22 +4,14 @@ import {
   DecimalExpressionData,
   s,
 } from '../../../math-components/expression-data/expressionData';
-import {
-  getRandomDecimals,
-  getRandomFractionLowerBase,
-} from '../sampleRandomValues';
+import { getRandomDecimals, getRandomFractionLowerBase } from '../sampleRandomValues';
 import { getValidDecimals } from '../sampleValidValues';
 import { Puzzle } from '../Puzzle';
 import { PuzzleType } from '../../services/puzzle-type.service';
 
 export class Decimals extends Puzzle {
   public constructor() {
-    super(
-      PuzzleType.Decimals,
-      'Percentages',
-      true,
-      getRandomFractionLowerBase(),
-    );
+    super(PuzzleType.Decimals, 'Percentages', true, getRandomFractionLowerBase());
   }
 
   public override predicate(choice: ExpressionData): boolean {

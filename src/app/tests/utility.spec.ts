@@ -4,10 +4,7 @@ for kids, I want to make sure output is correct.
 */
 
 import { DivisionExpressionData } from '../../math-components/expression-data/expressionData';
-import {
-  getValidDivisionPairs,
-  expressionDataSetHas,
-} from '../puzzles/sampleValidValues';
+import { getValidDivisionPairs, expressionDataSetHas } from '../puzzles/sampleValidValues';
 
 describe('PseudoUnitTests-Utility', () => {
   it('expressionDataSetHas should work on sets', () => {

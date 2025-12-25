@@ -5,10 +5,7 @@ import {
   s,
 } from '../../../math-components/expression-data/expressionData';
 import { dataUpperBound } from '../../constants';
-import {
-  getRandomNumberWithinRange,
-  getRandomSumPairs,
-} from '../sampleRandomValues';
+import { getRandomNumberWithinRange, getRandomSumPairs } from '../sampleRandomValues';
 import { Puzzle, toggleRValue } from '../Puzzle';
 import { getValidSumPairs } from '../sampleValidValues';
 import { PuzzleType } from '../../services/puzzle-type.service';
@@ -25,11 +22,7 @@ export class Addition extends Puzzle {
       PuzzleType.Addition,
       `${digits} digit addition`,
       true,
-      new MixedNumberExpressionData(
-        getRandomNumberWithinRange(lowerBound, upperBound),
-        0,
-        0,
-      ),
+      new MixedNumberExpressionData(getRandomNumberWithinRange(lowerBound, upperBound), 0, 0)
     );
     this.digits = digits;
   }

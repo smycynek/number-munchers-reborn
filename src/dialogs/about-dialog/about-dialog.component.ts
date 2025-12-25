@@ -13,7 +13,6 @@ import { NgOptimizedImage } from '@angular/common';
 export class AboutDialogComponent {
   protected imageService = inject(ImageService);
   protected gameInfoService = inject(GameInfoService);
-  public constructor(
-  ) {}
+  public constructor() {}
   puzzleTypesClicked = output<void>();
 }

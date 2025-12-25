@@ -1,8 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import {
-  BaseExpressionComponent,
-  toNumber,
-} from '../base-expression/base-expression.component';
+import { BaseExpressionComponent, toNumber } from '../base-expression/base-expression.component';
 import { DecimalPipe, NgClass } from '@angular/common';
 
 @Component({
@@ -10,10 +7,16 @@ import { DecimalPipe, NgClass } from '@angular/common';
   templateUrl: './mixed-number-expression.component.html',
   styleUrl: './mixed-number-expression.component.less',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgClass, DecimalPipe]
+  imports: [NgClass, DecimalPipe],
 })
 export class MixedNumberExpressionComponent extends BaseExpressionComponent {
   readonly whole = input.required({ transform: toNumber });
   readonly numerator = input.required({ transform: toNumber });
   readonly denominator = input.required({ transform: toNumber });
+
+  readonly stringValue = input.required<string>();
+
+  public isPunctuationPhrase(): boolean {
+    return false;
+  }
 }

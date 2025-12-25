@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import {  NgComponentOutlet } from '@angular/common';
+import { NgComponentOutlet } from '@angular/common';
 import { LogarithmExpressionComponent } from '../expression-components/logarithm-expression/logarithm-expression.component';
 import { MixedNumberExpressionComponent } from '../expression-components/mixed-number-expression/mixed-number-expression.component';
 import { MultiplicationExpressionComponent } from '../expression-components/multiplication-expression/multiplication-expression.component';

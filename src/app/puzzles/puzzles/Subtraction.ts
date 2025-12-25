@@ -4,10 +4,7 @@ import {
   ExpressionTypes,
   s,
 } from '../../../math-components/expression-data/expressionData';
-import {
-  getRandomNumberWithinRange,
-  getRandomDifferencePairs,
-} from '../sampleRandomValues';
+import { getRandomNumberWithinRange, getRandomDifferencePairs } from '../sampleRandomValues';
 import { getValidDifferencePairs } from '../sampleValidValues';
 import { Puzzle, toggleRValue } from '../Puzzle';
 import { dataUpperBound } from '../../constants';
@@ -25,11 +22,7 @@ export class Subtraction extends Puzzle {
       PuzzleType.Subtraction,
       `${digits} digit subtraction`,
       true,
-      new MixedNumberExpressionData(
-        getRandomNumberWithinRange(lowerBound, upperBound),
-        0,
-        0,
-      ),
+      new MixedNumberExpressionData(getRandomNumberWithinRange(lowerBound, upperBound), 0, 0)
     );
     this.digits = digits;
   }

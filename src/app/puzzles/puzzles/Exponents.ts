@@ -5,10 +5,7 @@ import {
   s,
 } from '../../../math-components/expression-data/expressionData';
 import { getRandomExponentPairs } from '../sampleRandomValues';
-import {
-  getExponentTargets,
-  getValidExponentPairs,
-} from '../sampleValidValues';
+import { getExponentTargets, getValidExponentPairs } from '../sampleValidValues';
 import { Puzzle, toggleRValue } from '../Puzzle';
 import { PuzzleType } from '../../services/puzzle-type.service';
 
@@ -21,7 +18,7 @@ export class Exponents extends Puzzle {
       true,
       new MixedNumberExpressionData(exponentTargets[0], 0, 0),
       new MixedNumberExpressionData(exponentTargets[1], 0, 0),
-      new MixedNumberExpressionData(exponentTargets[2], 0, 0),
+      new MixedNumberExpressionData(exponentTargets[2], 0, 0)
     );
   }
 
@@ -60,11 +57,7 @@ export class Exponents extends Puzzle {
   }
 
   public override getValidSamples(): Set<ExpressionData> {
-    return getValidExponentPairs([
-      this.target1.value,
-      this.target2.value,
-      this.target3.value,
-    ]);
+    return getValidExponentPairs([this.target1.value, this.target2.value, this.target3.value]);
   }
   public override getRandomSamples(count: number): Set<ExpressionData> {
     return getRandomExponentPairs(count);

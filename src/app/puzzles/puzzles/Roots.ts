@@ -19,7 +19,7 @@ export class Roots extends Puzzle {
       true,
       new MixedNumberExpressionData(rootTargets[0], 0, 0),
       new MixedNumberExpressionData(rootTargets[1], 0, 0),
-      new MixedNumberExpressionData(rootTargets[2], 0, 0),
+      new MixedNumberExpressionData(rootTargets[2], 0, 0)
     );
     this.rootTargets = rootTargets;
   }
@@ -32,14 +32,7 @@ export class Roots extends Puzzle {
     );
   }
   public override getQuestionText(): ExpressionTypes[] {
-    return [
-      s('Find roots equal to'),
-      this.target1,
-      s(', '),
-      this.target2,
-      s(', or'),
-      this.target3,
-    ];
+    return [s('Find roots equal to'), this.target1, s(', '), this.target2, s(', or'), this.target3];
   }
   public override successDetails(choice: ExpressionTypes): ExpressionTypes[] {
     return [toggleRValue(choice)];

@@ -23,7 +23,7 @@ import {
 import { getRandomItemFromSetAndRemove } from '../utility';
 
 const perfectSquares = new Set<number>(
-  [...getNaturalNumberSet(dataUpperBound)].filter((n) => isPerfectSquare(n)),
+  [...getNaturalNumberSet(dataUpperBound)].filter((n) => isPerfectSquare(n))
 );
 
 export function getPerfectSquares(): Set<number> {
@@ -34,8 +34,8 @@ export function getPrimes(): Set<number> {
   // Must define inside function for some reason, odd scope
   // change
   const primes = new Set<number>([
-    1, 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71,
-    73, 79, 83, 89, 97,
+    1, 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89,
+    97,
   ]);
   return new Set<number>([...primes]);
 }
@@ -66,18 +66,14 @@ export function getNaturalNumberSet(upperBound: number): Set<number> {
 }
 
 export function getNaturalEvenSet(upperBound: number): Set<number> {
-  const base = [...[].constructor(upperBound + 1).keys()].filter(
-    (n) => n % 2 === 0,
-  );
+  const base = [...[].constructor(upperBound + 1).keys()].filter((n) => n % 2 === 0);
   const baseSet = new Set(base);
   baseSet.delete(0);
   return baseSet;
 }
 
 export function getNaturalOddSet(upperBound: number): Set<number> {
-  const base = [...[].constructor(upperBound + 1).keys()].filter(
-    (n) => n % 2 === 1,
-  );
+  const base = [...[].constructor(upperBound + 1).keys()].filter((n) => n % 2 === 1);
   const baseSet = new Set(base);
   baseSet.delete(0);
   return baseSet;
@@ -86,18 +82,16 @@ export function getNaturalOddSet(upperBound: number): Set<number> {
 export function getValidBetweenValues(
   lower: number,
   upper: number,
-  inclusive: boolean,
+  inclusive: boolean
 ): Set<number> {
   return new Set(
     [...getNaturalNumberSet(dataUpperBound)].filter((value) =>
-      isBetween(value, lower, upper, inclusive),
-    ),
+      isBetween(value, lower, upper, inclusive)
+    )
   );
 }
 
-export function getValidDecimals(
-  target: MixedNumberExpressionData,
-): Set<DecimalExpressionData> {
+export function getValidDecimals(target: MixedNumberExpressionData): Set<DecimalExpressionData> {
   const returnSet = new Set<DecimalExpressionData>();
   const targetValMin = Math.round(target.value * 100);
   const validPercentageDigits = getValidBetweenValues(targetValMin, 100, true);
@@ -109,14 +103,11 @@ export function getValidDecimals(
   return returnSet;
 }
 
-export function getValidOutsideExclusiveValues(
-  lower: number,
-  upper: number,
-): Set<number> {
+export function getValidOutsideExclusiveValues(lower: number, upper: number): Set<number> {
   return new Set(
     [...getNaturalNumberSet(dataUpperBound)].filter((value) =>
-      isOutsideExclusive(value, lower, upper),
-    ),
+      isOutsideExclusive(value, lower, upper)
+    )
   );
 }
 
@@ -125,8 +116,7 @@ function newFractionPair(idn: number, idd: number) {
 }
 
 export function getLowerBaseFractions(): Set<MixedNumberExpressionData> {
-  const newFractionPair = (idn: number, idd: number) =>
-    new MixedNumberExpressionData(0, idn, idd);
+  const newFractionPair = (idn: number, idd: number) => new MixedNumberExpressionData(0, idn, idd);
 
   const pairs: Set<MixedNumberExpressionData> = new Set();
 
@@ -217,10 +207,7 @@ export function getValidFractions(target: MixedNumberExpressionData) {
   const valueSet: Set<MixedNumberExpressionData> = new Set();
   for (let idx = 1; idx != 21; idx++) {
     for (let idy = 2; idy != 21; idy++) {
-      if (
-        idx / idy === target.value &&
-        !(target.numerator == idx && target.denominator == idy)
-      ) {
+      if (idx / idy === target.value && !(target.numerator == idx && target.denominator == idy)) {
         // Add equivalent fractions but not the exact same fraction to the valid fraction list
         valueSet.add(new MixedNumberExpressionData(0, idx, idy));
       }
@@ -233,9 +220,7 @@ export function getValidPercentages(target: MixedNumberExpressionData) {
   const returnSet = new Set<PercentageExpressionData>();
   const targetValMin = Math.round(target.value * 100);
   const validPercentageDigits = getValidBetweenValues(targetValMin, 100, true);
-  validPercentageDigits.forEach((val) =>
-    returnSet.add(new PercentageExpressionData(val)),
-  );
+  validPercentageDigits.forEach((val) => returnSet.add(new PercentageExpressionData(val)));
   return returnSet;
 }
 
@@ -247,14 +232,10 @@ export function getValidMultiples(num: number): Set<number> {
   return multiples;
 }
 
-export function getValidMultiplicationPairs(
-  target: number,
-): Set<MultiplicationExpressionData> {
+export function getValidMultiplicationPairs(target: number): Set<MultiplicationExpressionData> {
   const pairs: Set<MultiplicationExpressionData> = new Set();
   const factors = getValidFactors(target);
-  factors.forEach((val) =>
-    pairs.add(new MultiplicationExpressionData(val, target / val)),
-  );
+  factors.forEach((val) => pairs.add(new MultiplicationExpressionData(val, target / val)));
   return pairs;
 }
 
@@ -269,7 +250,7 @@ export function getValidSumPairs(target: number): Set<AdditionExpressionData> {
 
 export function getValidDifferencePairs(
   target: number,
-  upperBound: number,
+  upperBound: number
 ): Set<SubtractionExpressionData> {
   const pairs: Set<SubtractionExpressionData> = new Set();
   for (let upper = upperBound; upper != target; upper--) {
@@ -278,9 +259,7 @@ export function getValidDifferencePairs(
   return pairs;
 }
 
-export function getValidDivisionPairs(
-  target: number,
-): Set<DivisionExpressionData> {
+export function getValidDivisionPairs(target: number): Set<DivisionExpressionData> {
   const pairs: Set<DivisionExpressionData> = new Set();
   const multiples = getValidMultiples(target);
   multiples.forEach((mul) => {
@@ -290,17 +269,12 @@ export function getValidDivisionPairs(
   return pairs;
 }
 
-export function getValidExponentPairs(
-  targets: number[],
-): Set<ExponentExpressionData> {
+export function getValidExponentPairs(targets: number[]): Set<ExponentExpressionData> {
   const allPairs = getAllExponentPairs();
   return new Set<ExponentExpressionData>(
     [...allPairs].filter(
-      (pair) =>
-        pair.value === targets[0] ||
-        pair.value === targets[1] ||
-        pair.value === targets[2],
-    ),
+      (pair) => pair.value === targets[0] || pair.value === targets[1] || pair.value === targets[2]
+    )
   );
 }
 
@@ -308,23 +282,18 @@ export function getValidRootPairs(targets: number[]): Set<RootExpressionData> {
   const allPairs = getAllRootPairs();
   return new Set<RootExpressionData>(
     [...allPairs].filter(
-      (pair) =>
-        pair.value === targets[0] ||
-        pair.value === targets[1] ||
-        pair.value === targets[2],
-    ),
+      (pair) => pair.value === targets[0] || pair.value === targets[1] || pair.value === targets[2]
+    )
   );
 }
 
 export function toExpressionDataSet(values: Set<number>): Set<ExpressionTypes> {
-  return new Set<ExpressionData>(
-    [...values].map((v) => new MixedNumberExpressionData(v, 0, 0)),
-  );
+  return new Set<ExpressionData>([...values].map((v) => new MixedNumberExpressionData(v, 0, 0)));
 }
 
 export function expressionDataSetHas(
   expression: ExpressionData,
-  set: Set<ExpressionData>,
+  set: Set<ExpressionData>
 ): boolean {
   const setVals = [...set].map((vp) => vp.getHashCode());
   const inc = setVals.includes(expression.getHashCode());

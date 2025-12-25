@@ -3,22 +3,14 @@ import {
   ExpressionTypes,
   s,
 } from '../../../math-components/expression-data/expressionData';
-import {
-  getRandomFractionBase,
-  getRandomFractions,
-} from '../sampleRandomValues';
+import { getRandomFractionBase, getRandomFractions } from '../sampleRandomValues';
 import { getValidFractions } from '../sampleValidValues';
 import { Puzzle } from '../Puzzle';
 import { PuzzleType } from '../../services/puzzle-type.service';
 
 export class FractionEquivalent extends Puzzle {
   public constructor() {
-    super(
-      PuzzleType.Fractions,
-      'Equivalent Fractions',
-      true,
-      getRandomFractionBase(),
-    );
+    super(PuzzleType.Fractions, 'Equivalent Fractions', true, getRandomFractionBase());
   }
 
   public override predicate(choice: ExpressionData): boolean {

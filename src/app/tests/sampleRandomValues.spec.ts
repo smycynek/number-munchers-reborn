@@ -15,9 +15,7 @@ describe('PseudoUnitTests-SampleRandomValues', () => {
   it('getRandomNaturalNumberSet gives a valid range set', () => {
     const randomNaturals = getRandomNaturalNumberSet(99, 99);
     expect(randomNaturals.size).toEqual(99);
-    expect([...randomNaturals].every((val) => val >= 1 && val <= 99)).toBe(
-      true,
-    );
+    expect([...randomNaturals].every((val) => val >= 1 && val <= 99)).toBe(true);
   });
 
   it('getRandomNumberWithinRange gives a number within a range', () => {

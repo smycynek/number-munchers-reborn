@@ -11,12 +11,7 @@ import { PuzzleType } from '../../services/puzzle-type.service';
 
 export class FractionLessThanHalf extends Puzzle {
   public constructor() {
-    super(
-      PuzzleType.Fractions,
-      'Fractions less than to than one half',
-      true,
-      oneHalf,
-    );
+    super(PuzzleType.Fractions, 'Fractions less than to than one half', true, oneHalf);
   }
 
   public override predicate(choice: ExpressionData): boolean {
