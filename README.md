@@ -14,7 +14,7 @@ that it's fair to put an MIT license on it.
 
 ## Setup
 
-- `npm install` (use --force to get around ng-bootstrap limitation)
+- `bun install`
 - `ng serve` for a development server.
 - `preplocal.sh` or `deploy.sh` to build for production
 - `config.sh` to deploy a holiday configuration
@@ -24,4 +24,4 @@ that it's fair to put an MIT license on it.
 <a href="https://stevenvictor.net/number-munchers"><img alt="screenshot" src="main_screen.png" width="50%">
 </a>
 
-version: 000447
+version: 000451
