@@ -7,7 +7,7 @@ import { NgClass } from '@angular/common';
   templateUrl: './string-expression.component.html',
   styleUrl: './string-expression.component.less',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgClass]
+  imports: [NgClass],
 })
 export class StringExpressionComponent extends BaseExpressionComponent {
   readonly stringValue = input.required<string>();

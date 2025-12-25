@@ -1,18 +1,16 @@
 <math>
   <mrow>
-    @if(whole() !== 0) {
-    <mn>
-      {{ whole() | number }}
-    </mn>
-  }
-  @if(numerator() !== 0 && denominator() !== 0) {
-    <mfrac
-      [ngClass]="{ 'mfrac-large': whole() === 0 }"
-    >
-      <mn>{{ numerator() }}</mn>
-      <mn>{{ denominator() }}</mn>
-    </mfrac>
-  }
+    @if (whole() !== 0) {
+      <mn>
+        {{ whole() | number }}
+      </mn>
+    }
+    @if (numerator() !== 0 && denominator() !== 0) {
+      <mfrac [ngClass]="{ 'mfrac-large': whole() === 0 }">
+        <mn>{{ numerator() }}</mn>
+        <mn>{{ denominator() }}</mn>
+      </mfrac>
+    }
     @if (showRval()) {
       @if (displayOp()) {
         <mo>

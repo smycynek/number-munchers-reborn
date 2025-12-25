@@ -29,8 +29,6 @@ export class Evens extends Puzzle {
     return toExpressionDataSet(getNaturalEvenSet(dataUpperBound));
   }
   public override getRandomSamples(count: number): Set<ExpressionData> {
-    return toExpressionDataSet(
-      getRandomNaturalNumberSet(dataUpperBound, count),
-    );
+    return toExpressionDataSet(getRandomNaturalNumberSet(dataUpperBound, count));
   }
 }

@@ -6,10 +6,7 @@ import {
 } from '../../../math-components/expression-data/expressionData';
 import { dataUpperBound } from '../../constants';
 import { isMultiple } from '../predicates';
-import {
-  getRandomMultipleBase,
-  getRandomNaturalNumberSet,
-} from '../sampleRandomValues';
+import { getRandomMultipleBase, getRandomNaturalNumberSet } from '../sampleRandomValues';
 import { getValidMultiples, toExpressionDataSet } from '../sampleValidValues';
 import { Puzzle } from '../Puzzle';
 import { PuzzleType } from '../../services/puzzle-type.service';
@@ -20,7 +17,7 @@ export class Multiples extends Puzzle {
       PuzzleType.Multiplication,
       'Multiples of',
       true,
-      new MixedNumberExpressionData(getRandomMultipleBase(), 0, 0),
+      new MixedNumberExpressionData(getRandomMultipleBase(), 0, 0)
     );
   }
   public override predicate(choice: ExpressionData): boolean {
@@ -45,8 +42,6 @@ export class Multiples extends Puzzle {
     return toExpressionDataSet(getValidMultiples(this.target1.value));
   }
   public override getRandomSamples(count: number): Set<ExpressionData> {
-    return toExpressionDataSet(
-      getRandomNaturalNumberSet(dataUpperBound, count),
-    );
+    return toExpressionDataSet(getRandomNaturalNumberSet(dataUpperBound, count));
   }
 }

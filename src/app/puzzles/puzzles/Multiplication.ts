@@ -4,10 +4,7 @@ import {
   s,
   ExpressionData,
 } from '../../../math-components/expression-data/expressionData';
-import {
-  getRandomFactorTarget,
-  getRandomMultiplicationPairs,
-} from '../sampleRandomValues';
+import { getRandomFactorTarget, getRandomMultiplicationPairs } from '../sampleRandomValues';
 import { getValidMultiplicationPairs } from '../sampleValidValues';
 import { Puzzle, toggleRValue } from '../Puzzle';
 import { PuzzleType } from '../../services/puzzle-type.service';
@@ -18,7 +15,7 @@ export class Multiplication extends Puzzle {
       PuzzleType.Multiplication,
       'Multiplication',
       true,
-      new MixedNumberExpressionData(getRandomFactorTarget(3), 0, 0),
+      new MixedNumberExpressionData(getRandomFactorTarget(3), 0, 0)
     );
   }
 

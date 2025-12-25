@@ -6,14 +6,8 @@ import {
 } from '../../../math-components/expression-data/expressionData';
 import { dataUpperBound, greaterEqual, lessEqual } from '../../constants';
 import { isBetween } from '../predicates';
-import {
-  getRandomBetweenBounds,
-  getRandomNaturalNumberSet,
-} from '../sampleRandomValues';
-import {
-  toExpressionDataSet,
-  getValidBetweenValues,
-} from '../sampleValidValues';
+import { getRandomBetweenBounds, getRandomNaturalNumberSet } from '../sampleRandomValues';
+import { toExpressionDataSet, getValidBetweenValues } from '../sampleValidValues';
 import { Puzzle } from '../Puzzle';
 import { PuzzleType } from '../../services/puzzle-type.service';
 
@@ -25,24 +19,14 @@ export class BetweenInclusive extends Puzzle {
       'Between Inclusive',
       true,
       new MixedNumberExpressionData(bounds[0], 0, 0),
-      new MixedNumberExpressionData(bounds[1], 0, 0),
+      new MixedNumberExpressionData(bounds[1], 0, 0)
     );
   }
   public override getQuestionText(): ExpressionTypes[] {
-    return [
-      s(`Find numbers ${greaterEqual}`),
-      this.target1,
-      s(`and ${lessEqual}`),
-      this.target2,
-    ];
+    return [s(`Find numbers ${greaterEqual}`), this.target1, s(`and ${lessEqual}`), this.target2];
   }
   public override predicate(choice: ExpressionData): boolean {
-    return isBetween(
-      choice.value,
-      this.target1.value,
-      this.target2.value,
-      true,
-    );
+    return isBetween(choice.value, this.target1.value, this.target2.value, true);
   }
   public override successDetails(choice: ExpressionTypes): ExpressionTypes[] {
     return [
@@ -64,12 +48,10 @@ export class BetweenInclusive extends Puzzle {
   }
   public override getValidSamples(): Set<ExpressionData> {
     return toExpressionDataSet(
-      getValidBetweenValues(this.target1.value, this.target2.value, false),
+      getValidBetweenValues(this.target1.value, this.target2.value, false)
     );
   }
   public override getRandomSamples(count: number): Set<ExpressionData> {
-    return toExpressionDataSet(
-      getRandomNaturalNumberSet(dataUpperBound, count),
-    );
+    return toExpressionDataSet(getRandomNaturalNumberSet(dataUpperBound, count));
   }
 }

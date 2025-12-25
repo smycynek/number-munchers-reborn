@@ -27,21 +27,9 @@ export abstract class Puzzle {
     public readonly type: PuzzleType,
     public readonly name: string,
     public readonly include: boolean,
-    public readonly target1: MixedNumberExpressionData = new MixedNumberExpressionData(
-      0,
-      0,
-      0,
-    ),
-    public readonly target2: MixedNumberExpressionData = new MixedNumberExpressionData(
-      0,
-      0,
-      0,
-    ),
-    public readonly target3: MixedNumberExpressionData = new MixedNumberExpressionData(
-      0,
-      0,
-      0,
-    ),
+    public readonly target1: MixedNumberExpressionData = new MixedNumberExpressionData(0, 0, 0),
+    public readonly target2: MixedNumberExpressionData = new MixedNumberExpressionData(0, 0, 0),
+    public readonly target3: MixedNumberExpressionData = new MixedNumberExpressionData(0, 0, 0)
   ) {}
 
   public generateCell(curatedValues: Set<ExpressionData>) {
@@ -61,27 +49,19 @@ export abstract class Puzzle {
     return dataCells;
   }
 
-  protected getCuratedValues(
-    count: number,
-    addValidValues: boolean = true,
-  ): Set<ExpressionData> {
+  protected getCuratedValues(count: number, addValidValues: boolean = true): Set<ExpressionData> {
     const randomValues = this.getRandomSamples(count);
 
     if (addValidValues) {
       const validSamples = this.getValidSamples();
       let replacements = maxReplacements;
       if (
-        [
-          PuzzleType.Multiplication,
-          PuzzleType.Addition,
-          PuzzleType.Subtraction,
-        ].includes(this.type)
+        [PuzzleType.Multiplication, PuzzleType.Addition, PuzzleType.Subtraction].includes(this.type)
       ) {
         replacements *= 2;
         debug('Extra replacements');
       }
-      const replacementCount =
-        validSamples.size < replacements ? validSamples.size : replacements;
+      const replacementCount = validSamples.size < replacements ? validSamples.size : replacements;
       debug(`Valid samples for puzzle: ${[...validSamples]}`);
       debug(`Substituting in ${replacements} correct answers.`);
       for (let idx = 0; idx != replacementCount; idx++) {

@@ -1,7 +1,5 @@
 <form method="dialog">
-  <button title="Help X" class="button-base button-cancel highlighted">
-    X
-  </button>
+  <button title="Help X" class="button-base button-cancel highlighted">X</button>
 
   <h1 class="centered strong">{{ gameInfoService.title() }}</h1>
   <h2 class="centered">A math game</h2>
@@ -11,27 +9,27 @@
   <p class="paragraph">{{ gameInfoService.getGeneralInstructions() }}</p>
 
   <p class="paragraph">
-    I recommend that children try this game out with a parent. I hope that it
-    will be a fun experience for both!
+    I recommend that children try this game out with a parent. I hope that it will be a fun
+    experience for both!
   </p>
   <h1>Math terms</h1>
   <div class="glossary">
     <details>
       <summary>Perfect square</summary>
-      A number that can be expressed as another whole number multiplied by
-      itself. For example, 9 is a perfect square, because 3&times;3 is 9.
+      A number that can be expressed as another whole number multiplied by itself. For example, 9 is
+      a perfect square, because 3&times;3 is 9.
     </details>
 
     <details>
       <summary>Multiple</summary>
-      A number equal to a base number multiplied by a whole number. For example,
-      multiples of 3 include 6, 9, and 12.
+      A number equal to a base number multiplied by a whole number. For example, multiples of 3
+      include 6, 9, and 12.
     </details>
 
     <details>
       <summary>Factor</summary>
-      A whole number that, when multiplied by another whole number, is equal to
-      another number. For example, 3 is a factor of 6, since 3&times;2 is 6.
+      A whole number that, when multiplied by another whole number, is equal to another number. For
+      example, 3 is a factor of 6, since 3&times;2 is 6.
     </details>
 
     <details>
@@ -72,10 +70,9 @@
         width="70"
         height="70"
       />
-      Our hero, a curious frog who loves numbers and has very specific tastes
-      (that vary each game) for the kinds of numbers he likes to eat. Note that
-      you can select specific puzzle types to play by tapping the puzzle piece
-      icon above the grid.
+      Our hero, a curious frog who loves numbers and has very specific tastes (that vary each game)
+      for the kinds of numbers he likes to eat. Note that you can select specific puzzle types to
+      play by tapping the puzzle piece icon above the grid.
     </details>
 
     <details>
@@ -87,9 +84,9 @@
         width="70"
         height="70"
       />
-      A mischievous gremlin who likes to reset areas of the board according to
-      his own design. Mertin-mode is off by default, with three speed levels for
-      a challenge. Tap the "Mertin" icon above the grid for him to appear.
+      A mischievous gremlin who likes to reset areas of the board according to his own design.
+      Mertin-mode is off by default, with three speed levels for a challenge. Tap the "Mertin" icon
+      above the grid for him to appear.
     </details>
   </div>
 
@@ -97,20 +94,15 @@
   <div class="glossary">
     <details>
       <summary>Puzzle Types</summary>
-      Most of the math puzzles are suitable for elementary-school aged students.
-      Select the puzzle types you want with the
+      Most of the math puzzles are suitable for elementary-school aged students. Select the puzzle
+      types you want with the
       <span style="vertical-align: top">
         <button
           #btnShowPuzzleTypes
           class="btn imagebutton row-button highlighted"
           (click)="puzzleTypesClicked.emit()"
         >
-          <img
-            alt="puzzle-piece-icon"
-            height="40"
-            width="40"
-            ngSrc="assets/puzzle-piece.svg"
-          />
+          <img alt="puzzle-piece-icon" height="40" width="40" ngSrc="assets/puzzle-piece.svg" />
         </button>
       </span>
       icon.
@@ -118,23 +110,22 @@
 
     <details>
       <summary>Correct answers</summary>
-      Not all solutions are always shown. For example, for "find factors of 21,"
-      you might find 3, 7, 1, or 21, but not necessarily all of them.
+      Not all solutions are always shown. For example, for "find factors of 21," you might find 3,
+      7, 1, or 21, but not necessarily all of them.
     </details>
     <details>
       <summary>Keyboard</summary>
-      You can use the mouse on desktop or tap/touch on mobile to select squares,
-      but for that authentic old-school number-munchers experience, use the
-      arrow keys and space bar to move munchy around, and "N" for a new game.
+      You can use the mouse on desktop or tap/touch on mobile to select squares, but for that
+      authentic old-school number-munchers experience, use the arrow keys and space bar to move
+      munchy around, and "N" for a new game.
     </details>
     <details>
       <summary>Puzzle bookmarks</summary>
 
-      You may notice that the query string in the URL bar is updated when you
-      manually change the active puzzle types in the puzzle type dialog (the
-      <code>?p=</code> part). Find a configuration you like, and bookmark the
-      link, text to a friend, or post on social media to share your favorite
-      puzzle types.
+      You may notice that the query string in the URL bar is updated when you manually change the
+      active puzzle types in the puzzle type dialog (the
+      <code>?p=</code> part). Find a configuration you like, and bookmark the link, text to a
+      friend, or post on social media to share your favorite puzzle types.
 
       <ul>
         <p class="detail-content"><code>g - </code>greater or less than</p>
@@ -147,21 +138,18 @@
         <p class="detail-content"><code>x - </code>decimals</p>
         <p class="detail-content"><code>e - </code>exponents</p>
         <p class="detail-content"><code>r - </code>roots</p>
-        <p class="detail-content">
-          <code>o - </code>odds and ends / miscellaneous
-        </p>
+        <p class="detail-content"><code>o - </code>odds and ends / miscellaneous</p>
       </ul>
 
-      Sound and Mertin-mode options are also saved in the url as query
-      parameters.
+      Sound and Mertin-mode options are also saved in the url as query parameters.
     </details>
 
     <details>
       <summary>High score</summary>
-      A player's winning streak and high score (uninterrupted streak) are saved
-      locally to their laptop or mobile device, but they are saved with local
-      browser storage, not a cookie, and nothing is stored or read by the host
-      website itself. This site does not collect any personal data.
+      A player's winning streak and high score (uninterrupted streak) are saved locally to their
+      laptop or mobile device, but they are saved with local browser storage, not a cookie, and
+      nothing is stored or read by the host website itself. This site does not collect any personal
+      data.
     </details>
   </div>
   <h1>FAQ</h1>
@@ -170,17 +158,15 @@
     <details>
       <summary>What is your philosophy?</summary>
       <i>No ads, no logins, no cookies, no downloads -- just content.</i>
-      I'd rather make websites that have a low barrier to entry than develop an
-      app you need to download or install. I like to avoid any complications
-      with logins or anything that collects personal information, so we can both
-      just focus on the content. Finally, I try to be mobile and multi-platform
-      friendly with most modern browsers. In short, I develop content I'd want
-      my own children to access.
+      I'd rather make websites that have a low barrier to entry than develop an app you need to
+      download or install. I like to avoid any complications with logins or anything that collects
+      personal information, so we can both just focus on the content. Finally, I try to be mobile
+      and multi-platform friendly with most modern browsers. In short, I develop content I'd want my
+      own children to access.
     </details>
     <details>
       <summary>How is this made? Is it an app?</summary>
-      It'a a website, not an app, so there's nothing to install. It's made
-      mostly with
+      It'a a website, not an app, so there's nothing to install. It's made mostly with
       <a href="https://angular.dev/">Angular</a>,
       <a href="https://www.typescriptlang.org/">Typescript</a>, and
       <a href="https://getbootstrap.com/">Bootstrap.</a>
@@ -192,12 +178,11 @@
 
     <details>
       <summary>
-        How do you generate the puzzles? Do you have a long list of math
-        problems pre-made?
+        How do you generate the puzzles? Do you have a long list of math problems pre-made?
       </summary>
-      In general, I generate puzzle content dynamically and derive a mix of
-      correct choices and random but plausible choices from a generation
-      algorithm to give a good mix of choices in each puzzle. Source at:
+      In general, I generate puzzle content dynamically and derive a mix of correct choices and
+      random but plausible choices from a generation algorithm to give a good mix of choices in each
+      puzzle. Source at:
       <a href="https://github.com/smycynek/number-munchers-reborn/"
         >https://github.com/smycynek/number-munchers-reborn/</a
       >
@@ -205,26 +190,22 @@
 
     <details>
       <summary>What's next for Number Munchers Reborn?</summary>
-      I'm not sure. Maybe advanced fractions? Simple Algebra? Please send me
-      your feedback on what math content you'd like to see.
+      I'm not sure. Maybe advanced fractions? Simple Algebra? Please send me your feedback on what
+      math content you'd like to see.
     </details>
     <details>
       <summary>
-        What do Munchy and Mertin do when they are not hopping around on the
-        number munchers board?
+        What do Munchy and Mertin do when they are not hopping around on the number munchers board?
       </summary>
-      Munchy is looking forward to appearing on the next season of "Is it Cake?"
-      and also plays the drums. Mertin enjoys going to DEF CON meetups and
-      honing his lock picking skills and is also active in community theater.
-      His family does try to keep him away from chess tournaments, nuclear
-      launch silos, and randomized drug trial laboratories.
+      Munchy is looking forward to appearing on the next season of "Is it Cake?" and also plays the
+      drums. Mertin enjoys going to DEF CON meetups and honing his lock picking skills and is also
+      active in community theater. His family does try to keep him away from chess tournaments,
+      nuclear launch silos, and randomized drug trial laboratories.
     </details>
     <details>
-      <summary>
-        Where do Munchy and Mertin get all their holiday outfits?
-      </summary>
-      Mertin's community theater troupe has a wide assortment of costumes that
-      he and Munchy wear to celebrate year-round as they munch numbers.
+      <summary>Where do Munchy and Mertin get all their holiday outfits?</summary>
+      Mertin's community theater troupe has a wide assortment of costumes that he and Munchy wear to
+      celebrate year-round as they munch numbers.
     </details>
   </div>
 
@@ -242,7 +223,5 @@
     </li>
   </ul>
 
-  <button title="Help OK" class="button-base button-centered highlighted">
-    OK
-  </button>
+  <button title="Help OK" class="button-base button-centered highlighted">OK</button>
 </form>

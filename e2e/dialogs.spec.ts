@@ -12,7 +12,7 @@ test('Can execute dialogs', async ({ page }) => {
   await checkText(
     page,
     'helpSummary',
-    'Number Munchers Reborn is a re-imagining of the classic 90s game.',
+    'Number Munchers Reborn is a re-imagining of the classic 90s game.'
   );
   await page.keyboard.press('Escape');
 

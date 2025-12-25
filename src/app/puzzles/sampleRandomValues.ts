@@ -36,10 +36,7 @@ export function getRandomItemFromSetAndRemove<T>(itemSet: Set<T>): T {
   return item;
 }
 
-export function getRandomNaturalNumberSet(
-  upperBound: number,
-  total: number,
-): Set<number> {
+export function getRandomNaturalNumberSet(upperBound: number, total: number): Set<number> {
   if (total > upperBound) {
     throw Error('upper bound too low');
   }
@@ -54,37 +51,28 @@ export function getRandomNaturalNumberSet(
 export function getRandomNumberWithinRangeFromSeed(
   seed: number,
   lower: number,
-  upper: number,
+  upper: number
 ): number {
   const range = upper - lower;
   const initial = Math.floor(seed * (range + 1));
   return initial + lower;
 }
 
-export function getRandomNumberWithinRange(
-  lower: number,
-  upper: number,
-): number {
+export function getRandomNumberWithinRange(lower: number, upper: number): number {
   return getRandomNumberWithinRangeFromSeed(Math.random(), lower, upper);
 }
 
 // A narrower range used for > and <
 export function getRandomBetweenBounds() {
-  const bound1 = getRandomNumberWithinRange(
-    0,
-    dataUpperBound - boundOffsetMax - 2,
-  );
-  const bound2 =
-    bound1 + getRandomNumberWithinRange(boundoffsetMin, boundOffsetMax);
+  const bound1 = getRandomNumberWithinRange(0, dataUpperBound - boundOffsetMax - 2);
+  const bound2 = bound1 + getRandomNumberWithinRange(boundoffsetMin, boundOffsetMax);
   return [bound1, bound2];
 }
 
 // A wider range used for < or >
 export function getRandomBetweenBoundsWide() {
   const bound1 = getRandomNumberWithinRange(0, dataUpperBound - 20);
-  const bound2 =
-    bound1 +
-    getRandomNumberWithinRange(boundoffsetMin + 15, boundOffsetMax + 15);
+  const bound2 = bound1 + getRandomNumberWithinRange(boundoffsetMin + 15, boundOffsetMax + 15);
   return [bound1, bound2];
 }
 
@@ -100,9 +88,7 @@ export function getValidFactors(num: number): Set<number> {
 
 export function getFactorTargets(minimumFactors: number = 2): Set<number> {
   const baseSet = getNaturalNumberSet(dataUpperBound);
-  const factorTargets = [...baseSet].filter(
-    (f) => getValidFactors(f).size >= minimumFactors,
-  );
+  const factorTargets = [...baseSet].filter((f) => getValidFactors(f).size >= minimumFactors);
   return new Set<number>([...factorTargets]);
 }
 
@@ -110,9 +96,7 @@ export function getRandomFactorTarget(minimumFactors: number): number {
   return getRandomItemFromSetAndRemove(getFactorTargets(minimumFactors));
 }
 
-export function getRandomMultiplicationPairs(
-  count: number,
-): Set<MultiplicationExpressionData> {
+export function getRandomMultiplicationPairs(count: number): Set<MultiplicationExpressionData> {
   const valueSet: Set<MultiplicationExpressionData> = new Set();
   for (let idx = 2; idx < 16; idx++) {
     for (let idy = 2; idy < 16; idy++) {
@@ -133,7 +117,7 @@ export function getRandomMultiplicationPairs(
 export function getRandomSumPairs(
   count: number,
   target: number,
-  digits: number,
+  digits: number
 ): Set<AdditionExpressionData> {
   let lower = 1;
   let upper = 5;
@@ -180,7 +164,7 @@ export function getRandomSumPairs(
 export function getRandomDifferencePairs(
   count: number,
   target: number,
-  digits: number = 2,
+  digits: number = 2
 ): Set<SubtractionExpressionData> {
   let upper = dataUpperBound;
   let lower = 10;
@@ -285,9 +269,7 @@ export function getAllExponentValues(): Set<number> {
   return new Set<number>([...getAllExponentPairs()].map((exp) => exp.value));
 }
 
-export function getRandomExponentPairs(
-  count: number,
-): Set<ExponentExpressionData> {
+export function getRandomExponentPairs(count: number): Set<ExponentExpressionData> {
   const pairs = getAllExponentPairs();
   const returnSet: Set<ExponentExpressionData> = new Set();
 
@@ -311,9 +293,7 @@ export function getRandomMultipleBase(): number {
   return getRandomNumberWithinRange(multipleLowerBound, multipleUpperBound);
 }
 
-export function getRandomDivisionPairs(
-  count: number,
-): Set<DivisionExpressionData> {
+export function getRandomDivisionPairs(count: number): Set<DivisionExpressionData> {
   const valueSet: Set<DivisionExpressionData> = new Set();
   const returnSet: Set<DivisionExpressionData> = new Set();
   for (let idq = 2; idq < 12; idq++) {
@@ -342,9 +322,7 @@ export function getRandomFractionLowerBase(): MixedNumberExpressionData {
   return getRandomItemFromSetAndRemove(getLowerBaseFractions());
 }
 
-export function getRandomPercentages(
-  count: number,
-): Set<PercentageExpressionData> {
+export function getRandomPercentages(count: number): Set<PercentageExpressionData> {
   const percentageDigits = getNaturalNumberSet(100);
   const returnSet = new Set<PercentageExpressionData>();
   for (let idx = 0; idx < count; idx++) {
@@ -370,7 +348,7 @@ export function getRandomDecimals(count: number): Set<DecimalExpressionData> {
 
 export function getRandomFractions(
   count: number,
-  base: MixedNumberExpressionData,
+  base: MixedNumberExpressionData
 ): Set<MixedNumberExpressionData> {
   const valueSet: Set<MixedNumberExpressionData> = new Set();
   const returnSet: Set<MixedNumberExpressionData> = new Set();

@@ -1,11 +1,6 @@
 import { Signal, WritableSignal, signal } from '@angular/core';
 import { puzzleRows, puzzleColumns } from '../constants';
-import {
-  wrapUp,
-  debug,
-  wrapDown,
-  getRandomItemFromSetAndRemove,
-} from '../utility';
+import { wrapUp, debug, wrapDown, getRandomItemFromSetAndRemove } from '../utility';
 
 export class PositionService {
   public readonly rowCount: Signal<number> = signal(puzzleRows);
@@ -39,8 +34,7 @@ export class PositionService {
   }
 
   public getRandomNonOccupiedIndex(): number {
-    const activeIndex =
-      this.activeRow() * this.columnCount() + this.activeColumn();
+    const activeIndex = this.activeRow() * this.columnCount() + this.activeColumn();
     const upperBound = this.columnCount() * this.rowCount();
     const base = [...[].constructor(upperBound).keys()];
     const baseSet = new Set(base);

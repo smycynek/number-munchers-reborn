@@ -1,14 +1,6 @@
 <div>
-  <form
-    (ngSubmit)="submit()"
-    method="dialog"
-    [formGroup]="puzzleTypesFormGroup"
-  >
-    <button
-      type="button"
-      (click)="cancelAndClose()"
-      class="button-base button-cancel highlighted"
-    >
+  <form (ngSubmit)="submit()" method="dialog" [formGroup]="puzzleTypesFormGroup">
+    <button type="button" (click)="cancelAndClose()" class="button-base button-cancel highlighted">
       X
     </button>
     <h1 class="centered strong">Puzzle Types</h1>
@@ -24,22 +16,16 @@
               id="{{ puzzleTypeName }}"
               type="checkbox"
             />
-            <label for="{{ puzzleTypeName }}">{{
-              getPuzzleTypeTitle(puzzleTypeName)
-            }}</label>
+            <label for="{{ puzzleTypeName }}">{{ getPuzzleTypeTitle(puzzleTypeName) }}</label>
           </div>
         }
-        <button
-          type="button"
-          (click)="clearAll()"
-          class="button-base highlighted tiny-button"
-        >
+        <button type="button" (click)="clearAll()" class="button-base highlighted tiny-button">
           Clear All
         </button>
 
         <p class="detail-content">
-          Puzzle type preference changes are encoded in the page's URL. Copy,
-          text, bookmark, or post it to save a custom puzzle configuration.
+          Puzzle type preference changes are encoded in the page's URL. Copy, text, bookmark, or
+          post it to save a custom puzzle configuration.
         </p>
       </div>
     </div>
@@ -50,9 +36,7 @@
       title="Settings OK"
       class="has-disabled button-base button-centered highlighted"
     >
-      {{
-        hiddenPuzzleTypeValidator.valid ? 'OK' : 'Select at least one puzzle'
-      }}
+      {{ hiddenPuzzleTypeValidator.valid ? 'OK' : 'Select at least one puzzle' }}
     </button>
   </form>
 </div>

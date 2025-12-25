@@ -4,7 +4,7 @@ export class DataCell {
   constructor(
     public expressionValue: ExpressionData,
     public valid: boolean,
-    public discovered: boolean,
+    public discovered: boolean
   ) {}
 
   public toString(): string {

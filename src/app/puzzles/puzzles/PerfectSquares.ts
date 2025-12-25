@@ -35,8 +35,6 @@ export class PerfectSquares extends Puzzle {
     return toExpressionDataSet(getPerfectSquares());
   }
   public override getRandomSamples(count: number): Set<ExpressionData> {
-    return toExpressionDataSet(
-      getRandomNaturalNumberSet(dataUpperBound, count),
-    );
+    return toExpressionDataSet(getRandomNaturalNumberSet(dataUpperBound, count));
   }
 }

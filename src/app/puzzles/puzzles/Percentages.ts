@@ -4,22 +4,14 @@ import {
   PercentageExpressionData,
   s,
 } from '../../../math-components/expression-data/expressionData';
-import {
-  getRandomFractionLowerBase,
-  getRandomPercentages,
-} from '../sampleRandomValues';
+import { getRandomFractionLowerBase, getRandomPercentages } from '../sampleRandomValues';
 import { getValidPercentages } from '../sampleValidValues';
 import { Puzzle } from '../Puzzle';
 import { PuzzleType } from '../../services/puzzle-type.service';
 
 export class Percentages extends Puzzle {
   public constructor() {
-    super(
-      PuzzleType.Percentages,
-      'Percentages',
-      true,
-      getRandomFractionLowerBase(),
-    );
+    super(PuzzleType.Percentages, 'Percentages', true, getRandomFractionLowerBase());
   }
 
   public override predicate(choice: ExpressionData): boolean {

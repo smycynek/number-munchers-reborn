@@ -95,11 +95,7 @@ export class PuzzleTypeService {
     return PuzzleType;
   }
 
-  public toggleType(
-    value: boolean,
-    type: PuzzleType,
-    updateQuery?: boolean,
-  ): string {
+  public toggleType(value: boolean, type: PuzzleType, updateQuery?: boolean): string {
     if (value) {
       debug(`Add: ${PuzzleType[type]}`);
       this.add(type);
@@ -118,9 +114,7 @@ export class PuzzleTypeService {
         StringResources.TITLE +
           environment.titleSuffix +
           ' - ' +
-          [...this.getPuzzleTypes().values()]
-            .map((p) => PuzzleType[p])
-            .join(', '),
+          [...this.getPuzzleTypes().values()].map((p) => PuzzleType[p]).join(', ')
       );
       return activeTypeCodes;
     }
@@ -135,17 +129,14 @@ export class PuzzleTypeService {
 
   public getActivePuzzleCodes(): string {
     const codes: string[] = [...this.getPuzzleTypes().values()].map(
-      (p) => puzzleCodes.get(p) ?? '',
+      (p) => puzzleCodes.get(p) ?? ''
     );
     return codes.sort((a, b) => a.localeCompare(b)).join('');
   }
 
   public setPuzzleOptions(puzzleString: string) {
     const puzzleStringLc = puzzleString?.toLowerCase();
-    if (
-      !puzzleStringLc ||
-      puzzleStringLc.search('/|m|a|s|d|e|f|o|g|r|p|x|/') === -1
-    ) {
+    if (!puzzleStringLc || puzzleStringLc.search('/|m|a|s|d|e|f|o|g|r|p|x|/') === -1) {
       return;
     }
     this.toggleType(puzzleStringLc.includes('m'), PuzzleType.Multiplication);
@@ -155,10 +146,7 @@ export class PuzzleTypeService {
     this.toggleType(puzzleStringLc.includes('e'), PuzzleType.Exponents);
     this.toggleType(puzzleStringLc.includes('f'), PuzzleType.Fractions);
     this.toggleType(puzzleStringLc.includes('o'), PuzzleType.Miscellaneous);
-    this.toggleType(
-      puzzleStringLc.includes('g'),
-      PuzzleType.Greater_or_less_than,
-    );
+    this.toggleType(puzzleStringLc.includes('g'), PuzzleType.Greater_or_less_than);
     this.toggleType(puzzleStringLc.includes('r'), PuzzleType.Roots);
     this.toggleType(puzzleStringLc.includes('p'), PuzzleType.Percentages);
     this.toggleType(puzzleStringLc.includes('x'), PuzzleType.Decimals);
