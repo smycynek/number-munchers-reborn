@@ -355,6 +355,12 @@ export class AppComponent implements AfterViewChecked, AfterViewInit, OnInit, On
     );
   }
 
+  public contextMenuHandler(event: Event): void {
+    console.log('Context menu disabled');
+    event.preventDefault();
+    return;
+  }
+
   public getAvatarSizeClass(idxr: number, idxc: number): string {
     if (
       (this.isActive(idxr, idxc) && this.hasMertin(idxr, idxc)) ||

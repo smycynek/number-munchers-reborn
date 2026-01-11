@@ -137,6 +137,7 @@
             let idxc = $index
           ) {
             <div
+              (contextmenu)="contextMenuHandler($event)"
               [ngClass]="getCellClass(idxr, idxc)"
               id="{{ idxr }}{{ idxc }}"
               class="col cell click-target"
