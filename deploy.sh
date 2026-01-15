@@ -80,5 +80,6 @@ scp "$APP".zip "$SITE":public_html
 export SHELL_COMMAND="cd public_html; rm -rf $APP;  unzip $APP.zip; exit; bash"
 echo "$SHELL_COMMAND"
 ssh -t "$SITE" "$SHELL_COMMAND"
+scp src/assets/preview.png "$SITE":public_html/"$APP"/preview.png
 cd ../..
 echo "$version_inc"
