@@ -24,4 +24,4 @@ that it's fair to put an MIT license on it.
 <a href="https://stevenvictor.net/number-munchers"><img alt="screenshot" src="main_screen.png" width="50%">
 </a>
 
-version: 000462
+version: 000468
